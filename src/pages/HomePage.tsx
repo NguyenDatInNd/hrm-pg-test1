@@ -15,9 +15,9 @@ const HomePage = () => {
     console.log(loadingLogin);
 
     return (
-        <div className="h-[1000px]">
-            <div>hihi</div>
-            <p>egegegge</p>
+        <div className="mt-32">
+            <div>This is homePage</div>
+            <p>hehehheh</p>
         </div>
     );
 };

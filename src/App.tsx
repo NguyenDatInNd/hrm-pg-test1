@@ -9,6 +9,7 @@ import { useAppSelector } from './store';
 
 const LoginPage = lazy(() => import('./modules/page/loginPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
+const EmployeePage = lazy(() => import('./pages/employee/Employee'));
 
 import { Header, SideBar } from './components/index';
 
@@ -47,6 +48,7 @@ function App() {
                                 <Route path="/" Component={LoginPage} />
                                 <Route path={ROUTES.login} Component={LoginPage} />
                                 <Route path={ROUTES.home} Component={HomePage} />
+                                <Route path={ROUTES.employee} Component={EmployeePage} />
                             </Routes>
                         </Suspense>
                     </div>

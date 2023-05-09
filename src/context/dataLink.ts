@@ -13,26 +13,32 @@ export const links = [
             {
                 name: 'Attendance Management',
                 icon: attendace,
+                nameLink: 'attendance',
             },
             {
                 name: 'Leave Management',
                 icon: leave,
+                nameLink: 'leave',
             },
             {
                 name: 'Payroll Management',
                 icon: payroll,
+                nameLink: 'payroll',
             },
             {
                 name: 'Employee Management',
                 icon: employee,
+                nameLink: 'employee',
             },
             {
                 name: 'User Management',
                 icon: user,
+                nameLink: 'user',
             },
             {
                 name: 'Master Management',
                 icon: master,
+                nameLink: 'master',
             },
         ],
     },
@@ -42,10 +48,32 @@ export const links = [
             {
                 name: 'Global Settings',
                 icon: global,
+                nameLink: 'global',
             },
             {
                 name: 'Settings',
                 icon: setting,
+                nameLink: 'settings',
+            },
+            {
+                name: 'Global Settings',
+                icon: global,
+                nameLink: 'global',
+            },
+            {
+                name: 'Settings',
+                icon: setting,
+                nameLink: 'settings',
+            },
+            {
+                name: 'Global Settings',
+                icon: global,
+                nameLink: 'global',
+            },
+            {
+                name: 'Settings',
+                icon: setting,
+                nameLink: 'settings',
             },
         ],
     },

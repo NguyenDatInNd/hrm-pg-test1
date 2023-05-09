@@ -26,8 +26,8 @@ const Sidebar = () => {
                         </p>
                         {item.links.map((link, index) => (
                             <NavLink
-                                to={`/${link.name}`}
-                                key={link.name}
+                                to={`/${link.nameLink}`}
+                                key={index}
                                 onClick={() => {
                                     setIsRounderIcon(link.name);
                                 }}
