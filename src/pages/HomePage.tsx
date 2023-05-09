@@ -1,0 +1,25 @@
+import React from 'react';
+import Cookies from 'js-cookie';
+import { ACCESS_TOKEN_KEY } from '../utils/contants';
+import { Routes, Route } from 'react-router-dom';
+import Header from '../components/Header/Header';
+import Sidebar from '../components/Sidebar/Sidebar';
+import { useAppDispatch, useAppSelector } from '../store';
+import { loginSuccess } from './Redux/company.slice';
+const HomePage = () => {
+    const dispatch = useAppDispatch();
+    dispatch(loginSuccess(true));
+    // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
+    // console.log(cookieValue);
+    const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
+    console.log(loadingLogin);
+
+    return (
+        <div className="h-[1000px]">
+            <div>hihi</div>
+            <p>egegegge</p>
+        </div>
+    );
+};
+
+export default HomePage;

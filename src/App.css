@@ -1,0 +1,75 @@
+.button {
+    height: 35px;
+    width: 90px;
+    border-radius: 4px;
+    color: var(--color-white);
+    font-size: 1.4rem;
+}
+.button_2 {
+    height: 40px;
+    width: 120px;
+    border-radius: 4px;
+    color: var(--color-white);
+    font-size: 1.4rem;
+}
+.button-primary {
+    background-color: black;
+}
+
+.button-primary:hover {
+    background-color: var(--color-bg-primary);
+}
+
+.fixed-header {
+    padding-top: 15rem;
+}
+
+.wide {
+    margin-left: -12px;
+    margin-right: -12px;
+}
+.col-3-1 {
+    width: 23.5%;
+}
+
+select {
+    background-color: transparent;
+    border: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.product-show {
+    border: 1px solid var(--color-bg-primary) !important;
+}
+
+.e-dlg-center-center,
+.e-quick-popup-wrapper.e-device {
+    z-index: 1000000 !important;
+}
+
+/* ::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgb(216, 216, 216);
+    border-radius: 40px;
+}
+::-webkit-scrollbar-track {
+    background-color: transparent;
+} */
+
+.sidebar {
+    box-shadow: rgb(113 122 131 / 11%) 0px 7px 30px 0px;
+}
+.nav-item,
+.navbar {
+    z-index: 10000;
+}
+@media screen and (max-width: 800px) {
+    .sidebar {
+        z-index: 10000000;
+    }
+}
