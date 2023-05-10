@@ -6,6 +6,7 @@ import { BiSearch } from 'react-icons/bi';
 import './Employee.scss';
 import EmployeeItem from './EmployeeItem';
 import { getEmployeeList } from '../Redux/employee.slice';
+import { Link } from 'react-router-dom';
 
 const EmployeeList = () => {
     const dispatch = useAppDispatch();
@@ -27,7 +28,7 @@ const EmployeeList = () => {
     return (
         <div className="mt-36 px-16">
             <div className="relative">
-                <SubHeader category="General" title="Employee Management" />
+                <SubHeader category="General" title="Employee Management" subtitle={null} />
                 <div className="search-employee absolute top-14 right-0">
                     <form action="">
                         <div className="search-action">
@@ -43,11 +44,13 @@ const EmployeeList = () => {
             </div>
 
             <div className="employee-container mt-5 bg-white rounded-3xl">
-                <div style={{ height: '1000px' }} className="p-3 w-full">
-                    <div className="border-b border-gray-200">
-                        <div>
-                            <button>Add</button>
-                            <button>Delete</button>
+                <div className="p-3 w-full">
+                    <div className="border-b border-gray-200 pb-3">
+                        <div className="flex items-center justify-end gap-2">
+                            <Link className="btn-employee btn-e-add" to="/employee/create-or-update">
+                                Add
+                            </Link>
+                            <button className="btn-employee">Delete</button>
                         </div>
                     </div>
                     <EmployeeItem employeeList={employeeList} />
@@ -61,5 +64,4 @@ const EmployeeList = () => {
         </div>
     );
 };
-
 export default EmployeeList;

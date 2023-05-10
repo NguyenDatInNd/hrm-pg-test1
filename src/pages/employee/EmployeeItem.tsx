@@ -64,7 +64,7 @@ const columns: readonly Column[] = [
     { id: 'End Contract', label: 'End Contract', minWidth: 150 },
     { id: 'Department', label: 'Department', minWidth: 150 },
     { id: 'Employee Type', label: 'Employee Type', minWidth: 150 },
-    { id: 'Employee Type', label: 'Employee Type', minWidth: 150 },
+    { id: 'Salary Rp.', label: 'Salary Rp.', minWidth: 150 },
     { id: 'Position', label: 'Position', minWidth: 150 },
     { id: 'O/T Paid', label: 'O/T Paid', minWidth: 100 },
     { id: 'Meal paid', label: 'Meal paid', minWidth: 100 },
@@ -130,7 +130,7 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
     };
 
     return (
-        <div className="w-min-table w-max-table overflow-auto">
+        <div className="w-min-table w-max-table overflow-auto mt-3">
             <Paper>
                 <TableContainer className=" h-[73vh]">
                     <Table stickyHeader aria-label="sticky table">
@@ -183,6 +183,17 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                             <TableCell>{row.home_address_1}</TableCell>
                                             <TableCell>{row.nc_id}</TableCell>
                                             <TableCell>{row.contract_start_date}</TableCell>
+                                            <TableCell>{row.contract_start_date}</TableCell>
+                                            <TableCell>{row.card_number}</TableCell>
+                                            <TableCell>{row.card_number}</TableCell>
+                                            <TableCell>{row.department_name}</TableCell>
+                                            <TableCell>{row.department_id === 1 ? 'Permanent' : ''}</TableCell>
+                                            <TableCell>{row.audit_salary}</TableCell>
+                                            <TableCell>{row.position_name}</TableCell>
+                                            <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
+                                            <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
+                                            <TableCell>{row.health_insurance}</TableCell>
+                                            <TableCell>{row.grade_name}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -199,12 +210,6 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-
-            {/* <div>
-                {employeeList.map((employee, index) => {
-                    return <div key={index}>{employee.id}</div>;
-                })}
-            </div> */}
         </div>
     );
 };
