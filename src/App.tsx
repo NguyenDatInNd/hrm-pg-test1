@@ -9,7 +9,7 @@ import { useAppSelector } from './store';
 
 const LoginPage = lazy(() => import('./modules/page/loginPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const EmployeePage = lazy(() => import('./pages/employee/Employee'));
+const EmployeePage = lazy(() => import('./pages/employee/EmployeeList'));
 
 import { Header, SideBar } from './components/index';
 

@@ -21,6 +21,7 @@ function getBaseUrl(service: APIService) {
 export const API_PATHS = {
     signIn: 'api/login',
     company: 'api/company',
+    employee: 'api/employee',
 
     // signUp: `${getBaseUrl(APIService.auth)}/register`,
     // location: `${getBaseUrl(APIService.public)}/location`,

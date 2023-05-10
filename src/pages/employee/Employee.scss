@@ -24,3 +24,29 @@
 .employee-container {
     box-shadow: rgb(241, 243, 245) 0px 5px 20px;
 }
+
+.w-max-table {
+    max-width: 1110px;
+}
+.w-min-table {
+    min-width: 700px;
+}
+
+.css-rorn0c-MuiTableContainer-root::-webkit-scrollbar {
+    border-radius: 0 !important;
+    width: 8px !important;
+}
+
+.css-rorn0c-MuiTableContainer-root::-webkit-scrollbar-thumb {
+    border-radius: 100px !important;
+    background-color: rgb(216, 216, 216) !important;
+}
+.css-rorn0c-MuiTableContainer-root::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.css-rorn0c-MuiTableContainer-root::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0) !important;
+}

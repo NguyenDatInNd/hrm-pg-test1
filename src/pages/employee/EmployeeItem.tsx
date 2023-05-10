@@ -7,9 +7,38 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Employee, EmployeeList } from '../../Types/employee';
+import './Employee.scss';
 
+interface EmployeddItemType {
+    employeeList: EmployeeList;
+}
 interface Column {
-    id: 'name' | 'code' | 'population' | 'size' | 'density';
+    id:
+        | 'NIK'
+        | 'Name'
+        | 'Gender'
+        | 'Bank Card No.'
+        | 'Bank Account No.'
+        | 'Family Card No.'
+        | 'Marriage Status'
+        | 'Mother Name'
+        | 'Place of birth'
+        | 'Date of birth'
+        | 'Home Address'
+        | 'National Card ID No.'
+        | 'Date Start'
+        | 'First Contract'
+        | 'Second Contract'
+        | 'End Contract'
+        | 'Department'
+        | 'Employee Type'
+        | 'Salary Rp.'
+        | 'Position'
+        | 'O/T Paid'
+        | 'Meal paid'
+        | 'Meal Rp.'
+        | 'Grading';
     label: string;
     minWidth?: number;
     align?: 'right';
@@ -17,29 +46,30 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-    { id: 'name', label: 'Name', minWidth: 170 },
-    { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-    {
-        id: 'population',
-        label: 'Population',
-        minWidth: 170,
-        align: 'right',
-        format: (value: number) => value.toLocaleString('en-US'),
-    },
-    {
-        id: 'size',
-        label: 'Size\u00a0(km\u00b2)',
-        minWidth: 170,
-        align: 'right',
-        format: (value: number) => value.toLocaleString('en-US'),
-    },
-    {
-        id: 'density',
-        label: 'Density',
-        minWidth: 170,
-        align: 'right',
-        format: (value: number) => value.toFixed(2),
-    },
+    { id: 'NIK', label: 'NIK', minWidth: 100 },
+    { id: 'Name', label: 'Name', minWidth: 150 },
+    { id: 'Gender', label: 'Gender', minWidth: 70 },
+    { id: 'Bank Card No.', label: 'Bank Card No.', minWidth: 140 },
+    { id: 'Bank Account No.', label: 'Bank Account No.', minWidth: 150 },
+    { id: 'Family Card No.', label: 'Family Card No.', minWidth: 150 },
+    { id: 'Marriage Status', label: 'Marriage Status', minWidth: 150 },
+    { id: 'Mother Name', label: 'Mother Name', minWidth: 150 },
+    { id: 'Place of birth', label: 'Place of birth', minWidth: 150 },
+    { id: 'Date of birth', label: 'Date of birth', minWidth: 150 },
+    { id: 'Home Address', label: 'Home Address', minWidth: 200 },
+    { id: 'National Card ID No.', label: 'National Card ID No.', minWidth: 170 },
+    { id: 'Date Start', label: 'Date Start', minWidth: 130 },
+    { id: 'First Contract', label: 'First Contract', minWidth: 150 },
+    { id: 'Second Contract', label: 'Second Contract', minWidth: 150 },
+    { id: 'End Contract', label: 'End Contract', minWidth: 150 },
+    { id: 'Department', label: 'Department', minWidth: 150 },
+    { id: 'Employee Type', label: 'Employee Type', minWidth: 150 },
+    { id: 'Employee Type', label: 'Employee Type', minWidth: 150 },
+    { id: 'Position', label: 'Position', minWidth: 150 },
+    { id: 'O/T Paid', label: 'O/T Paid', minWidth: 100 },
+    { id: 'Meal paid', label: 'Meal paid', minWidth: 100 },
+    { id: 'Meal Rp.', label: 'Meal Rp.', minWidth: 100 },
+    { id: 'Grading', label: 'Grading', minWidth: 100 },
 ];
 
 interface Data {
@@ -49,34 +79,29 @@ interface Data {
     population: number;
     size: number;
     density: number;
+    testing: string;
+    aue: string;
 }
 
-function createData(id: number, name: string, code: string, population: number, size: number): Data {
+function createData(
+    id: number,
+    name: string,
+    code: string,
+    population: number,
+    size: number,
+    testing: string,
+    aue: string,
+): Data {
     const density = population / size;
-    return { id, name, code, population, size, density };
+    return { id, name, code, population, size, density, testing, aue };
 }
 
-const rows = [
-    createData(1, 'India', 'IN', 1324171354, 3287263),
-    createData(1, 'China', 'CN', 1403500365, 9596961),
-    createData(1, 'Italy', 'IT', 60483973, 301340),
-    createData(1, 'United States', 'US', 327167434, 9833520),
-    createData(2, 'Canada', 'CA', 37602103, 9984670),
-    createData(3, 'Australia', 'AU', 25475400, 7692024),
-    createData(4, 'Germany', 'DE', 83019200, 357578),
-    createData(5, 'Ireland', 'IE', 4857000, 70273),
-    createData(6, 'Mexico', 'MX', 126577691, 1972550),
-    createData(7, 'Japan', 'JP', 126317000, 377973),
-    createData(9, 'France', 'FR', 67022000, 640679),
-    createData(10, 'United Kingdom', 'GB', 67545757, 242495),
-    createData(11, 'Russia', 'RU', 146793744, 17098246),
-    createData(12, 'Nigeria', 'NG', 200962417, 923768),
-    createData(12, 'Brazil', 'BR', 210147125, 8515767),
-];
-
-const EmployeeItem: React.FC = () => {
+const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+    // load Api
+    console.log(employeeList.data);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -97,7 +122,7 @@ const EmployeeItem: React.FC = () => {
     };
 
     const handleHeaderSelect = () => {
-        setSelectedRows(selectedRows.length === rows.length ? [] : rows.map((row) => row.id));
+        setSelectedRows(selectedRows.length === employeeList.data.length ? [] : employeeList.data.map((row) => row.id));
     };
 
     const handleClearSelection = () => {
@@ -105,9 +130,9 @@ const EmployeeItem: React.FC = () => {
     };
 
     return (
-        <div>
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 440 }}>
+        <div className="w-min-table w-max-table overflow-auto">
+            <Paper>
+                <TableContainer className=" h-[73vh]">
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -115,7 +140,10 @@ const EmployeeItem: React.FC = () => {
                                     <input
                                         type="checkbox"
                                         onChange={handleHeaderSelect}
-                                        checked={selectedRows.length === rows.length && rows.length > 0}
+                                        checked={
+                                            selectedRows.length === employeeList.data.length &&
+                                            employeeList.data.length > 0
+                                        }
                                     />
                                 </TableCell>
                                 {columns.map((column) => (
@@ -130,42 +158,53 @@ const EmployeeItem: React.FC = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                        <TableCell align="center">
-                                            <input
-                                                type="checkbox"
-                                                onChange={() => handleRowSelect(row.id)}
-                                                checked={selectedRows.includes(row.id)}
-                                            />
-                                        </TableCell>
-                                        {columns.map((column) => {
-                                            const value = row[column.id];
-                                            return (
-                                                <TableCell key={column.id} align={column.align}>
-                                                    {column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
-                                                </TableCell>
-                                            );
-                                        })}
-                                    </TableRow>
-                                );
-                            })}
+                            {employeeList.data
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((row) => {
+                                    return (
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                            <TableCell align="center">
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={() => handleRowSelect(row.id)}
+                                                    checked={selectedRows.includes(row.id)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>{row.staff_id}</TableCell>
+                                            <TableCell>{row.name}</TableCell>
+                                            <TableCell>{row.gender === 1 ? 'Female' : 'Male'}</TableCell>
+                                            <TableCell>{row.card_number}</TableCell>
+                                            <TableCell>{row.bank_account_no}</TableCell>
+                                            <TableCell>{row.family_card_number}</TableCell>
+                                            <TableCell>{row.marriage_code}</TableCell>
+                                            <TableCell>{row.mother_name}</TableCell>
+                                            <TableCell>{row.pob}</TableCell>
+                                            <TableCell>{row.dob}</TableCell>
+                                            <TableCell>{row.home_address_1}</TableCell>
+                                            <TableCell>{row.nc_id}</TableCell>
+                                            <TableCell>{row.contract_start_date}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                         </TableBody>
                     </Table>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={rows.length}
+                    count={employeeList.data.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
+
+            {/* <div>
+                {employeeList.map((employee, index) => {
+                    return <div key={index}>{employee.id}</div>;
+                })}
+            </div> */}
         </div>
     );
 };

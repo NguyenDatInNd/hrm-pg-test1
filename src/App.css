@@ -73,3 +73,120 @@ select {
         z-index: 10000000;
     }
 }
+
+.css-dwuj3p-MuiTableCell-root {
+    line-height: 1.5rem !important;
+    font-size: 1.3rem !important;
+    font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
+    font-weight: 600 !important;
+    display: table-cell !important;
+    vertical-align: inherit !important;
+    color: rgb(17, 24, 28) !important;
+    position: sticky !important;
+    top: 0px !important;
+    z-index: 2 !important;
+    border-top-left-radius: 8px !important;
+    border: 1px solid white !important;
+    width: 36px !important;
+
+    text-align: center !important;
+    background-color: rgb(236, 238, 240) !important;
+    padding: 6px !important;
+}
+
+.css-i02g0k-MuiTableCell-root {
+    line-height: 1.5rem !important;
+    font-size: 1.3rem !important;
+    font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
+    font-weight: 600 !important;
+    display: table-cell !important;
+    vertical-align: inherit !important;
+    text-align: left !important;
+    color: rgb(17, 24, 28) !important;
+    position: sticky !important;
+    top: 0px !important;
+    z-index: 2 !important;
+    border: 1px solid white !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    padding: 6px 10px !important;
+    background-color: rgb(236, 238, 240) !important;
+}
+
+th {
+    line-height: 1.5rem !important;
+    font-size: 1.3rem !important;
+    font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
+    font-weight: 600 !important;
+    display: table-cell !important;
+    vertical-align: inherit !important;
+    text-align: left !important;
+    color: rgb(17, 24, 28) !important;
+    position: sticky !important;
+    top: 0px !important;
+    z-index: 2 !important;
+    border: 1px solid white !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    padding: 6px 10px !important;
+    background-color: rgb(236, 238, 240) !important;
+}
+
+.css-y8ay40-MuiTableCell-root {
+    line-height: 1.5rem !important;
+    font-size: 1.3rem !important;
+    font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
+    font-weight: 600 !important;
+    display: table-cell !important;
+    vertical-align: inherit !important;
+    text-align: left !important;
+    color: rgb(17, 24, 28) !important;
+    position: sticky !important;
+    top: 0px !important;
+    z-index: 2 !important;
+    border: 1px solid white !important;
+
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    padding: 6px 10px !important;
+    background-color: rgb(236, 238, 240) !important;
+}
+
+.css-1ex1afd-MuiTableCell-root {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 400;
+    font-size: 1.2rem !important;
+    line-height: 1.43;
+    letter-spacing: 0.01071em;
+    display: table-cell;
+    vertical-align: inherit;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    text-align: left;
+    font-weight: 500 !important;
+    padding: 12px !important;
+    color: rgb(104, 112, 118) !important;
+}
+.css-177gid-MuiTableCell-root {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 1.3rem !important;
+}
+
+/* Table Panigation */
+
+.css-16c50h-MuiInputBase-root-MuiTablePagination-select {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 500 !important;
+}
+
+.css-pdct74-MuiTablePagination-selectLabel {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 500 !important;
+}
+
+.css-levciy-MuiTablePagination-displayedRows {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 500 !important;
+}

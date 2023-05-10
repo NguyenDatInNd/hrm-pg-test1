@@ -55,26 +55,6 @@ export const links = [
                 icon: setting,
                 nameLink: 'settings',
             },
-            {
-                name: 'Global Settings',
-                icon: global,
-                nameLink: 'global',
-            },
-            {
-                name: 'Settings',
-                icon: setting,
-                nameLink: 'settings',
-            },
-            {
-                name: 'Global Settings',
-                icon: global,
-                nameLink: 'global',
-            },
-            {
-                name: 'Settings',
-                icon: setting,
-                nameLink: 'settings',
-            },
         ],
     },
 ];

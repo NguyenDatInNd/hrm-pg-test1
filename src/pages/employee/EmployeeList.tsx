@@ -1,18 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { loginSuccess } from '../Redux/company.slice';
-import SubHeader from './../../components/Header/SubHeader';
+import SubHeader from '../../components/Header/SubHeader';
 import { BiSearch } from 'react-icons/bi';
 import './Employee.scss';
 import EmployeeItem from './EmployeeItem';
+import { getEmployeeList } from '../Redux/employee.slice';
 
-const Employee = () => {
+const EmployeeList = () => {
     const dispatch = useAppDispatch();
     dispatch(loginSuccess(true));
     // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
     // console.log(cookieValue);
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
+    const employeeList = useAppSelector((state) => state.employee.employeeList);
     console.log(loadingLogin);
+
+    // API get list employee
+    useEffect(() => {
+        const promise = dispatch(getEmployeeList());
+        return () => {
+            promise.abort();
+        };
+    }, [dispatch]);
 
     return (
         <div className="mt-36 px-16">
@@ -33,14 +43,15 @@ const Employee = () => {
             </div>
 
             <div className="employee-container mt-5 bg-white rounded-3xl">
-                <div style={{ height: '1000px' }} className="p-3">
+                <div style={{ height: '1000px' }} className="p-3 w-full">
                     <div className="border-b border-gray-200">
                         <div>
                             <button>Add</button>
                             <button>Delete</button>
                         </div>
                     </div>
-                    <EmployeeItem />
+                    <EmployeeItem employeeList={employeeList} />
+                    {/* employeeList={employeeList} */}
                 </div>
             </div>
 
@@ -51,4 +62,4 @@ const Employee = () => {
     );
 };
 
-export default Employee;
+export default EmployeeList;
