@@ -31,7 +31,7 @@ function App() {
 
                             <div
                                 style={{ zIndex: '99' }}
-                                className="w-[320px] mt-24  fixed sidebar dark:bg-secondary-dark-bg bg-white"
+                                className="w-[325px] mt-24  fixed sidebar dark:bg-secondary-dark-bg bg-white"
                             >
                                 <SideBar />
                             </div>

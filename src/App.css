@@ -157,7 +157,6 @@ th {
     top: 0px !important;
     z-index: 2 !important;
     border: 1px solid white !important;
-
     border-top-left-radius: 0px !important;
     border-top-right-radius: 0px !important;
     padding: 6px 10px !important;
@@ -247,3 +246,5 @@ th {
     color: rgb(229, 72, 77);
     background-color: rgb(255, 239, 239);
 }
+
+/* configure csstailwind */

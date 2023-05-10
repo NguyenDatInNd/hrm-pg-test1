@@ -15,7 +15,7 @@
 }
 
 .icon-padding {
-    padding: 0.625rem;
+    padding: 0.725rem;
 }
 
 .icon-rounder {
@@ -25,3 +25,9 @@
 .icon_active {
     background-color: white;
 }
+
+.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root:hover {
+    border-radius: 0.75rem !important;
+}
+
+// configure csstailwind

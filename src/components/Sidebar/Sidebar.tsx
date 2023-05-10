@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-
 import './Sidebar.scss';
-
 import { links } from '../../context/dataLink';
+import { ListItemButton } from '@mui/material';
 
 const Sidebar = () => {
     const [isRounderIcon, setIsRounderIcon] = useState('');
     console.log(isRounderIcon);
-    const activeLink = 'flex items-center gap-4 pl-4 py-3 rounded-xl bg-active-link text-md m-2';
-    const normalLink =
-        'flex items-center gap-4 pl-4 py-3 rounded-xl text-md text-gray-700 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2';
-
+    // const activeLink = 'flex items-center gap-4 pl-4 py-3 rounded-xl bg-active-link text-md m-2';
+    // const normalLink =
+    //     'flex items-center gap-4 pl-4 py-3 rounded-xl text-md text-gray-700 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2';
+    const activeLink =
+        'flex items-center gap-[10px] rounded-xl text-md mb-[10px] bg-active-link  hover:bg-bgrHoverActive transition-all';
+    const normalLink = 'flex items-center gap-[10px] rounded-xl transition-all text-md hover:bg-bgrHover  mb-[10px] ';
     return (
         <div className="pl-12 pr-8 text-2xl font-medium h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">
             <div className="py-4">
@@ -36,7 +37,20 @@ const Sidebar = () => {
                                 })}
                                 className={({ isActive }) => (isActive ? activeLink : normalLink)}
                             >
-                                <span
+                                <ListItemButton>
+                                    <div
+                                        className={
+                                            isRounderIcon === link.name
+                                                ? `rounded-full icon-padding icon_active`
+                                                : 'rounded-full icon-padding icon-rounder'
+                                        }
+                                    >
+                                        <img src={link.icon} className="" alt="" />
+                                    </div>
+                                    <p className="ml-4 text-16  font-semibold tracking-wide ">{link.name}</p>
+                                </ListItemButton>
+
+                                {/* <span
                                     className={
                                         isRounderIcon === link.name
                                             ? `rounded-full icon-padding icon_active`
@@ -45,7 +59,7 @@ const Sidebar = () => {
                                 >
                                     <img src={link.icon} className="" alt="" />
                                 </span>
-                                <span className="capitalize">{link.name}</span>
+                                <span className="capitalize">{link.name}</span> */}
                             </NavLink>
                         ))}
                     </div>
