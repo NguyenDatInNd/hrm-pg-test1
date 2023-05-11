@@ -41,7 +41,7 @@ function App() {
                     )}
                     <div
                         className={`dark:bg-main-bg bg-main-bg min-h-screen w-full ${
-                            loadingLogin ? 'md:ml-[320px]' : ''
+                            loadingLogin ? 'md:ml-[325px]' : ''
                         }`}
                     >
                         <Suspense fallback={<div>Loading.....</div>}>

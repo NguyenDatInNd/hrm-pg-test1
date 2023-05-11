@@ -89,3 +89,43 @@
     border-bottom: 1px solid !important;
     border-color: transparent !important;
 }
+
+// row selected
+.row-start-select:hover {
+    background-color: rgb(237, 246, 255) !important;
+    color: rgb(0, 145, 255) !important;
+}
+.row-selected {
+    background-color: rgb(233, 249, 238) !important;
+}
+
+input[type='checkbox'] {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgb(104, 112, 118);
+    border-radius: 3px;
+
+    color: white;
+}
+
+input[type='checkbox']:checked {
+    background-color: rgb(48, 164, 108) !important;
+    border: 2px solid transparent;
+}
+.icon-checked {
+    color: white;
+}
+
+.checkbox-root-color .MuiSvgIcon-root {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgb(104, 112, 118);
+    border-radius: 3px;
+    color: white;
+}
+
+.checkbox-root-color .Mui-checked {
+    background-color: rgb(48, 164, 108) !important;
+    border: 2px solid transparent !important;
+}

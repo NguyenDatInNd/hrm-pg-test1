@@ -7,9 +7,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Employee, EmployeeList } from '../../Types/employee';
+import { BsCheckLg } from 'react-icons/bs';
+import { EmployeeList } from '../../Types/employee';
 import './Employee.scss';
-
+import { useNavigate } from 'react-router-dom';
+import { Checkbox } from '@mui/material';
 interface EmployeddItemType {
     employeeList: EmployeeList;
 }
@@ -72,37 +74,13 @@ const columns: readonly Column[] = [
     { id: 'Grading', label: 'Grading', minWidth: 100 },
 ];
 
-interface Data {
-    id: number;
-    name: string;
-    code: string;
-    population: number;
-    size: number;
-    density: number;
-    testing: string;
-    aue: string;
-}
-
-function createData(
-    id: number,
-    name: string,
-    code: string,
-    population: number,
-    size: number,
-    testing: string,
-    aue: string,
-): Data {
-    const density = population / size;
-    return { id, name, code, population, size, density, testing, aue };
-}
-
 const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [selectedRows, setSelectedRows] = useState<number[]>([]);
+    const navigate = useNavigate();
 
-    // load Api
-    console.log(employeeList.data);
-
+    // handle change of page navigation
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -112,7 +90,8 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
         setPage(0);
     };
 
-    const [selectedRows, setSelectedRows] = useState<number[]>([]);
+    // select row
+
     const handleRowSelect = (id: number) => {
         if (selectedRows.includes(id)) {
             setSelectedRows(selectedRows.filter((rowId: number) => rowId !== id));
@@ -129,6 +108,8 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
         setSelectedRows([]);
     };
 
+    // select item rows when selected
+    const isRowSelected = (id: number) => selectedRows.includes(id);
     return (
         <div className="w-min-table w-max-table overflow-auto mt-3">
             <Paper>
@@ -137,14 +118,43 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center">
-                                    <input
-                                        type="checkbox"
-                                        onChange={handleHeaderSelect}
-                                        checked={
-                                            selectedRows.length === employeeList.data.length &&
-                                            employeeList.data.length > 0
-                                        }
-                                    />
+                                    <div
+                                        onClick={handleHeaderSelect}
+                                        className="relative flex items-center justify-center"
+                                    >
+                                        {/* <Checkbox
+                                            color="primary"
+                                            checked={
+                                                selectedRows.length > 0 &&
+                                                selectedRows.length === employeeList.data.length
+                                            }
+                                            indeterminate={
+                                                selectedRows.length > 0 &&
+                                                selectedRows.length < employeeList.data.length
+                                            }
+                                            onChange={handleHeaderSelect}
+                                            inputProps={{
+                                                'aria-label': 'select all desserts',
+                                            }}
+                                            className="checkbox-root-color"
+                                        /> */}
+                                        <input
+                                            type="checkbox"
+                                            onChange={handleHeaderSelect}
+                                            checked={
+                                                selectedRows.length === employeeList.data.length &&
+                                                employeeList.data.length > 0
+                                            }
+                                        />
+                                        <span className="absolute">
+                                            {selectedRows.length === employeeList.data.length &&
+                                            employeeList.data.length > 0 ? (
+                                                <BsCheckLg size={18} className="icon-checked" />
+                                            ) : (
+                                                ''
+                                            )}
+                                        </span>
+                                    </div>
                                 </TableCell>
                                 {columns.map((column) => (
                                     <TableCell
@@ -162,13 +172,54 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                        <TableRow
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={row.id}
+                                            selected={isRowSelected(row.id)}
+                                            onClick={() => handleRowSelect(row.id)}
+                                            onDoubleClick={() => {
+                                                console.log(row.id);
+                                                navigate(`/employee/create-or-update/${row.id}`);
+                                            }}
+                                            className={`cursor-pointer row-start-select  ${
+                                                isRowSelected(row.id) ? 'row-selected' : ''
+                                            } `}
+                                        >
                                             <TableCell align="center">
-                                                <input
+                                                <div
+                                                    onClick={() => handleRowSelect(row.id)}
+                                                    className="relative flex items-center justify-center"
+                                                >
+                                                    {/* <Checkbox
+                                                        color="primary"
+                                                        onChange={() => handleRowSelect(row.id)}
+                                                        checked={selectedRows.includes(row.id)}
+                                                        inputProps={{
+                                                            'aria-label': 'select all desserts',
+                                                        }}
+                                                    /> */}
+
+                                                    <input
+                                                        type="checkbox"
+                                                        onChange={() => handleRowSelect(row.id)}
+                                                        checked={selectedRows.includes(row.id)}
+                                                    />
+                                                    <span className="absolute">
+                                                        {selectedRows.includes(row.id) ? (
+                                                            <BsCheckLg size={18} className="icon-checked" />
+                                                        ) : (
+                                                            ''
+                                                        )}
+                                                    </span>
+                                                </div>
+
+                                                {/* <input
                                                     type="checkbox"
                                                     onChange={() => handleRowSelect(row.id)}
                                                     checked={selectedRows.includes(row.id)}
-                                                />
+                                                /> */}
                                             </TableCell>
                                             <TableCell>{row.staff_id}</TableCell>
                                             <TableCell>{row.name}</TableCell>
