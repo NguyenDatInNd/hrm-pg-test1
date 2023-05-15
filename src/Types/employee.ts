@@ -3,11 +3,11 @@ export interface Employee {
     old_staff_id: number | null;
     staff_id: string;
     name: string;
-    gender: number;
+    gender: number | string;
     department_id: number;
     company_id: number;
     manager_id: number | null;
-    marriage_id: number;
+    marriage_id: number | string;
     position_id: number | null;
     type: string;
     mother_name: string;
@@ -49,6 +49,7 @@ export interface Employee {
     grade_name: string;
     manager_name: string | null;
     contracts: Contract[];
+    [key: string]: any;
 }
 
 export interface EmployeeList {
@@ -80,4 +81,43 @@ export interface Contract {
     created_at: string;
     updated_at: string;
     deleted_at: string | null;
+}
+
+// form employee Information
+export interface FormEmployeeInformation {
+    nik: string;
+    name: string;
+    gender: string;
+    mother_name: string;
+    dob: string;
+    pob: string;
+    ktp_no: string;
+    nc_id: string;
+    home_address_1: string;
+    home_address_2: string;
+    mobile_no: string;
+    tel_no: string;
+    marriage_id: string;
+    card_number: string;
+    bank_account_no: string;
+    bank_name: string;
+    family_card_number: string;
+    safety_insurance_no: string;
+    health_insurance_no: string;
+}
+
+// from contract information
+export interface FormContractEmployee {
+    contract_start_date: string;
+    employee_id: string;
+    contract: Contract[];
+}
+//
+export interface MarriageStatus {
+    id: number;
+    name: string;
+    code: string;
+    company_id: number;
+    created_at: string;
+    updated_at: string | null;
 }

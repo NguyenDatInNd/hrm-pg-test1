@@ -50,3 +50,77 @@
         background-color: rgb(241, 243, 245);
     }
 }
+
+.modalStyle {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
+    background-color: transparent !important;
+}
+
+.modalITemStyle {
+    position: absolute;
+    top: 22.3% !important;
+    left: 88% !important;
+    // transform: translate(-50%, -50%);
+    width: 320px !important;
+    background-color: rgb(209, 1, 1);
+    border: 1px solid rgb(223, 227, 230) !important;
+    box-shadow: none !important;
+    padding: 20px 24px !important;
+    border-radius: 10px;
+}
+
+.modalITemStyleSecond {
+    width: 360px !important;
+    background-color: rgb(209, 1, 1);
+    border: 1px solid rgb(223, 227, 230) !important;
+    box-shadow: none !important;
+    padding: 20px 24px !important;
+    border: 1px solid rgb(223, 227, 230) !important;
+    border-radius: 10px;
+}
+
+.font-family {
+    font-family: 'SVN-Sofia Pro Medium', 'Public Sans', sans-serif !important;
+}
+
+.button-signout {
+    height: 46px !important;
+    font-size: 14px !important;
+    border-radius: 6px !important;
+    text-transform: capitalize !important;
+    background-color: rgb(0, 145, 255) !important;
+    color: rgb(251, 253, 255) !important;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.button-signout:hover {
+    background-color: rgb(0, 129, 241) !important;
+}
+
+.button-signout-close {
+    height: 46px !important;
+    font-size: 14px !important;
+    border-radius: 6px !important;
+    text-transform: capitalize !important;
+    background-color: rgb(0, 145, 255) !important;
+    color: rgb(251, 253, 255) !important;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.button-signout-close:hover {
+    background-color: #0091ff14 !important;
+}
+
+.font-resetpass {
+    line-height: 1.71429;
+    font-size: 13px !important;
+    text-transform: capitalize !important;
+    color: rgb(0, 145, 255) !important;
+    text-decoration: none !important;
+    cursor: pointer;
+}

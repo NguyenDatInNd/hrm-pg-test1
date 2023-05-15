@@ -1,4 +1,5 @@
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 type subHeader = {
     category: string;
@@ -15,7 +16,10 @@ const SubHeader = ({ category, title, subtitle }: subHeader) => {
 
                 {subtitle ? (
                     <>
-                        <p className="text-2xl text-gray-500 font-semibold tracking-tight ">{title}</p>
+                        <Link to="/employee">
+                            <p className="text-2xl text-gray-500 font-semibold tracking-tight ">{title}</p>
+                        </Link>
+
                         <MdKeyboardArrowRight size={16} />
                         <p className="text-2xl font-semibold tracking-tight ">{subtitle}</p>
                     </>

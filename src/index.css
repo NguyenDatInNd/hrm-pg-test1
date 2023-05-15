@@ -56,6 +56,7 @@ a[href] {
 html *::-webkit-scrollbar {
     border-radius: 0;
     width: 8px;
+    height: 8px !important;
 }
 html *::-webkit-scrollbar-thumb {
     border-radius: 6px;

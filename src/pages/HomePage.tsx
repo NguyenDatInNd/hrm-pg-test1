@@ -12,8 +12,6 @@ const HomePage = () => {
     // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
     // console.log(cookieValue);
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
-    console.log(loadingLogin);
-
     return (
         <div className="mt-32">
             <div>This is homePage</div>

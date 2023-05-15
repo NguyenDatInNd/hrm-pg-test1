@@ -3,10 +3,15 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { loginSuccess } from '../Redux/company.slice';
 import SubHeader from '../../components/Header/SubHeader';
 import { BiSearch } from 'react-icons/bi';
+import { MdDeleteOutline } from 'react-icons/md';
 import './Employee.scss';
 import EmployeeItem from './EmployeeItem';
 import { getEmployeeList } from '../Redux/employee.slice';
 import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
+import addIcon from '../../assets/addIcon.svg';
+import deleteIcon from '../../assets/deleteIcon.svg';
+import deleteIconActive from '../../assets/deleteIconAction.svg';
 
 const EmployeeList = () => {
     const dispatch = useAppDispatch();
@@ -14,8 +19,7 @@ const EmployeeList = () => {
     // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
     // console.log(cookieValue);
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
-    const employeeList = useAppSelector((state) => state.employee.employeeList);
-    console.log(loadingLogin);
+    const { employeeList, employeeIddelete } = useAppSelector((state) => state.employee);
 
     // API get list employee
     useEffect(() => {
@@ -24,6 +28,8 @@ const EmployeeList = () => {
             promise.abort();
         };
     }, [dispatch]);
+
+    console.log(employeeIddelete);
 
     return (
         <div className="mt-36 px-16">
@@ -48,9 +54,22 @@ const EmployeeList = () => {
                     <div className="border-b border-gray-200 pb-3">
                         <div className="flex items-center justify-end gap-2">
                             <Link className="btn-employee btn-e-add" to="/employee/create-or-update">
-                                Add
+                                <img src={addIcon} className="" alt="" />
+                                <span className="ml-2">Add</span>
                             </Link>
-                            <button className="btn-employee">Delete</button>
+                            <Button
+                                className={`flex items-center btn-employee ${
+                                    employeeIddelete.length > 0 ? 'btn-e-delete' : ''
+                                }`}
+                            >
+                                {/* <img
+                                    className="w-4 -mt-1"
+                                    src={employeeIddelete.length > 0 ? deleteIconActive : deleteIcon}
+                                    alt=""
+                                /> */}
+                                <MdDeleteOutline size={16} className=" -mt-1" />
+                                <span className="ml-2">Delete</span>
+                            </Button>
                         </div>
                     </div>
                     <EmployeeItem employeeList={employeeList} />

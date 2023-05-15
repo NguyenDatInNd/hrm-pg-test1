@@ -22,6 +22,9 @@ export const API_PATHS = {
     signIn: 'api/login',
     company: 'api/company',
     employee: 'api/employee',
+    marriage: 'api/marriage',
+
+    API_FIXER: 'https://api-training.hrm.div4.pgtest.co/api/v1',
 
     // signUp: `${getBaseUrl(APIService.auth)}/register`,
     // location: `${getBaseUrl(APIService.public)}/location`,

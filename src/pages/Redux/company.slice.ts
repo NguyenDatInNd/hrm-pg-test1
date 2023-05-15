@@ -2,12 +2,15 @@ import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@redux
 import { Company } from '../../Types/company';
 import axios from 'axios';
 import { API_PATHS } from '../../configs/api';
-
+import Cookies from 'js-cookie';
+import { ACCESS_TOKEN_KEY } from '../../utils/contants';
+import { fetchApi } from '../../configs/fetchApi';
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
 type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
 type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 
+const companyfixerLogin = 'https://api-training.hrm.div4.pgtest.co/api/v1';
 interface CompanyState {
     companyList: Company[];
     loadingCompany: boolean;
@@ -20,16 +23,21 @@ const initialState: CompanyState = {
     loadingLogin: false,
 };
 
-// export const getProductList = createAsyncThunk('products/getProducts', async () => {
-//     const response = await axios.get(API_PATHS.product, {
-//         headers: { Authorization: Cookies.get(ACCESS_TOKEN_KEY) },
-//     });
-//     const data = response.data.data;
+export const getCompany = createAsyncThunk('companys/getCompany', async () => {
+    const res = await axios.get(API_PATHS.company);
+    const data = res.data.data;
+    return data;
+});
+
+// fetchApi configuration
+// export const getCompany = createAsyncThunk('companys/getCompany', async () => {
+//     const res = await fetchApi(API_PATHS.company, 'get');
+//     const data = res.data;
 //     return data;
 // });
 
-export const getCompany = createAsyncThunk('companys/getCompany', async () => {
-    const res = await axios.get(API_PATHS.company);
+export const getCompanyFixerLogin = createAsyncThunk('companysFixer/getCompanyFixer', async () => {
+    const res = await axios.get(`${companyfixerLogin}/company`);
     const data = res.data.data;
     return data;
 });
@@ -44,10 +52,16 @@ const companySlice = createSlice({
         loginFailed: (state, action: PayloadAction<boolean>) => {
             state.loadingLogin = action.payload;
         },
+        logoutUser: (state) => {
+            Cookies.remove(ACCESS_TOKEN_KEY);
+        },
     },
     extraReducers(builder) {
         builder
             .addCase(getCompany.fulfilled, (state, action) => {
+                state.companyList = action.payload;
+            })
+            .addCase(getCompanyFixerLogin.fulfilled, (state, action) => {
                 state.companyList = action.payload;
             })
             .addMatcher<PendingAction>(
@@ -71,6 +85,6 @@ const companySlice = createSlice({
     },
 });
 
-export const { loginSuccess, loginFailed } = companySlice.actions;
+export const { loginSuccess, loginFailed, logoutUser } = companySlice.actions;
 
 export default companySlice.reducer;

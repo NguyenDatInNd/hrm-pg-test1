@@ -25,6 +25,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
         };
     }, [dispatch]);
 
+    console.log(companyList);
     // useForm
     const {
         register,

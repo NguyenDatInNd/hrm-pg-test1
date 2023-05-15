@@ -69,6 +69,7 @@
     border-radius: 6px !important;
     background-color: rgb(237, 246, 255) !important;
     min-width: 180px !important;
+    min-height: 43px !important ;
 }
 
 .tab-button:hover {
@@ -128,4 +129,24 @@ input[type='checkbox']:checked {
 .checkbox-root-color .Mui-checked {
     background-color: rgb(48, 164, 108) !important;
     border: 2px solid transparent !important;
+}
+
+// button create Employee
+.button-save-change {
+    color: rgb(251, 253, 255) !important;
+    font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
+    background-color: rgb(0, 145, 255) !important;
+    font-weight: 600 !important;
+    font-size: 1.3rem !important;
+    text-transform: none !important;
+    border-radius: 0.75rem !important;
+    height: 49px !important;
+    text-transform: capitalize !important;
+}
+
+.button-not-save-change {
+    color: rgb(124, 124, 124) !important;
+    font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
+    background-color: rgb(217, 217, 217) !important;
+    user-select: none !important;
 }

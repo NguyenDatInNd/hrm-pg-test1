@@ -58,3 +58,62 @@ export const links = [
         ],
     },
 ];
+
+export const gender = [
+    {
+        id: 0,
+        name: 'Male',
+        value: 0,
+    },
+    {
+        id: 1,
+        name: 'Female',
+        value: 1,
+    },
+];
+
+export const marriage = [
+    {
+        id: 0,
+        name: 'Married with one kid',
+        value: 0,
+    },
+    {
+        id: 1,
+        name: 'Signle',
+        value: 1,
+    },
+
+    {
+        id: 2,
+        name: 'Married',
+        value: 2,
+    },
+];
+
+export const employeeType = [
+    {
+        id: 1,
+        name: 'Parmanent',
+        code: 'MK01',
+        company_id: 1,
+        created_at: '2023-04-27T09:41:28.000000Z',
+        updated_at: null,
+    },
+    {
+        id: 2,
+        name: 'Part-time',
+        code: 'S01',
+        company_id: 1,
+        created_at: '2023-04-27T09:41:28.000000Z',
+        updated_at: null,
+    },
+    {
+        id: 3,
+        name: 'Contract',
+        code: 'M01',
+        company_id: 1,
+        created_at: '2023-04-27T09:41:28.000000Z',
+        updated_at: null,
+    },
+];

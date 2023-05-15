@@ -17,10 +17,7 @@ const loginPage = () => {
     // const navigate = useNavigate();
     const dispatch = useAppDispatch();
     dispatch(loginSuccess(false));
-
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
-    console.log(loadingLogin);
-
     const onLogin = async (value: IsLoginParam) => {
         try {
             const res = await axios.post(API_PATHS.signIn, {
@@ -56,7 +53,6 @@ const loginPage = () => {
                     </div>
                 </div>
             </div>
-            <Toaster position="top-right" reverseOrder={false} />
         </div>
     );
 };

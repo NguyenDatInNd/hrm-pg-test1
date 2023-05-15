@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,10 +8,13 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { BsCheckLg } from 'react-icons/bs';
+import { AiOutlineMinus } from 'react-icons/ai';
 import { EmployeeList } from '../../Types/employee';
 import './Employee.scss';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from '@mui/material';
+import { useAppDispatch } from '../../store';
+import { getIdEmployeeDelete } from '../Redux/employee.slice';
 interface EmployeddItemType {
     employeeList: EmployeeList;
 }
@@ -75,10 +78,11 @@ const columns: readonly Column[] = [
 ];
 
 const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [selectedRows, setSelectedRows] = useState<number[]>([]);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(18);
+    const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
     // handle change of page navigation
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -91,7 +95,6 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
     };
 
     // select row
-
     const handleRowSelect = (id: number) => {
         if (selectedRows.includes(id)) {
             setSelectedRows(selectedRows.filter((rowId: number) => rowId !== id));
@@ -107,6 +110,11 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
     const handleClearSelection = () => {
         setSelectedRows([]);
     };
+
+    // get list id Employee Deleted
+    useEffect(() => {
+        dispatch(getIdEmployeeDelete(selectedRows));
+    }, [dispatch, selectedRows]);
 
     // select item rows when selected
     const isRowSelected = (id: number) => selectedRows.includes(id);
@@ -142,14 +150,22 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                             type="checkbox"
                                             onChange={handleHeaderSelect}
                                             checked={
-                                                selectedRows.length === employeeList.data.length &&
-                                                employeeList.data.length > 0
+                                                // selectedRows.length === employeeList.data.length &&
+                                                // employeeList.data.length > 0
+                                                selectedRows.length > 0
                                             }
                                         />
                                         <span className="absolute">
                                             {selectedRows.length === employeeList.data.length &&
                                             employeeList.data.length > 0 ? (
                                                 <BsCheckLg size={18} className="icon-checked" />
+                                            ) : (
+                                                ''
+                                            )}
+
+                                            {selectedRows.length > 0 &&
+                                            selectedRows.length < employeeList.data.length ? (
+                                                <AiOutlineMinus size={12} className="icon-checked" />
                                             ) : (
                                                 ''
                                             )}
@@ -238,7 +254,7 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                             <TableCell>{row.card_number}</TableCell>
                                             <TableCell>{row.card_number}</TableCell>
                                             <TableCell>{row.department_name}</TableCell>
-                                            <TableCell>{row.department_id === 1 ? 'Permanent' : ''}</TableCell>
+                                            <TableCell>{row.department_id === 1 ? 'Permanent' : 'null'}</TableCell>
                                             <TableCell>{row.audit_salary}</TableCell>
                                             <TableCell>{row.position_name}</TableCell>
                                             <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
@@ -252,7 +268,7 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
+                    rowsPerPageOptions={[18, 25, 100]}
                     component="div"
                     count={employeeList.data.length}
                     rowsPerPage={rowsPerPage}
