@@ -12,12 +12,29 @@ type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
 type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 
 interface CompanyState {
-    user: User[];
+    user: User;
     loadingUser: boolean;
 }
 
 const initialState: CompanyState = {
-    user: [],
+    user: {
+        id: 0,
+        username: '',
+        email: '',
+        role_id: 0,
+        employee_id: null,
+        department_id: null,
+        company_id: 0,
+        register_token: '',
+        email_verified_at: null,
+        is_active: '',
+        created_at: '',
+        updated_at: '',
+        deleted_at: '',
+        department_name: '',
+        position_name: '',
+    },
+
     loadingUser: false,
 };
 

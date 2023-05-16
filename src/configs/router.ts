@@ -8,4 +8,5 @@ export const ROUTES = {
     login: '/login',
     signUp: '/sign-up',
     detail: '/detail',
+    setting: '/settings',
 };

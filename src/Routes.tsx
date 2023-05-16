@@ -11,6 +11,7 @@ const LoginPage = lazy(() => import('./modules/page/loginPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const EmployeePage = lazy(() => import('./pages/employee/EmployeeList'));
 const CreateOrUpdateEmployee = lazy(() => import('./pages/employee/CreateEmployee'));
+const Settings = lazy(() => import('./pages/Settings/Setting'));
 
 import { Header, SideBar } from './components/index';
 import { Toaster } from 'react-hot-toast';
@@ -52,6 +53,7 @@ export const RoutesConfig = () => {
                                 <Route path={ROUTES.employee} Component={EmployeePage} />
                                 <Route path={ROUTES.creatOrUpdate} Component={CreateOrUpdateEmployee} />
                                 <Route path={ROUTES.createUpdateId} Component={CreateOrUpdateEmployee} />
+                                <Route path={ROUTES.setting} Component={Settings} />
                             </Routes>
                         </Suspense>
                     </div>

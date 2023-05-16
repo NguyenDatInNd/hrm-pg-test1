@@ -104,10 +104,12 @@ const Header = () => {
                                         <div className="h-11 w-11 text-center bg-gray-200 font-semibold text-[18px] text-white rounded-full">
                                             t
                                         </div>
-                                        <h3 className="font-semibold text-3xl font-family">trieubuihai</h3>
+                                        <h3 className="font-semibold text-3xl font-family">{user?.username}</h3>
                                     </div>
                                     <div className="mt-5">
-                                        <p>Staff ID: </p>
+                                        <p>
+                                            Staff ID: <span className="font-semibold text-lg">{user?.email}</span>
+                                        </p>
                                     </div>
                                     <div className="mt-4">
                                         <Button onClick={handleOpenSecondModal} className="button-signout w-full">
@@ -115,7 +117,7 @@ const Header = () => {
                                         </Button>
                                     </div>
                                     <div className="mt-3 font-semibold font-resetpass mb-3">
-                                        <Link to="/">Reset Password</Link>
+                                        <Link to="/settings">Reset Password</Link>
                                     </div>
                                 </Box>
                             </Modal>
