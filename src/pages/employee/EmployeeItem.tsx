@@ -13,8 +13,10 @@ import { EmployeeList } from '../../Types/employee';
 import './Employee.scss';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from '@mui/material';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { getIdEmployeeDelete } from '../Redux/employee.slice';
+import IconNoData from '../../assets/nodata.svg';
+
 interface EmployeddItemType {
     employeeList: EmployeeList;
 }
@@ -80,6 +82,8 @@ const columns: readonly Column[] = [
 const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { employeeIddelete } = useAppSelector((state) => state.employee);
+
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(18);
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -118,6 +122,10 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
 
     // select item rows when selected
     const isRowSelected = (id: number) => selectedRows.includes(id);
+
+    console.log('select row', selectedRows);
+    console.log('employee row', employeeIddelete);
+
     return (
         <div className="w-min-table w-max-table overflow-auto mt-3">
             <Paper>
@@ -150,9 +158,8 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                             type="checkbox"
                                             onChange={handleHeaderSelect}
                                             checked={
-                                                // selectedRows.length === employeeList.data.length &&
-                                                // employeeList.data.length > 0
-                                                selectedRows.length > 0
+                                                employeeIddelete.length === employeeList.data.length ||
+                                                employeeIddelete.length > 0
                                             }
                                         />
                                         <span className="absolute">
@@ -162,8 +169,8 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                             ) : (
                                                 ''
                                             )}
-
                                             {selectedRows.length > 0 &&
+                                            employeeIddelete.length > 0 &&
                                             selectedRows.length < employeeList.data.length ? (
                                                 <AiOutlineMinus size={12} className="icon-checked" />
                                             ) : (
@@ -183,6 +190,7 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                 ))}
                             </TableRow>
                         </TableHead>
+
                         <TableBody>
                             {employeeList.data
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -266,6 +274,20 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                 })}
                         </TableBody>
                     </Table>
+
+                    {employeeList.data.length === 0 ? (
+                        <div className="w-full ">
+                            <div className="flex flex-col table-without-data items-center justify-center ">
+                                <img src={IconNoData} className="w-40" alt="" />
+                                <h3 className="font-semibold text-2xl mt-4">No data</h3>
+                                <p className="text-2xl mt-2 text-[#687076] font-medium">
+                                    Your record will be synced here once it ready
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        ''
+                    )}
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[18, 25, 100]}

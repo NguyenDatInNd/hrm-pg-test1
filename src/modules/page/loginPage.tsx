@@ -9,7 +9,7 @@ import { IsLoginParam } from '../../Types/auth';
 import axios from 'axios';
 import { API_PATHS } from '../../configs/api';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { loginFailed, loginSuccess } from '../../pages/Redux/company.slice';
 
@@ -29,7 +29,7 @@ const loginPage = () => {
             toast.success('Login Successfully');
 
             setTimeout(() => {
-                window.location.href = '/home';
+                window.location.href = '/employee';
             }, 500);
         } catch (error) {
             toast.error('Login Failed');

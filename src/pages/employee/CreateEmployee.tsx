@@ -13,7 +13,7 @@ import Box from '@mui/material/Box';
 import EmployeeInfomation from '../../components/EmployeeSplit/EmployeeInfomation';
 import { FormEmployeeInformation, FormContractEmployee } from '../../Types/employee';
 import { Button, SelectChangeEvent } from '@mui/material';
-import { addEmployee, changeValueFormEmployeeInfo } from '../Redux/employee.slice';
+import { addEmployee, changeValueFormEmployeeInfo, removeValueFormEmployeeInfo } from '../Redux/employee.slice';
 import ContactInfomation from '../../components/EmployeeSplit/ContactInfomation';
 import EmployeeDetails from '../../components/EmployeeSplit/EmployeeDetails';
 import EmployeeSalary from '../../components/EmployeeSplit/EmployeeSalary';
@@ -119,6 +119,12 @@ const CreateEmployee = () => {
         [dispatch],
     );
 
+    // handle add employee
+    const handleAddEmployee = () => {
+        dispatch(addEmployee());
+        dispatch(removeValueFormEmployeeInfo());
+    };
+
     console.log(employee);
 
     return (
@@ -136,24 +142,13 @@ const CreateEmployee = () => {
                                 Save Change
                             </Button>
                         ) : (
-                            // <button
-                            //     type="submit"
-                            //     className="h-20 w-56 text-[#fbfdff] font-semibold  bg-[#0081f1] rounded-xl"
-                            // >
-                            //     Save Change
-                            // </button>
                             <Button
-                                onClick={() => {
-                                    dispatch(addEmployee());
-                                }}
+                                onClick={handleAddEmployee}
                                 type="submit"
                                 className="h-20 w-32 button-save-change button-not-save-change"
                             >
                                 Add
                             </Button>
-                            // <button type="submit" className="h-20 w-32 text-gray-400 bg-gray-200 rounded-xl">
-                            //     Add
-                            // </button>
                         )}
                     </div>
                 </div>

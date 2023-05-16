@@ -121,3 +121,21 @@ export interface MarriageStatus {
     created_at: string;
     updated_at: string | null;
 }
+
+export interface Department {
+    id: number;
+    company_id: number;
+    code: string;
+    name: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Position {
+    id: number;
+    company_id: number;
+    code: string;
+    name: string;
+    created_at: string;
+    updated_at: string;
+}

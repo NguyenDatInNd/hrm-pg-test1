@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Input.scss';
 import { useAppDispatch } from '../../store';
-import { ChangeValueDateFormEmployeeInfo } from '../../pages/Redux/employee.slice';
+import { ChangeValueDateFormEmployeeInfo, changeValueFormContractDate } from '../../pages/Redux/employee.slice';
 import moment from 'moment-timezone';
 import datePicker from '../../assets/datePicker.svg';
 import { MdKeyboardArrowDown } from 'react-icons/md';
@@ -26,14 +26,23 @@ const Input = (props: PropsInput) => {
 
     const handleDateChange = (date: Date | null, event: React.SyntheticEvent<any> | undefined) => {
         const dateString = moment(date).format('YYYY/MM/DD');
-        dispatch(ChangeValueDateFormEmployeeInfo(dateString));
+        const formattedDate = dateString.replace(/\//g, '-');
+        if (name === 'dob') {
+            dispatch(ChangeValueDateFormEmployeeInfo(dateString));
+        } else if (name === 'contract_start_date') {
+            dispatch(changeValueFormContractDate(formattedDate));
+        }
+
         setSelectedDate(date);
     };
 
     return (
         <Box component="form" className="form" noValidate autoComplete="off">
             <div className="flex  items-center h-12">
-                <label htmlFor={label} className="font-normal !text-2xl min-w-[162px] flex">
+                <label
+                    htmlFor={label}
+                    className={`font-normal !text-2xl ${type === 'number' ? 'min-w-[220px]' : 'min-w-[162px]'}  flex`}
+                >
                     {label}
                     {isRequired ? <span className={`isRequired text-required font-normal `}>*</span> : ''}
                 </label>
@@ -48,15 +57,7 @@ const Input = (props: PropsInput) => {
                 /> */}
 
                 {/* Cách 2 : sử dụng date picker */}
-                {type === 'text' ? (
-                    <input
-                        type={type}
-                        onChange={onChange}
-                        value={value}
-                        name={name}
-                        className="input-type h-12 min-w-290 max-w-300 "
-                    />
-                ) : (
+                {type === 'date' ? (
                     <div className="relative">
                         <DatePicker
                             name={name}
@@ -73,6 +74,14 @@ const Input = (props: PropsInput) => {
                             <MdKeyboardArrowDown size={16} />
                         </span>
                     </div>
+                ) : (
+                    <input
+                        type={type}
+                        onChange={onChange}
+                        value={value}
+                        name={name}
+                        className="input-type h-12 min-w-290 max-w-300 "
+                    />
                 )}
             </div>
         </Box>

@@ -11,7 +11,6 @@ import { getCompanyFixerLogin } from '../../pages/Redux/company.slice';
 import { gender } from '../../context/dataLink';
 import { getMarriageList } from '../../pages/Redux/employee.slice';
 import SubTitleTable from '../Header/SubTitleTable';
-
 type PropsTabEmployee = {
     FormEmployeeInformation: FormEmployeeInformation;
     handleFormEmployeeChange?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;

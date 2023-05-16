@@ -23,6 +23,8 @@ export const API_PATHS = {
     company: 'api/company',
     employee: 'api/employee',
     marriage: 'api/marriage',
+    user: 'api/user',
+    useDetail: 'api/user/detail',
 
     API_FIXER: 'https://api-training.hrm.div4.pgtest.co/api/v1',
 

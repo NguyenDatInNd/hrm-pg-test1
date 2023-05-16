@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useAppDispatch } from '../../store';
+import { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store';
 import './Header.scss';
 import { loginSuccess, logoutUser } from '../../pages/Redux/company.slice';
 import logo from '../../assets/HRM_Logo.svg';
@@ -14,6 +14,7 @@ import { ROUTES } from '../../configs/router';
 import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import { redirect } from 'react-router-dom';
+import { getUserDetails, getUserList } from '../../pages/Redux/user.slice';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -31,10 +32,10 @@ const Header = () => {
     const navigate = useNavigate();
     const [openFirstModal, setOpenFirstModal] = useState(false);
     const [openSecondModal, setOpenSecondModal] = useState(false);
-    dispatch(loginSuccess(true));
-    const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
-    console.log(cookieValue);
 
+    const { user } = useAppSelector((state) => state.user);
+
+    dispatch(loginSuccess(true));
     const logOut = () => {
         dispatch(logoutUser());
         navigate(ROUTES.login);
@@ -53,6 +54,15 @@ const Header = () => {
     const handleCloseSecondModal = () => {
         setOpenSecondModal(false);
     };
+
+    useEffect(() => {
+        const promise = dispatch(getUserDetails());
+        return () => {
+            promise.abort();
+        };
+    }, [dispatch]);
+
+    console.log(user);
 
     return (
         <div className="w-full h-24 bg-white header-container">
