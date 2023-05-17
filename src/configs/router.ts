@@ -9,4 +9,5 @@ export const ROUTES = {
     signUp: '/sign-up',
     detail: '/detail',
     setting: '/settings',
+    forgotpassword: '/forgot-password',
 };

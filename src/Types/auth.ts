@@ -3,3 +3,7 @@ export type IsLoginParam = {
     password: string;
     company_id: number;
 };
+
+export interface IForgotPasswordParams {
+    email: string;
+}

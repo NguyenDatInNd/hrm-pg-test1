@@ -9,9 +9,10 @@ import { useAppSelector } from './store';
 
 const LoginPage = lazy(() => import('./modules/page/loginPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const EmployeePage = lazy(() => import('./pages/employee/EmployeeList'));
+const EmployeePage = lazy(() => import('./pages/employee/EmployeeListPage'));
 const CreateOrUpdateEmployee = lazy(() => import('./pages/employee/CreateEmployee'));
 const Settings = lazy(() => import('./pages/Settings/Setting'));
+const ForgotPassWord = lazy(() => import('./modules/page/ForgotPasswordPage'));
 
 import { Header, SideBar } from './components/index';
 import { Toaster } from 'react-hot-toast';
@@ -24,7 +25,7 @@ export const RoutesConfig = () => {
         <>
             <div>
                 <div className="flex relative flex-wrap dark:bg-main-dark-bg">
-                    {cookieValue ? (
+                    {loadingLogin ? (
                         <div className="">
                             <div style={{ zIndex: '101' }} className="w-full sidebar fixed">
                                 <Header />
@@ -42,7 +43,7 @@ export const RoutesConfig = () => {
                     )}
                     <div
                         className={`dark:bg-main-bg bg-main-bg min-h-screen w-full ${
-                            cookieValue ? 'md:ml-[325px]' : ''
+                            loadingLogin ? 'md:ml-[325px]' : ''
                         }`}
                     >
                         <Suspense fallback={<div>Loading.....</div>}>
@@ -54,6 +55,7 @@ export const RoutesConfig = () => {
                                 <Route path={ROUTES.creatOrUpdate} Component={CreateOrUpdateEmployee} />
                                 <Route path={ROUTES.createUpdateId} Component={CreateOrUpdateEmployee} />
                                 <Route path={ROUTES.setting} Component={Settings} />
+                                <Route path={ROUTES.forgotpassword} Component={ForgotPassWord} />
                             </Routes>
                         </Suspense>
                     </div>

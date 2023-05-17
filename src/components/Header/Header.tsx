@@ -14,7 +14,9 @@ import { ROUTES } from '../../configs/router';
 import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import { redirect } from 'react-router-dom';
-import { getUserDetails, getUserList } from '../../pages/Redux/user.slice';
+import { getUserDetails, getUserList, logoutUserPost } from '../../pages/Redux/user.slice';
+import axios from 'axios';
+import { API_PATHS } from '../../configs/api';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -36,9 +38,17 @@ const Header = () => {
     const { user } = useAppSelector((state) => state.user);
 
     dispatch(loginSuccess(true));
-    const logOut = () => {
+    const logOut = async () => {
+        // const res = await fetch(API_PATHS.logout, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}`,
+        //     },
+        // });
+        dispatch(logoutUserPost());
         dispatch(logoutUser());
-        navigate(ROUTES.login);
+        navigate('/login');
     };
 
     const handleOpenFirstModal = () => {

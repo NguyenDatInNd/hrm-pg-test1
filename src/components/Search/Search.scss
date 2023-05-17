@@ -1,0 +1,22 @@
+.search-action {
+    display: inline-flex;
+    flex-direction: row;
+    position: relative;
+    min-width: 0px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    margin: 0px;
+    border: 0px;
+    vertical-align: top;
+    max-width: 200px;
+    background: rgb(255, 255, 255);
+    line-height: 1.35714;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid rgba(214, 197, 197, 0.6);
+    align-items: center;
+}
+
+.search-action:hover {
+    border: 1px solid rgba(27, 22, 22, 0.6);
+}

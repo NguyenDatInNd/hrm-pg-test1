@@ -49,17 +49,6 @@ const Sidebar = () => {
                                     </div>
                                     <p className="ml-4 text-16  font-semibold tracking-wide ">{link.name}</p>
                                 </ListItemButton>
-
-                                {/* <span
-                                    className={
-                                        isRounderIcon === link.name
-                                            ? `rounded-full icon-padding icon_active`
-                                            : 'rounded-full icon-padding icon-rounder'
-                                    }
-                                >
-                                    <img src={link.icon} className="" alt="" />
-                                </span>
-                                <span className="capitalize">{link.name}</span> */}
                             </NavLink>
                         ))}
                     </div>

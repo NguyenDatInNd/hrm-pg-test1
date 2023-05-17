@@ -60,6 +60,7 @@ const Input = (props: PropsInput) => {
                 {type === 'date' ? (
                     <div className="relative">
                         <DatePicker
+                            // showYearDropdown
                             name={name}
                             selected={selectedDate}
                             onChange={handleDateChange}

@@ -5,20 +5,23 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { BsCheckLg } from 'react-icons/bs';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { EmployeeList } from '../../Types/employee';
 import './Employee.scss';
+
 import { useNavigate } from 'react-router-dom';
-import { Checkbox } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { getIdEmployeeDelete } from '../Redux/employee.slice';
 import IconNoData from '../../assets/nodata.svg';
-
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import { Typography } from '@mui/material';
 interface EmployeddItemType {
     employeeList: EmployeeList;
+    onChangePage: (keyword: string | '', page: number) => void;
+    currentPage: number;
 }
 interface Column {
     id:
@@ -79,24 +82,12 @@ const columns: readonly Column[] = [
     { id: 'Grading', label: 'Grading', minWidth: 100 },
 ];
 
-const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
+const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItemType) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { employeeIddelete } = useAppSelector((state) => state.employee);
 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(18);
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
-    // handle change of page navigation
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
 
     // select row
     const handleRowSelect = (id: number) => {
@@ -120,12 +111,12 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
         dispatch(getIdEmployeeDelete(selectedRows));
     }, [dispatch, selectedRows]);
 
+    const handleChangePagePanigation = (event: unknown, newPage: number) => {
+        onChangePage('', newPage);
+    };
+
     // select item rows when selected
     const isRowSelected = (id: number) => selectedRows.includes(id);
-
-    console.log('select row', selectedRows);
-    console.log('employee row', employeeIddelete);
-
     return (
         <div className="w-min-table w-max-table overflow-auto mt-3">
             <Paper>
@@ -192,31 +183,29 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                         </TableHead>
 
                         <TableBody>
-                            {employeeList.data
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={row.id}
-                                            selected={isRowSelected(row.id)}
-                                            onClick={() => handleRowSelect(row.id)}
-                                            onDoubleClick={() => {
-                                                console.log(row.id);
-                                                navigate(`/employee/create-or-update/${row.id}`);
-                                            }}
-                                            className={`cursor-pointer row-start-select  ${
-                                                isRowSelected(row.id) ? 'row-selected' : ''
-                                            } `}
-                                        >
-                                            <TableCell align="center">
-                                                <div
-                                                    onClick={() => handleRowSelect(row.id)}
-                                                    className="relative flex items-center justify-center"
-                                                >
-                                                    {/* <Checkbox
+                            {employeeList.data.map((row) => {
+                                return (
+                                    <TableRow
+                                        hover
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                        key={row.id}
+                                        selected={isRowSelected(row.id)}
+                                        onClick={() => handleRowSelect(row.id)}
+                                        onDoubleClick={() => {
+                                            console.log(row.id);
+                                            navigate(`/employee/create-or-update/${row.id}`);
+                                        }}
+                                        className={`cursor-pointer row-start-select  ${
+                                            isRowSelected(row.id) ? 'row-selected' : ''
+                                        } `}
+                                    >
+                                        <TableCell align="center">
+                                            <div
+                                                onClick={() => handleRowSelect(row.id)}
+                                                className="relative flex items-center justify-center"
+                                            >
+                                                {/* <Checkbox
                                                         color="primary"
                                                         onChange={() => handleRowSelect(row.id)}
                                                         checked={selectedRows.includes(row.id)}
@@ -225,53 +214,47 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                                                         }}
                                                     /> */}
 
-                                                    <input
-                                                        type="checkbox"
-                                                        onChange={() => handleRowSelect(row.id)}
-                                                        checked={selectedRows.includes(row.id)}
-                                                    />
-                                                    <span className="absolute">
-                                                        {selectedRows.includes(row.id) ? (
-                                                            <BsCheckLg size={18} className="icon-checked" />
-                                                        ) : (
-                                                            ''
-                                                        )}
-                                                    </span>
-                                                </div>
-
-                                                {/* <input
+                                                <input
                                                     type="checkbox"
                                                     onChange={() => handleRowSelect(row.id)}
                                                     checked={selectedRows.includes(row.id)}
-                                                /> */}
-                                            </TableCell>
-                                            <TableCell>{row.staff_id}</TableCell>
-                                            <TableCell>{row.name}</TableCell>
-                                            <TableCell>{row.gender === 1 ? 'Female' : 'Male'}</TableCell>
-                                            <TableCell>{row.card_number}</TableCell>
-                                            <TableCell>{row.bank_account_no}</TableCell>
-                                            <TableCell>{row.family_card_number}</TableCell>
-                                            <TableCell>{row.marriage_code}</TableCell>
-                                            <TableCell>{row.mother_name}</TableCell>
-                                            <TableCell>{row.pob}</TableCell>
-                                            <TableCell>{row.dob}</TableCell>
-                                            <TableCell>{row.home_address_1}</TableCell>
-                                            <TableCell>{row.nc_id}</TableCell>
-                                            <TableCell>{row.contract_start_date}</TableCell>
-                                            <TableCell>{row.contract_start_date}</TableCell>
-                                            <TableCell>{row.card_number}</TableCell>
-                                            <TableCell>{row.card_number}</TableCell>
-                                            <TableCell>{row.department_name}</TableCell>
-                                            <TableCell>{row.department_id === 1 ? 'Permanent' : 'null'}</TableCell>
-                                            <TableCell>{row.audit_salary}</TableCell>
-                                            <TableCell>{row.position_name}</TableCell>
-                                            <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
-                                            <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
-                                            <TableCell>{row.health_insurance}</TableCell>
-                                            <TableCell>{row.grade_name}</TableCell>
-                                        </TableRow>
-                                    );
-                                })}
+                                                />
+                                                <span className="absolute">
+                                                    {selectedRows.includes(row.id) ? (
+                                                        <BsCheckLg size={18} className="icon-checked" />
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>{row.staff_id}</TableCell>
+                                        <TableCell>{row.name}</TableCell>
+                                        <TableCell>{row.gender === 1 ? 'Female' : 'Male'}</TableCell>
+                                        <TableCell>{row.card_number}</TableCell>
+                                        <TableCell>{row.bank_account_no}</TableCell>
+                                        <TableCell>{row.family_card_number}</TableCell>
+                                        <TableCell>{row.marriage_code}</TableCell>
+                                        <TableCell>{row.mother_name}</TableCell>
+                                        <TableCell>{row.pob}</TableCell>
+                                        <TableCell>{row.dob}</TableCell>
+                                        <TableCell>{row.home_address_1}</TableCell>
+                                        <TableCell>{row.nc_id}</TableCell>
+                                        <TableCell>{row.contract_start_date}</TableCell>
+                                        <TableCell>{row.contract_start_date}</TableCell>
+                                        <TableCell>{row.card_number}</TableCell>
+                                        <TableCell>{row.card_number}</TableCell>
+                                        <TableCell>{row.department_name}</TableCell>
+                                        <TableCell>{row.department_id === 1 ? 'Permanent' : 'null'}</TableCell>
+                                        <TableCell>{row.audit_salary}</TableCell>
+                                        <TableCell>{row.position_name}</TableCell>
+                                        <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
+                                        <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
+                                        <TableCell>{row.health_insurance}</TableCell>
+                                        <TableCell>{row.grade_name}</TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
 
@@ -289,15 +272,27 @@ const EmployeeItem = ({ employeeList }: EmployeddItemType) => {
                         ''
                     )}
                 </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[18, 25, 100]}
-                    component="div"
-                    count={employeeList.data.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+
+                <div className="flex items-center mt-3  border-t border-gray-200 gap-3 Panigation-container">
+                    <div className="mt-3 mb-3">
+                        <Pagination
+                            className="Mui-container-pagination"
+                            page={currentPage}
+                            onChange={handleChangePagePanigation}
+                            size={'large'}
+                            shape={'rounded'}
+                            count={employeeList.last_page}
+                            showFirstButton
+                            showLastButton
+                        />
+                    </div>
+
+                    {employeeList && (
+                        <Typography className=" mt-3 mb-3">
+                            {employeeList.from} - {employeeList.to} of {employeeList.total}
+                        </Typography>
+                    )}
+                </div>
             </Paper>
         </div>
     );

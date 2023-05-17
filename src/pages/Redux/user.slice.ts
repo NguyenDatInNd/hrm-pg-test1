@@ -55,6 +55,28 @@ export const getUserDetails = createAsyncThunk('users/getUserDetails', async () 
     return data;
 });
 
+export const logoutUserPost = createAsyncThunk('users/logOut', async (_, body) => {
+    const res = await axios.post(API_PATHS.logout, body, {
+        headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
+    const data = res.data.data;
+    return data;
+});
+
+//
+export const forgotPassword = createAsyncThunk('user/forgot-password', async (email: string) => {
+    const payload = {
+        email: email,
+    };
+    const res = await axios.post(API_PATHS.forgotPassword, payload, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const data = res.data.data;
+    return data;
+});
+
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -63,6 +85,9 @@ const userSlice = createSlice({
         builder
             .addCase(getUserDetails.fulfilled, (state, action) => {
                 state.user = action.payload;
+            })
+            .addCase(logoutUserPost.fulfilled, (state, action) => {
+                // Cookies.remove(ACCESS_TOKEN_KEY);
             })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),

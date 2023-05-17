@@ -204,7 +204,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
                 </div>
 
                 <div className="d-flex flex-column mt-3 mb-4">
-                    <Link to="" className="text-center  text-primary">
+                    <Link to="/forgot-password" className="text-center  text-primary">
                         Forgot Your Password?
                     </Link>
                 </div>

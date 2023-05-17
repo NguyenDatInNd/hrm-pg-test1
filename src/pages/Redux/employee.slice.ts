@@ -23,7 +23,14 @@ interface EmployeeState {
     marriageList: MarriageStatus[];
     department: Department[];
     position: Position[];
+    searchValue: string;
     loadingEmployee: boolean;
+    employeeOriginal: EmployeeList;
+}
+
+interface EmployeeListParams {
+    keywordSearch?: string | null;
+    currentPage?: string | null;
 }
 
 interface Value {
@@ -107,10 +114,30 @@ const initialState: EmployeeState = {
         },
     ],
     employeeIddelete: [],
+    searchValue: '',
     marriageList: [],
     department: [],
     position: [],
     loadingEmployee: false,
+    employeeOriginal: {
+        current_page: 0,
+        data: [],
+        first_page_url: '',
+        from: 0,
+        last_page: 0,
+        last_page_url: '',
+        links: {
+            url: '',
+            label: '',
+            active: false,
+        },
+        next_page_url: '',
+        path: '',
+        per_page: 0,
+        prev_page_url: '',
+        to: 0,
+        total: 0,
+    },
 };
 
 //get API employeeList
@@ -121,6 +148,22 @@ export const getEmployeeList = createAsyncThunk('employees/getEmployees', async 
     const data = response.data.data;
     return data;
 });
+
+export const getEmployeeListSearch = createAsyncThunk(
+    'employees/getEmployeesSearch',
+    async ({ keywordSearch = '', currentPage = '' }: EmployeeListParams) => {
+        const response = await axios.get(API_PATHS.employee, {
+            params: {
+                search: keywordSearch,
+                page: currentPage,
+            },
+            headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+        });
+        const data = response.data.data;
+        return data;
+    },
+);
+
 // fetchApi configuration
 // export const getEmployeeList = createAsyncThunk('employees/getEmployees', async () => {
 //     const response = await fetchApi(API_PATHS.employee, 'get');
@@ -260,10 +303,26 @@ const employeeSlice = createSlice({
                 },
             ];
         },
+
+        // search filter
+        changeValueSearchEmployee: (state, action: PayloadAction<string>) => {
+            state.searchValue = action.payload;
+            if (state.searchValue === '') {
+                state.employeeList.data = state.employeeOriginal.data;
+            } else {
+                state.employeeList.data = state.employeeList.data.filter((employee) =>
+                    employee.name.includes(state.searchValue),
+                );
+            }
+        },
     },
     extraReducers(builder) {
         builder
             .addCase(getEmployeeList.fulfilled, (state, action) => {
+                state.employeeList = action.payload;
+                state.employeeOriginal = action.payload;
+            })
+            .addCase(getEmployeeListSearch.fulfilled, (state, action) => {
                 state.employeeList = action.payload;
             })
             .addCase(addEmployee.fulfilled, (state, action) => {
@@ -316,6 +375,7 @@ export const {
     getIdEmployeeDelete,
     changeValueFormContractDate,
     removeValueFormEmployeeInfo,
+    changeValueSearchEmployee,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

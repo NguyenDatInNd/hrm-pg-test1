@@ -1,21 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { loginSuccess } from '../Redux/company.slice';
 import SubHeader from '../../components/Header/SubHeader';
-import { BiSearch } from 'react-icons/bi';
 import { MdDeleteOutline } from 'react-icons/md';
 import './Employee.scss';
 import EmployeeItem from './EmployeeItem';
-import { deleteEmployeeEncode, getEmployeeList } from '../Redux/employee.slice';
-import { Link } from 'react-router-dom';
+import { deleteEmployeeEncode, getEmployeeList, getEmployeeListSearch } from '../Redux/employee.slice';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import addIcon from '../../assets/addIcon.svg';
 import ClearIcon from '@mui/icons-material/Clear';
-import deleteIcon from '../../assets/deleteIcon.svg';
-import deleteIconActive from '../../assets/deleteIconAction.svg';
+import { debounce } from 'lodash';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-
+import SearchEmployee from '../../components/Search/SearchEmployee';
+import { EmployeeList } from '../../Types/employee';
+import { unwrapResult } from '@reduxjs/toolkit';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -28,12 +28,16 @@ const style = {
     p: 4,
 };
 
-const EmployeeList = () => {
+const EmployeeListPage = () => {
     const dispatch = useAppDispatch();
     dispatch(loginSuccess(true));
-    // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
-    // console.log(cookieValue);
+    const navigate = useNavigate();
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const search = searchParams.get('search');
+    const page = searchParams.get('page');
+
     const { employeeList, employeeIddelete } = useAppSelector((state) => state.employee);
     const [openFirstModal, setOpenFirstModal] = React.useState(false);
 
@@ -44,8 +48,6 @@ const EmployeeList = () => {
             promise.abort();
         };
     }, [dispatch]);
-
-    console.log(employeeIddelete);
 
     const handleOpenFirstModal = () => {
         setOpenFirstModal(true);
@@ -63,21 +65,50 @@ const EmployeeList = () => {
         }
     };
 
+    // get data table in employeeList Search
+    const [dataTables, setDataTables] = useState<EmployeeList>(employeeList);
+
+    useEffect(() => {
+        setDataTables(employeeList);
+    }, [employeeList]);
+
+    const getDataEmployeeList = useCallback(
+        async (keywordSearch: string | null, currentPage: string | null) => {
+            const resultAction = await dispatch(getEmployeeListSearch({ keywordSearch, currentPage }));
+            unwrapResult(resultAction);
+        },
+        [dispatch],
+    );
+
+    useEffect(() => {
+        (async () => {
+            getDataEmployeeList(search, page);
+        })();
+    }, [search, page, getDataEmployeeList]);
+
+    const handleSearchEmployee = debounce((keyword: string | '', page?: number) => {
+        const queryParams: { search?: string; page: string } = keyword
+            ? {
+                  search: keyword,
+                  page: '1',
+              }
+            : {
+                  page: String(page ? page : dataTables.current_page),
+              };
+
+        const searchParams = new URLSearchParams(queryParams);
+        navigate({
+            pathname: '/employee',
+            search: `${searchParams}`,
+        });
+    }, 250);
+
     return (
         <div className="mt-36 px-16">
             <div className="relative">
                 <SubHeader category="General" title="Employee Management" subtitle={null} />
                 <div className="search-employee absolute top-14 right-0">
-                    <form action="">
-                        <div className="search-action">
-                            <div>
-                                <BiSearch size={17} />
-                            </div>
-                            <div className="ml-2">
-                                <input type="text" className="" placeholder="Search..." />
-                            </div>
-                        </div>
-                    </form>
+                    <SearchEmployee search={search} onSearchEmployee={handleSearchEmployee} />
                 </div>
             </div>
 
@@ -105,8 +136,11 @@ const EmployeeList = () => {
                             </Button>
                         </div>
                     </div>
-                    <EmployeeItem employeeList={employeeList} />
-                    {/* employeeList={employeeList} */}
+                    <EmployeeItem
+                        employeeList={employeeList}
+                        onChangePage={handleSearchEmployee}
+                        currentPage={Number(page)}
+                    />
                 </div>
             </div>
 
@@ -149,4 +183,4 @@ const EmployeeList = () => {
         </div>
     );
 };
-export default EmployeeList;
+export default EmployeeListPage;

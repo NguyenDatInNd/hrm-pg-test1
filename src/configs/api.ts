@@ -25,6 +25,8 @@ export const API_PATHS = {
     marriage: 'api/marriage',
     user: 'api/user',
     useDetail: 'api/user/detail',
+    logout: 'api/logout',
+    forgotPassword: 'api/forgot-password',
 
     API_FIXER: 'https://api-training.hrm.div4.pgtest.co/api/v1',
 
