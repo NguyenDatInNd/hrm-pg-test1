@@ -11,13 +11,19 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import EmployeeInfomation from '../../components/EmployeeSplit/EmployeeInfomation';
-import { FormEmployeeInformation, FormContractEmployee } from '../../Types/employee';
+import {
+    FormEmployeeInformation,
+    FormContractEmployee,
+    FormSalaryEmployee,
+    FormDetailsEmployee,
+} from '../../Types/employee';
 import { Button, SelectChangeEvent } from '@mui/material';
 import { addEmployee, changeValueFormEmployeeInfo, removeValueFormEmployeeInfo } from '../Redux/employee.slice';
 import ContactInfomation from '../../components/EmployeeSplit/ContactInfomation';
 import EmployeeDetails from '../../components/EmployeeSplit/EmployeeDetails';
 import EmployeeSalary from '../../components/EmployeeSplit/EmployeeSalary';
 import EmployeeOthers from '../../components/EmployeeSplit/EmployeeOthers';
+import Copyright from '../../components/Copyright';
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -91,8 +97,23 @@ const CreateEmployee = () => {
     // state contract information form
     const [formContractEmployee, setFormContractEmployee] = useState<FormContractEmployee>({
         contract_start_date: '',
-        employee_id: '',
+        type: '',
         contract: [],
+    });
+
+    // state employee Salary information
+    const [formSalaryEmployee, setFormSalaryEmployee] = useState<FormSalaryEmployee>({
+        basic_salary: 0,
+        audit_salary: 0,
+        safety_insurance: 0,
+        health_insurance: 0,
+        meal_allowance: 0,
+    });
+
+    // state employee detail information
+    const [formDetailEmployee, setFormDetailEmployee] = useState<FormDetailsEmployee>({
+        department_id: '',
+        position_id: '',
     });
 
     // handle Add employee information Submitted
@@ -114,6 +135,30 @@ const CreateEmployee = () => {
             let value: any;
             value = e.target.value;
             setFormContractEmployee((prevValues) => ({ ...prevValues, [name]: value }));
+            dispatch(changeValueFormEmployeeInfo({ name, value }));
+        },
+        [dispatch],
+    );
+
+    // handle Add Salary Employee Information Submitted
+    const handleFormSalaryChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
+            const { name } = e.target;
+            let value: any;
+            value = e.target.value;
+            setFormSalaryEmployee((prevValues) => ({ ...prevValues, [name]: value }));
+            dispatch(changeValueFormEmployeeInfo({ name, value }));
+        },
+        [dispatch],
+    );
+
+    // handle  Add Detail Employee Information Submitted
+    const handleFormDetailChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
+            const { name } = e.target;
+            let value: any;
+            value = e.target.value;
+            setFormDetailEmployee((prevValues) => ({ ...prevValues, [name]: value }));
             dispatch(changeValueFormEmployeeInfo({ name, value }));
         },
         [dispatch],
@@ -185,10 +230,16 @@ const CreateEmployee = () => {
                                 />
                             </TabPanel>
                             <TabPanel value={value} index={2}>
-                                <EmployeeDetails />
+                                <EmployeeDetails
+                                    formDetailEmployee={formDetailEmployee}
+                                    handleFormDetailChange={handleFormDetailChange}
+                                />
                             </TabPanel>
                             <TabPanel value={value} index={3}>
-                                <EmployeeSalary />
+                                <EmployeeSalary
+                                    formSalaryEmployee={formSalaryEmployee}
+                                    handleFormSalaryChange={handleFormSalaryChange}
+                                />
                             </TabPanel>
                             <TabPanel value={value} index={4}>
                                 <EmployeeOthers />
@@ -198,9 +249,7 @@ const CreateEmployee = () => {
                 </div>
             </Box>
 
-            <div className="mt-5 mb-5">
-                <p className="fs-6 font-semibold text-gray-500 text-center">Copyright © 2022. All Rights Reserved</p>
-            </div>
+            <Copyright />
         </div>
     );
 };

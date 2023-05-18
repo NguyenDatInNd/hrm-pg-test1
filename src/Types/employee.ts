@@ -109,10 +109,23 @@ export interface FormEmployeeInformation {
 // from contract information
 export interface FormContractEmployee {
     contract_start_date: string;
-    employee_id: string;
+    type: string;
     contract: Contract[];
 }
-//
+// from employee Salary information
+export interface FormSalaryEmployee {
+    basic_salary: number;
+    audit_salary: number;
+    safety_insurance: number;
+    health_insurance: number;
+    meal_allowance: number;
+}
+// form employee details
+export interface FormDetailsEmployee {
+    department_id: string;
+    position_id: string;
+}
+
 export interface MarriageStatus {
     id: number;
     name: string;

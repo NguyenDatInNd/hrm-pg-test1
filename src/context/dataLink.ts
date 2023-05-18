@@ -93,7 +93,7 @@ export const marriage = [
 
 export const employeeType = [
     {
-        id: 1,
+        id: '0',
         name: 'Parmanent',
         code: 'MK01',
         company_id: 1,
@@ -101,7 +101,7 @@ export const employeeType = [
         updated_at: null,
     },
     {
-        id: 2,
+        id: '1',
         name: 'Part-time',
         code: 'S01',
         company_id: 1,
@@ -109,7 +109,7 @@ export const employeeType = [
         updated_at: null,
     },
     {
-        id: 3,
+        id: '2',
         name: 'Contract',
         code: 'M01',
         company_id: 1,

@@ -5,6 +5,7 @@ import './LoginForm.scss';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { IForgotPasswordParams } from '../../../Types/auth';
+import Copyright from '../../../components/Copyright';
 
 type IForgotPasswordType = {
     handleForgotPassword(values: IForgotPasswordParams): void;
@@ -104,9 +105,7 @@ const ForgotPassword = ({ handleForgotPassword }: IForgotPasswordType) => {
                             </div>
                         </div>
 
-                        <div className="mt-4">
-                            <p className="fs-5">Copyright © 2023. All Rights Reserved</p>
-                        </div>
+                        <Copyright />
                     </div>
                 </div>
             </div>

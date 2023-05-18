@@ -25,7 +25,6 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
         };
     }, [dispatch]);
 
-    console.log(companyList);
     // useForm
     const {
         register,
@@ -52,7 +51,6 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     // handleShowPass
     const handleShowPassword = (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
         e.preventDefault();
-
         setIsShowPassWord((prev) => !prev);
     };
 

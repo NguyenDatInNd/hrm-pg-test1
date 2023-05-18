@@ -86,6 +86,7 @@ const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItem
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { employeeIddelete } = useAppSelector((state) => state.employee);
+    const [loadingSniper, setLoadingSniper] = useState(true);
 
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -113,23 +114,41 @@ const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItem
 
     const handleChangePagePanigation = (event: unknown, newPage: number) => {
         onChangePage('', newPage);
+        setLoadingSniper(true);
     };
+    setTimeout(() => {
+        setLoadingSniper(false);
+    }, 500);
 
     // select item rows when selected
     const isRowSelected = (id: number) => selectedRows.includes(id);
+
+    // handle change value employee_id
+    const handleChangeValuEmployeeType = (value: string) => {
+        if (value === '0') {
+            return 'Parmanent';
+        } else if (value === '1') {
+            return 'Part-time';
+        } else if (value === '2') {
+            return 'Contract';
+        }
+        return 'Unknown';
+    };
+
     return (
         <div className="w-min-table w-max-table overflow-auto mt-3">
             <Paper>
-                <TableContainer className=" h-[73vh]">
-                    <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">
-                                    <div
-                                        onClick={handleHeaderSelect}
-                                        className="relative flex items-center justify-center"
-                                    >
-                                        {/* <Checkbox
+                <div className="relative">
+                    <TableContainer className=" h-[73vh]">
+                        <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="center">
+                                        <div
+                                            onClick={handleHeaderSelect}
+                                            className="relative flex items-center justify-center"
+                                        >
+                                            {/* <Checkbox
                                             color="primary"
                                             checked={
                                                 selectedRows.length > 0 &&
@@ -145,67 +164,65 @@ const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItem
                                             }}
                                             className="checkbox-root-color"
                                         /> */}
-                                        <input
-                                            type="checkbox"
-                                            onChange={handleHeaderSelect}
-                                            checked={
-                                                employeeIddelete.length === employeeList.data.length ||
-                                                employeeIddelete.length > 0
-                                            }
-                                        />
-                                        <span className="absolute">
-                                            {selectedRows.length === employeeList.data.length &&
-                                            employeeList.data.length > 0 ? (
-                                                <BsCheckLg size={18} className="icon-checked" />
-                                            ) : (
-                                                ''
-                                            )}
-                                            {selectedRows.length > 0 &&
-                                            employeeIddelete.length > 0 &&
-                                            selectedRows.length < employeeList.data.length ? (
-                                                <AiOutlineMinus size={12} className="icon-checked" />
-                                            ) : (
-                                                ''
-                                            )}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{ minWidth: column.minWidth }}
-                                    >
-                                        {column.label}
+                                            <input
+                                                type="checkbox"
+                                                onChange={handleHeaderSelect}
+                                                checked={employeeIddelete.length > 0}
+                                            />
+                                            <span className="absolute">
+                                                {employeeIddelete.length === employeeList.data.length &&
+                                                employeeList.data.length > 0 ? (
+                                                    <BsCheckLg size={18} className="icon-checked" />
+                                                ) : (
+                                                    ''
+                                                )}
+                                                {selectedRows.length > 0 &&
+                                                employeeIddelete.length > 0 &&
+                                                selectedRows.length < employeeList.data.length ? (
+                                                    <AiOutlineMinus size={12} className="icon-checked" />
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </span>
+                                        </div>
                                     </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
+                                    {columns.map((column) => (
+                                        <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                            style={{ minWidth: column.minWidth }}
+                                        >
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
 
-                        <TableBody>
-                            {employeeList.data.map((row) => {
-                                return (
-                                    <TableRow
-                                        hover
-                                        role="checkbox"
-                                        tabIndex={-1}
-                                        key={row.id}
-                                        selected={isRowSelected(row.id)}
-                                        onClick={() => handleRowSelect(row.id)}
-                                        onDoubleClick={() => {
-                                            console.log(row.id);
-                                            navigate(`/employee/create-or-update/${row.id}`);
-                                        }}
-                                        className={`cursor-pointer row-start-select  ${
-                                            isRowSelected(row.id) ? 'row-selected' : ''
-                                        } `}
-                                    >
-                                        <TableCell align="center">
-                                            <div
-                                                onClick={() => handleRowSelect(row.id)}
-                                                className="relative flex items-center justify-center"
-                                            >
-                                                {/* <Checkbox
+                            <TableBody>
+                                {employeeList.data.map((row) => {
+                                    console.log('Day la row', row.employee_id);
+                                    return (
+                                        <TableRow
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={row.id}
+                                            selected={isRowSelected(row.id)}
+                                            onClick={() => handleRowSelect(row.id)}
+                                            onDoubleClick={() => {
+                                                console.log(row.id);
+                                                navigate(`/employee/create-or-update/${row.id}`);
+                                            }}
+                                            className={`cursor-pointer row-start-select  ${
+                                                isRowSelected(row.id) ? 'row-selected' : ''
+                                            } `}
+                                        >
+                                            <TableCell align="center">
+                                                <div
+                                                    onClick={() => handleRowSelect(row.id)}
+                                                    className="relative flex items-center justify-center"
+                                                >
+                                                    {/* <Checkbox
                                                         color="primary"
                                                         onChange={() => handleRowSelect(row.id)}
                                                         checked={selectedRows.includes(row.id)}
@@ -214,64 +231,76 @@ const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItem
                                                         }}
                                                     /> */}
 
-                                                <input
-                                                    type="checkbox"
-                                                    onChange={() => handleRowSelect(row.id)}
-                                                    checked={selectedRows.includes(row.id)}
-                                                />
-                                                <span className="absolute">
-                                                    {selectedRows.includes(row.id) ? (
-                                                        <BsCheckLg size={18} className="icon-checked" />
-                                                    ) : (
-                                                        ''
-                                                    )}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>{row.staff_id}</TableCell>
-                                        <TableCell>{row.name}</TableCell>
-                                        <TableCell>{row.gender === 1 ? 'Female' : 'Male'}</TableCell>
-                                        <TableCell>{row.card_number}</TableCell>
-                                        <TableCell>{row.bank_account_no}</TableCell>
-                                        <TableCell>{row.family_card_number}</TableCell>
-                                        <TableCell>{row.marriage_code}</TableCell>
-                                        <TableCell>{row.mother_name}</TableCell>
-                                        <TableCell>{row.pob}</TableCell>
-                                        <TableCell>{row.dob}</TableCell>
-                                        <TableCell>{row.home_address_1}</TableCell>
-                                        <TableCell>{row.nc_id}</TableCell>
-                                        <TableCell>{row.contract_start_date}</TableCell>
-                                        <TableCell>{row.contract_start_date}</TableCell>
-                                        <TableCell>{row.card_number}</TableCell>
-                                        <TableCell>{row.card_number}</TableCell>
-                                        <TableCell>{row.department_name}</TableCell>
-                                        <TableCell>{row.department_id === 1 ? 'Permanent' : 'null'}</TableCell>
-                                        <TableCell>{row.audit_salary}</TableCell>
-                                        <TableCell>{row.position_name}</TableCell>
-                                        <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
-                                        <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
-                                        <TableCell>{row.health_insurance}</TableCell>
-                                        <TableCell>{row.grade_name}</TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                                                    <input
+                                                        type="checkbox"
+                                                        onChange={() => handleRowSelect(row.id)}
+                                                        checked={
+                                                            selectedRows.includes(row.id) &&
+                                                            employeeIddelete.includes(row.id)
+                                                        }
+                                                    />
+                                                    <span className="absolute">
+                                                        {selectedRows.includes(row.id) ? (
+                                                            <BsCheckLg size={18} className="icon-checked" />
+                                                        ) : (
+                                                            ''
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>{row.staff_id}</TableCell>
+                                            <TableCell>{row.name}</TableCell>
+                                            <TableCell>{row.gender === 1 ? 'Female' : 'Male'}</TableCell>
+                                            <TableCell>{row.card_number}</TableCell>
+                                            <TableCell>{row.bank_account_no}</TableCell>
+                                            <TableCell>{row.family_card_number}</TableCell>
+                                            <TableCell>{row.marriage_code}</TableCell>
+                                            <TableCell>{row.mother_name}</TableCell>
+                                            <TableCell>{row.pob}</TableCell>
+                                            <TableCell>{row.dob}</TableCell>
+                                            <TableCell>{row.home_address_1}</TableCell>
+                                            <TableCell>{row.nc_id}</TableCell>
+                                            <TableCell>{row.contract_start_date}</TableCell>
+                                            <TableCell>{row.contract_start_date}</TableCell>
+                                            <TableCell>{row.card_number}</TableCell>
+                                            <TableCell>{row.card_number}</TableCell>
+                                            <TableCell>{row.department_name}</TableCell>
+                                            <TableCell>{handleChangeValuEmployeeType(row.type)}</TableCell>
+                                            <TableCell>{row.audit_salary}</TableCell>
+                                            <TableCell>{row.position_name}</TableCell>
+                                            <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
+                                            <TableCell>{row.attendance_allowance_paid === 1 ? 'Yes' : 'No'}</TableCell>
+                                            <TableCell>{row.health_insurance}</TableCell>
+                                            <TableCell>{row.grade_name}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
 
-                    {employeeList.data.length === 0 ? (
-                        <div className="w-full ">
-                            <div className="flex flex-col table-without-data items-center justify-center ">
-                                <img src={IconNoData} className="w-40" alt="" />
-                                <h3 className="font-semibold text-2xl mt-4">No data</h3>
-                                <p className="text-2xl mt-2 text-[#687076] font-medium">
-                                    Your record will be synced here once it ready
-                                </p>
+                        {employeeList.data.length === 0 ? (
+                            <div className="w-full ">
+                                <div className="flex flex-col table-without-data items-center justify-center ">
+                                    <img src={IconNoData} className="w-40" alt="" />
+                                    <h3 className="font-semibold text-2xl mt-4">No data</h3>
+                                    <p className="text-2xl mt-2 text-[#687076] font-medium">
+                                        Your record will be synced here once it ready
+                                    </p>
+                                </div>
                             </div>
+                        ) : (
+                            ''
+                        )}
+                    </TableContainer>
+
+                    {loadingSniper ? (
+                        <div className="absolute flex top-50 left-1/2 items-center justify-center">
+                            <div className="w-12 h-12 border-2 border-blue-700 border-solid rounded-full  animate-spin border-t-transparent"></div>
                         </div>
                     ) : (
                         ''
                     )}
-                </TableContainer>
+                </div>
 
                 <div className="flex items-center mt-3  border-t border-gray-200 gap-3 Panigation-container">
                     <div className="mt-3 mb-3">

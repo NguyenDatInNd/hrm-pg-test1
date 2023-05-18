@@ -16,6 +16,7 @@ import Box from '@mui/material/Box';
 import SearchEmployee from '../../components/Search/SearchEmployee';
 import { EmployeeList } from '../../Types/employee';
 import { unwrapResult } from '@reduxjs/toolkit';
+import Copyright from '../../components/Copyright';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -56,9 +57,26 @@ const EmployeeListPage = () => {
         setOpenFirstModal(false);
     };
 
+    // delete table
     const handleDeleteEmploy = () => {
         try {
+            const updatePage =
+                Number(page) === dataTables.last_page && employeeIddelete.length === dataTables.data.length
+                    ? Number(page) - 1
+                    : page;
+
+            const queryParams = {
+                page: String(updatePage),
+            };
+            const searchParams = new URLSearchParams(queryParams);
+            navigate({
+                pathname: '/employee',
+                search: `${searchParams}`,
+            });
             dispatch(deleteEmployeeEncode(employeeIddelete));
+            setTimeout(() => {
+                getDataEmployeeList(search, page);
+            }, 250);
             setOpenFirstModal(false);
         } catch (error) {
             console.log(error);
@@ -85,7 +103,6 @@ const EmployeeListPage = () => {
             getDataEmployeeList(search, page);
         })();
     }, [search, page, getDataEmployeeList]);
-
     const handleSearchEmployee = debounce((keyword: string | '', page?: number) => {
         const queryParams: { search?: string; page: string } = keyword
             ? {
@@ -101,7 +118,7 @@ const EmployeeListPage = () => {
             pathname: '/employee',
             search: `${searchParams}`,
         });
-    }, 250);
+    }, 500);
 
     return (
         <div className="mt-36 px-16">
@@ -144,9 +161,7 @@ const EmployeeListPage = () => {
                 </div>
             </div>
 
-            <div className="mt-5 mb-5">
-                <p className="fs-6 font-semibold text-gray-500 text-center">Copyright © 2022. All Rights Reserved</p>
-            </div>
+            <Copyright />
 
             <div>
                 <Modal

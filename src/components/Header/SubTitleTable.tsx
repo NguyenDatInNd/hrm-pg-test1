@@ -13,12 +13,17 @@ const SubTitleTable = ({ category, title }: subTitleTable) => {
                 <div>
                     <h3 className="font-semibold text-[1.75rem] -ml-1">{category}</h3>
                 </div>
-                <div className="-mr-1">
-                    <span className="font-medium text-[#687076] text-[1.35rem] ">{title}</span>
-                    <span className="font-medium text-xl">
-                        (<span className="text-[#E5484D] text-2xl">*</span>){' '}
-                    </span>
-                </div>
+
+                {title ? (
+                    <div className="-mr-1">
+                        <span className="font-medium text-[#687076] text-[1.35rem] ">{title}</span>
+                        <span className="font-medium text-xl">
+                            (<span className="text-[#E5484D] text-2xl">*</span>){' '}
+                        </span>
+                    </div>
+                ) : (
+                    ''
+                )}
             </div>
         </div>
     );

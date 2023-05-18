@@ -12,9 +12,7 @@ export interface ISearchEmployeeProps {
 const SearchEmployee = ({ onSearchEmployee, search }: ISearchEmployeeProps) => {
     const dispatch = useAppDispatch();
     const [value, setValue] = useState<string>(search || '');
-
     const { searchValue } = useAppSelector((state) => state.employee);
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // const { value } = e.target;
         // setValue(value);
@@ -23,9 +21,6 @@ const SearchEmployee = ({ onSearchEmployee, search }: ISearchEmployeeProps) => {
         setValue(value);
         onSearchEmployee(value);
     };
-
-    console.log(searchValue);
-
     return (
         <div className="search-action">
             <div>

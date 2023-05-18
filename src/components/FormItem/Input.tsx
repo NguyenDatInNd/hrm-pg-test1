@@ -14,13 +14,14 @@ type PropsInput = {
     isRequired?: boolean;
     name: string;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-    value: string;
+    value: string | number;
     type: string;
+    isRp?: boolean;
 };
 
 const Input = (props: PropsInput) => {
     const dispatch = useAppDispatch();
-    const { label, onChange, value, name, isRequired, type } = props;
+    const { label, onChange, value, name, isRp, isRequired, type } = props;
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -75,14 +76,31 @@ const Input = (props: PropsInput) => {
                             <MdKeyboardArrowDown size={16} />
                         </span>
                     </div>
+                ) : isRp ? (
+                    <div className="relative flex items-center">
+                        <span style={{ zIndex: 20 }} className="absolute text-2xl text-[#006adc] font-medium  left-4">
+                            Rp
+                        </span>
+
+                        <input
+                            style={{ zIndex: 10 }}
+                            type={type}
+                            onChange={onChange}
+                            value={value}
+                            name={name}
+                            className="input-type !text-2xl !pl-14 h-12 min-w-290 max-w-300 "
+                        />
+                    </div>
                 ) : (
-                    <input
-                        type={type}
-                        onChange={onChange}
-                        value={value}
-                        name={name}
-                        className="input-type h-12 min-w-290 max-w-300 "
-                    />
+                    <div className="flex flex-col">
+                        <input
+                            type={type}
+                            onChange={onChange}
+                            value={value}
+                            name={name}
+                            className="input-type h-12 min-w-290 max-w-300 "
+                        />
+                    </div>
                 )}
             </div>
         </Box>

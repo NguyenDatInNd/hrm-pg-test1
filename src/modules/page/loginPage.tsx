@@ -12,6 +12,7 @@ import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import toast from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { loginFailed, loginSuccess } from '../../pages/Redux/company.slice';
+import Copyright from '../../components/Copyright';
 
 const loginPage = () => {
     // const navigate = useNavigate();
@@ -47,9 +48,7 @@ const loginPage = () => {
                             <LoginForm onLogin={onLogin} />
                         </div>
 
-                        <div className="mt-4">
-                            <p className="fs-5">Copyright © 2023. All Rights Reserved</p>
-                        </div>
+                        <Copyright />
                     </div>
                 </div>
             </div>

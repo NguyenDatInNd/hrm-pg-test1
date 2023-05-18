@@ -11,6 +11,7 @@ import { getCompanyFixerLogin } from '../../pages/Redux/company.slice';
 import { gender } from '../../context/dataLink';
 import { getMarriageList } from '../../pages/Redux/employee.slice';
 import SubTitleTable from '../Header/SubTitleTable';
+import InputTest from '../FormItem/InputTest';
 type PropsTabEmployee = {
     FormEmployeeInformation: FormEmployeeInformation;
     handleFormEmployeeChange?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
@@ -57,7 +58,7 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     ) : (
                         <></>
                     )}
-                    <Input
+                    <InputTest
                         type="text"
                         value={FormEmployeeInformation.name}
                         name="name"

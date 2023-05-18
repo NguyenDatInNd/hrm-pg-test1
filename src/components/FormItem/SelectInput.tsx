@@ -10,7 +10,7 @@ type PropsSelect = {
     label: string;
     placeholder?: string;
     isRequired?: boolean;
-    value?: string;
+    value?: string | any;
     onChange?: (event: SelectChangeEvent) => void;
     name: string;
     isNa?: boolean;

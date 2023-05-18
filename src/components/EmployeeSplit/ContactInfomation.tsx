@@ -31,7 +31,7 @@ const ContactInfomation = (props: PropsTabEmployee) => {
                     label="Employee Type"
                     placeholder="Choose Type"
                     isRequired={true}
-                    value={formContractEmployee.employee_id}
+                    value={formContractEmployee.type}
                     onChange={handleFormContractChange}
                     name="employee_id"
                     isType
