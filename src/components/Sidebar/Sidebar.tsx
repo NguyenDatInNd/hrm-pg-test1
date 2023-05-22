@@ -11,7 +11,7 @@ const Sidebar = () => {
     // const normalLink =
     //     'flex items-center gap-4 pl-4 py-3 rounded-xl text-md text-gray-700 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2';
     const activeLink =
-        'flex items-center gap-[10px] rounded-xl text-md mb-[10px] bg-active-link  hover:bg-bgrHoverActive transition-all';
+        'flex items-center gap-[10px] rounded-xl text-md mb-[10px] bg-active-link bh-[#ffffff]  hover:bg-bgrHoverActive transition-all';
     const normalLink = 'flex items-center gap-[10px] rounded-xl transition-all text-md hover:bg-bgrHover  mb-[10px] ';
     return (
         <div className="pl-12 pr-8 text-2xl font-medium h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">

@@ -72,6 +72,22 @@
     min-height: 43px !important ;
 }
 
+.tab-button-error {
+    font-size: 14px !important;
+    text-transform: capitalize !important;
+    font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
+    padding: 3px 8px !important;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    color: rgb(0, 145, 255) !important;
+    box-shadow: none !important;
+    border-radius: 6px !important;
+    background-color: rgb(237, 246, 255) !important;
+    min-width: 180px !important;
+    min-height: 43px !important ;
+}
+
 .tab-button:hover {
     background-color: rgba(0, 145, 255, 0.08) !important;
 }
@@ -80,6 +96,13 @@
     background-color: rgb(0, 145, 255) !important;
 }
 
+.tab-button-error.Mui-selected {
+    color: white !important;
+    background-color: rgb(229, 72, 77) !important;
+}
+.tab-button-error:hover {
+    background-color: rgba(0, 145, 255, 0.08) !important;
+}
 .MuiTabs-indicator .css-1aquho2-MuiTabs-indicator {
     display: none !important;
 }
@@ -143,12 +166,20 @@ input[type='checkbox']:checked {
     height: 49px !important;
     text-transform: capitalize !important;
 }
-
+.button-save-change:hover {
+    background-color: rgb(0, 129, 241) !important;
+}
 .button-not-save-change {
-    color: rgb(124, 124, 124) !important;
+    color: rgba(193, 200, 205, 0.8) !important;
     font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
-    background-color: rgb(217, 217, 217) !important;
+    background-color: rgba(193, 200, 205, 0.24) !important;
     user-select: none !important;
+    font-weight: 600 !important;
+    font-size: 1.3rem !important;
+    text-transform: none !important;
+    border-radius: 0.75rem !important;
+    height: 49px !important;
+    text-transform: capitalize !important;
 }
 
 // button

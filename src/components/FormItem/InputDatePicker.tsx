@@ -17,13 +17,14 @@ type PropsInput = {
     value: string | number;
     type: string;
     isRp?: boolean;
+    upload?: boolean;
 };
 
-const Input = (props: PropsInput) => {
+const InputDatePicker = (props: PropsInput) => {
     const dispatch = useAppDispatch();
-    const { label, onChange, value, name, isRp, isRequired, type } = props;
-
+    const { label, upload, onChange, value, name, isRp, isRequired, type } = props;
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [isValue, setIsValue] = useState(true);
 
     const handleDateChange = (date: Date | null, event: React.SyntheticEvent<any> | undefined) => {
         const dateString = moment(date).format('YYYY/MM/DD');
@@ -33,8 +34,15 @@ const Input = (props: PropsInput) => {
         } else if (name === 'contract_start_date') {
             dispatch(changeValueFormContractDate(formattedDate));
         }
-
         setSelectedDate(date);
+    };
+
+    const handleDateBlur = () => {
+        if (!selectedDate) {
+            setIsValue(false);
+        } else {
+            setIsValue(true);
+        }
     };
 
     return (
@@ -42,23 +50,59 @@ const Input = (props: PropsInput) => {
             <div className="flex  items-center h-12">
                 <label
                     htmlFor={label}
-                    className={`font-normal !text-2xl ${type === 'number' ? 'min-w-[220px]' : 'min-w-[162px]'}  flex`}
+                    className={`font-normal !text-2xl ${type === 'number' ? 'min-w-[220px]' : 'min-w-[162px]'} 
+                     ${upload && 'min-w-[120px]'} flex`}
                 >
                     {label}
                     {isRequired ? <span className={`isRequired text-required font-normal `}>*</span> : ''}
                 </label>
+                {type === 'date' && (
+                    <div className="relative">
+                        <DatePicker
+                            // showYearDropdown
+                            name={name}
+                            selected={selectedDate}
+                            onChange={handleDateChange}
+                            onBlur={handleDateBlur}
+                            dateFormat="yyyy/MM/dd"
+                            isClearable
+                            className={`input-type-date  h-12 min-w-290 max-w-300  ${
+                                !isValue && !selectedDate && 'input-danger'
+                            }  ${upload && 'max-w-[230px]'} `}
+                        ></DatePicker>
+                        <span className="absolute top-[1.35rem] left-5">
+                            <img src={datePicker} className="w-7" alt="" />
+                        </span>
+                        <span className="absolute top-6 right-3">
+                            <MdKeyboardArrowDown size={16} />
+                        </span>
+                    </div>
+                )}
+            </div>
+        </Box>
+    );
+};
 
-                {/* Cách 1 với input thuần có type là date */}
-                {/* <input
+// eslint-disable-next-line react-refresh/only-export-components
+export default memo(InputDatePicker);
+
+{
+    /* Cách 1 với input thuần có type là date */
+}
+{
+    /* <input
                     type={type}
                     onChange={onChange}
                     value={value}
                     name={name}
                     className="input-type h-12 min-w-290 max-w-300 "
-                /> */}
-
-                {/* Cách 2 : sử dụng date picker */}
-                {type === 'date' ? (
+                /> */
+}
+{
+    /* Cách 2 : sử dụng date picker */
+}
+{
+    /* {type === 'date' ? (
                     <div className="relative">
                         <DatePicker
                             // showYearDropdown
@@ -101,10 +145,5 @@ const Input = (props: PropsInput) => {
                             className="input-type h-12 min-w-290 max-w-300 "
                         />
                     </div>
-                )}
-            </div>
-        </Box>
-    );
-};
-
-export default memo(Input);
+                )} */
+}

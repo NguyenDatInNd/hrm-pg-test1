@@ -3,7 +3,7 @@
 import React, { useState, useCallback, ChangeEvent, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { loginSuccess } from '../Redux/company.slice';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SubHeader from '../../components/Header/SubHeader';
 import './Employee.scss';
 import Tabs from '@mui/material/Tabs';
@@ -24,6 +24,8 @@ import EmployeeDetails from '../../components/EmployeeSplit/EmployeeDetails';
 import EmployeeSalary from '../../components/EmployeeSplit/EmployeeSalary';
 import EmployeeOthers from '../../components/EmployeeSplit/EmployeeOthers';
 import Copyright from '../../components/Copyright';
+import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
+import { ROUTES } from '../../configs/router';
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -58,13 +60,15 @@ function a11yProps(index: number) {
 }
 
 const CreateEmployee = () => {
+    const navigate = useNavigate();
     const [value, setValue] = React.useState(0);
+    const [isActiveAdd, setIsActiveAdd] = useState(false);
+    const [isActiveAddContract, setIsActiveAddContract] = useState(false);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
     const dispatch = useAppDispatch();
     dispatch(loginSuccess(true));
-
     // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
     // console.log(cookieValue);
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
@@ -139,7 +143,6 @@ const CreateEmployee = () => {
         },
         [dispatch],
     );
-
     // handle Add Salary Employee Information Submitted
     const handleFormSalaryChange = useCallback(
         (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
@@ -167,10 +170,35 @@ const CreateEmployee = () => {
     // handle add employee
     const handleAddEmployee = () => {
         dispatch(addEmployee());
+        setTimeout(() => {
+            navigate(ROUTES.employee);
+        }, 250);
         dispatch(removeValueFormEmployeeInfo());
     };
 
     console.log(employee);
+    const handleActiveAddEmployee = () => {
+        if (employee[0].name && employee[0].gender && employee[0].dob && employee[0].ktp_no && employee[0].nc_id) {
+            setIsActiveAdd(true);
+        } else {
+            setIsActiveAdd(false);
+            setIsActiveAddContract(false);
+        }
+    };
+    const handleActiveAddEmployeeContact = () => {
+        if (employee[0].contract_start_date && employee[0].type) {
+            setIsActiveAddContract(true);
+        } else {
+            setIsActiveAddContract(false);
+        }
+    };
+
+    useEffect(() => {
+        setTimeout(() => {
+            handleActiveAddEmployee();
+            handleActiveAddEmployeeContact();
+        }, 1000);
+    });
 
     return (
         <div className="mt-36 px-16">
@@ -190,7 +218,11 @@ const CreateEmployee = () => {
                             <Button
                                 onClick={handleAddEmployee}
                                 type="submit"
-                                className="h-20 w-32 button-save-change button-not-save-change"
+                                className={`h-20 w-32 ${
+                                    isActiveAdd && isActiveAddContract
+                                        ? 'button-save-change'
+                                        : ' button-not-save-change'
+                                } `}
                             >
                                 Add
                             </Button>
@@ -206,8 +238,22 @@ const CreateEmployee = () => {
                         onChange={handleChange}
                         aria-label="basic tabs example"
                     >
-                        <Tab className="tab-button" component="button" label="Employee Information" {...a11yProps(0)} />
-                        <Tab className="tab-button" component="button" label="Contract Information" {...a11yProps(1)} />
+                        <Tab
+                            icon={<ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />}
+                            iconPosition={'end'}
+                            className={` ${isActiveAdd ? 'tab-button' : 'tab-button-error'} `}
+                            component="button"
+                            label="Employee Information"
+                            {...a11yProps(0)}
+                        />
+                        <Tab
+                            icon={<ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />}
+                            iconPosition={'end'}
+                            className={` ${isActiveAddContract ? 'tab-button' : 'tab-button-error'} `}
+                            component="button"
+                            label="Contract Information"
+                            {...a11yProps(1)}
+                        />
                         <Tab className="tab-button" component="button" label="Employment Details" {...a11yProps(2)} />
                         <Tab className="tab-button" component="button" label="Salary & Wages" {...a11yProps(3)} />
                         <Tab className="tab-button" component="button" label="Others" {...a11yProps(4)} />
@@ -215,7 +261,7 @@ const CreateEmployee = () => {
                 </Box>
 
                 <div className="employee-container mt-5 bg-white rounded-3xl">
-                    <div className="px-2 w-full">
+                    <div className="px-0 w-full">
                         <div className="">
                             <TabPanel value={value} index={0}>
                                 <EmployeeInfomation

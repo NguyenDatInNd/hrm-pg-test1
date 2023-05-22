@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import SubTitleTable from '../Header/SubTitleTable';
-import Input from '../FormItem/Input';
 import { SelectChangeEvent } from '@mui/material/Select';
 import SelectInput from '../FormItem/SelectInput';
 import { employeeType } from '../../context/dataLink';
 import { FormContractEmployee } from '../../Types/employee';
+import InputDatePicker from '../FormItem/InputDatePicker';
+import ContractUpload from '../Upload/ContractUpload';
 
 type PropsTabEmployee = {
     formContractEmployee: FormContractEmployee;
@@ -18,7 +19,7 @@ const ContactInfomation = (props: PropsTabEmployee) => {
         <div>
             <SubTitleTable category="Contract Information" title="Required" />
             <div className="flex flex-col gap-11">
-                <Input
+                <InputDatePicker
                     isRequired={true}
                     type="date"
                     value={formContractEmployee.contract_start_date}
@@ -33,9 +34,13 @@ const ContactInfomation = (props: PropsTabEmployee) => {
                     isRequired={true}
                     value={formContractEmployee.type}
                     onChange={handleFormContractChange}
-                    name="employee_id"
+                    name="type"
                     isType
                 />
+            </div>
+
+            <div className="mt-5">
+                <ContractUpload />
             </div>
         </div>
     );

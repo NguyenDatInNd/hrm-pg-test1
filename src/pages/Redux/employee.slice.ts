@@ -101,10 +101,10 @@ const initialState: EmployeeState = {
 
             name: '',
             gender: 1,
-            dob: '2024-09-09',
-            ktp_no: '99999',
-            nc_id: '9999',
-            type: '0',
+            dob: '',
+            ktp_no: '',
+            nc_id: '',
+            type: '',
             basic_salary: 0,
             audit_salary: 0,
             safety_insurance: 0,
@@ -177,6 +177,7 @@ export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, {
     const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, employee.employee[0], {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
+    toast.success(response.data.message);
     const data = response.data.data;
     return data;
 });
