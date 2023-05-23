@@ -249,3 +249,11 @@ th {
 
 /* configure csstailwind */
 /* date picker */
+
+/* benefit Employee Management */
+.css-1skkyr1-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
+    margin-top: 4px;
+}
+.css-1mmoate-MuiFormControl-root-MuiTextField-root {
+    margin-top: 0px !important;
+}

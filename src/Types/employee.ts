@@ -152,3 +152,31 @@ export interface Position {
     created_at: string;
     updated_at: string;
 }
+
+export interface IsBenefit {
+    id: number;
+    name: string;
+    code: string;
+    type: number;
+    value: string;
+    company_id: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface IsGrade {
+    id: number;
+    name: string;
+    prefix: string;
+    company_id: number;
+    created_at: string;
+    updated_at: string;
+    benefits: IsBenefit[];
+}
+
+export interface IsContractInfo {
+    names: string;
+    contract_dates: string;
+    modified_contracts: string;
+    documents: string;
+}

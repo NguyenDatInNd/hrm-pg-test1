@@ -4,7 +4,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Input.scss';
 import { useAppDispatch } from '../../store';
-import { ChangeValueDateFormEmployeeInfo, changeValueFormContractDate } from '../../pages/Redux/employee.slice';
+import {
+    ChangeValueDateFormEmployeeInfo,
+    changeValueFormContractDate,
+    changeValueFormContractDateInfo,
+} from '../../pages/Redux/employee.slice';
 import moment from 'moment-timezone';
 import datePicker from '../../assets/datePicker.svg';
 import { MdKeyboardArrowDown } from 'react-icons/md';
@@ -33,6 +37,8 @@ const InputDatePicker = (props: PropsInput) => {
             dispatch(ChangeValueDateFormEmployeeInfo(dateString));
         } else if (name === 'contract_start_date') {
             dispatch(changeValueFormContractDate(formattedDate));
+        } else if (name === 'contract_dates') {
+            dispatch(changeValueFormContractDateInfo(dateString));
         }
         setSelectedDate(date);
     };
@@ -88,8 +94,6 @@ export default memo(InputDatePicker);
 
 {
     /* Cách 1 với input thuần có type là date */
-}
-{
     /* <input
                     type={type}
                     onChange={onChange}
@@ -97,11 +101,7 @@ export default memo(InputDatePicker);
                     name={name}
                     className="input-type h-12 min-w-290 max-w-300 "
                 /> */
-}
-{
     /* Cách 2 : sử dụng date picker */
-}
-{
     /* {type === 'date' ? (
                     <div className="relative">
                         <DatePicker

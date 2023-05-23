@@ -122,7 +122,7 @@ const InputComponent = (props: PropsInput) => {
                                             {...register(name, {
                                                 required: `Please ${name} is not empty`,
                                             })}
-                                            className=" h-12 min-w-290 max-w-300 "
+                                            className=" input-width  h-12 min-w-290 max-w-300 "
                                             value={value}
                                             onChange={onChange}
                                             onBlur={handleIsValueCheck}

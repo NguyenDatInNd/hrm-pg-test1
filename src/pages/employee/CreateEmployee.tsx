@@ -124,8 +124,7 @@ const CreateEmployee = () => {
     const handleFormEmployeeChange = useCallback(
         (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
             const { name } = e.target;
-            let value: any;
-            value = e.target.value;
+            const value = e.target.value;
             setFormEmployeeInfomation((prevValues) => ({ ...prevValues, [name]: value }));
             dispatch(changeValueFormEmployeeInfo({ name, value }));
         },
@@ -136,8 +135,7 @@ const CreateEmployee = () => {
     const handleFormContractChange = useCallback(
         (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
             const { name } = e.target;
-            let value: any;
-            value = e.target.value;
+            const value = e.target.value;
             setFormContractEmployee((prevValues) => ({ ...prevValues, [name]: value }));
             dispatch(changeValueFormEmployeeInfo({ name, value }));
         },
@@ -155,7 +153,7 @@ const CreateEmployee = () => {
         [dispatch],
     );
 
-    // handle  Add Detail Employee Information Submitted
+    // handle Add Detail Employee Information Submitted
     const handleFormDetailChange = useCallback(
         (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
             const { name } = e.target;
@@ -239,7 +237,7 @@ const CreateEmployee = () => {
                         aria-label="basic tabs example"
                     >
                         <Tab
-                            icon={<ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />}
+                            icon={!isActiveAdd ? <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} /> : ''}
                             iconPosition={'end'}
                             className={` ${isActiveAdd ? 'tab-button' : 'tab-button-error'} `}
                             component="button"
@@ -247,7 +245,7 @@ const CreateEmployee = () => {
                             {...a11yProps(0)}
                         />
                         <Tab
-                            icon={<ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />}
+                            icon={!isActiveAddContract ? <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} /> : ''}
                             iconPosition={'end'}
                             className={` ${isActiveAddContract ? 'tab-button' : 'tab-button-error'} `}
                             component="button"

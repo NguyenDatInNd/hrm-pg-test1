@@ -1,5 +1,14 @@
 import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
-import { Department, Employee, EmployeeList, MarriageStatus, Position } from '../../Types/employee';
+import {
+    Department,
+    Employee,
+    EmployeeList,
+    IsBenefit,
+    IsContractInfo,
+    IsGrade,
+    MarriageStatus,
+    Position,
+} from '../../Types/employee';
 import { API_PATHS } from '../../configs/api';
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
@@ -26,6 +35,9 @@ interface EmployeeState {
     searchValue: string;
     loadingEmployee: boolean;
     employeeOriginal: EmployeeList;
+    gradeList: IsGrade[];
+    benefitList: IsBenefit[];
+    contractInfo: IsContractInfo[];
 }
 
 interface EmployeeListParams {
@@ -138,6 +150,16 @@ const initialState: EmployeeState = {
         to: 0,
         total: 0,
     },
+    gradeList: [],
+    benefitList: [],
+    contractInfo: [
+        {
+            names: '',
+            contract_dates: '',
+            modified_contracts: '',
+            documents: '',
+        },
+    ],
 };
 
 //get API employeeList
@@ -177,7 +199,7 @@ export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, {
     const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, employee.employee[0], {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
-    toast.success(response.data.message);
+    toast.success('Record added');
     const data = response.data.data;
     return data;
 });
@@ -229,6 +251,24 @@ export const getDepartment = createAsyncThunk('department/getDepartment', async 
     return data;
 });
 
+//get Grade
+export const getGrade = createAsyncThunk('grades/getGrade', async () => {
+    const res = await axios.get(`${API_PATHS.API_FIXER}/grade`, {
+        headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
+    const data = res.data.data;
+    return data;
+});
+
+// get getBenefit
+export const getBenefit = createAsyncThunk('benefits/getBenefit', async () => {
+    const res = await axios.get(`${API_PATHS.API_FIXER}/benefit`, {
+        headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
+    const data = res.data.data;
+    return data;
+});
+
 const employeeSlice = createSlice({
     name: 'employee',
     initialState,
@@ -243,7 +283,9 @@ const employeeSlice = createSlice({
         changeValueFormContractDate: (state, action: PayloadAction<any>) => {
             state.employee[0].contract_start_date = action.payload;
         },
-
+        changeValueFormContractDateInfo: (state, action: PayloadAction<string>) => {
+            state.contractInfo[0].contract_dates = action.payload;
+        },
         getIdEmployeeDelete: (state, action: PayloadAction<number[]>) => {
             state.employeeIddelete = action.payload;
         },
@@ -304,6 +346,9 @@ const employeeSlice = createSlice({
                 },
             ];
         },
+        addContractInfo: (state, action: PayloadAction<number[]>) => {
+            state.employeeIddelete = action.payload;
+        },
 
         // search filter
         changeValueSearchEmployee: (state, action: PayloadAction<string>) => {
@@ -349,6 +394,12 @@ const employeeSlice = createSlice({
             .addCase(getPosition.fulfilled, (state, action) => {
                 state.position = action.payload;
             })
+            .addCase(getGrade.fulfilled, (state, action) => {
+                state.gradeList = action.payload;
+            })
+            .addCase(getBenefit.fulfilled, (state, action) => {
+                state.benefitList = action.payload;
+            })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),
                 (state, action) => {
@@ -377,6 +428,7 @@ export const {
     changeValueFormContractDate,
     removeValueFormEmployeeInfo,
     changeValueSearchEmployee,
+    changeValueFormContractDateInfo,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;
