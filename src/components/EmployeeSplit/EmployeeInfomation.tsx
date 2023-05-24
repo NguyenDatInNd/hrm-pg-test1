@@ -20,7 +20,7 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
     const dispatch = useAppDispatch();
     const { FormEmployeeInformation, handleFormEmployeeChange } = props;
     const { idEmployee } = useParams();
-    const { marriageList } = useAppSelector((state) => state.employee);
+    const { marriageList, employee } = useAppSelector((state) => state.employee);
     // const { marriageList, employeeList } = useAppSelector((state) => state.employee);
 
     // get API Company
@@ -47,8 +47,9 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     {idEmployee ? (
                         <>
                             <InputComponent
+                                disable
                                 type="text"
-                                value={FormEmployeeInformation.nik}
+                                value={employee.staff_id}
                                 name="nik"
                                 onChange={handleFormEmployeeChange}
                                 label="NIK"
@@ -59,7 +60,7 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     )}
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.name}
+                        value={employee.name}
                         name="name"
                         isRequired={true}
                         onChange={handleFormEmployeeChange}
@@ -76,14 +77,14 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.mother_name}
+                        value={employee.mother_name}
                         name="mother_name"
                         onChange={handleFormEmployeeChange}
                         label="Mother Name"
                     />
                     <InputDatePicker
                         type="date"
-                        value={FormEmployeeInformation.dob}
+                        value={employee.dob}
                         name="dob"
                         onChange={handleFormEmployeeChange}
                         label="Date of birth"
@@ -91,14 +92,14 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.pob}
+                        value={employee.pob}
                         name="pob"
                         onChange={handleFormEmployeeChange}
                         label="Place of birth"
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.ktp_no}
+                        value={employee.ktp_no}
                         name="ktp_no"
                         isRequired={true}
                         onChange={handleFormEmployeeChange}
@@ -106,7 +107,7 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.nc_id}
+                        value={employee.nc_id}
                         name="nc_id"
                         isRequired={true}
                         onChange={handleFormEmployeeChange}
@@ -114,14 +115,14 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.home_address_1}
+                        value={employee.home_address_1}
                         name="home_address_1"
                         onChange={handleFormEmployeeChange}
                         label="Home Address 1"
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.home_address_2}
+                        value={employee.home_address_2}
                         name="home_address_2"
                         onChange={handleFormEmployeeChange}
                         label="Home Address 2"
@@ -130,14 +131,14 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                 <div className="flex flex-col gap-11 px-2.5">
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.mobile_no}
+                        value={employee.mobile_no}
                         name="mobile_no"
                         onChange={handleFormEmployeeChange}
                         label="Mobile No."
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.tel_no}
+                        value={employee.tel_no}
                         name="tel_no"
                         onChange={handleFormEmployeeChange}
                         label="Tel No."
@@ -146,7 +147,6 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                         data={marriageList}
                         label="Marriage Status"
                         placeholder="Choose Marriage Status"
-                        // isRequired={true}
                         value={FormEmployeeInformation.marriage_id}
                         onChange={handleFormEmployeeChange}
                         isNa
@@ -154,42 +154,42 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.card_number}
+                        value={employee.card_number}
                         name="card_number"
                         onChange={handleFormEmployeeChange}
                         label="Bank Card No."
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.bank_account_no}
+                        value={employee.bank_account_no}
                         name="bank_account_no"
                         onChange={handleFormEmployeeChange}
                         label="Bank Account No."
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.bank_name}
+                        value={employee.bank_name}
                         name="bank_name"
                         onChange={handleFormEmployeeChange}
                         label="Bank Name"
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.family_card_number}
+                        value={employee.family_card_number}
                         name="family_card_number"
                         onChange={handleFormEmployeeChange}
                         label="Family Card Number"
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.safety_insurance_no}
+                        value={employee.safety_insurance_no}
                         name="safety_insurance_no"
                         onChange={handleFormEmployeeChange}
                         label="Safety Insurance No."
                     />
                     <InputComponent
                         type="text"
-                        value={FormEmployeeInformation.health_insurance_no}
+                        value={employee.health_insurance_no}
                         name="health_insurance_no"
                         onChange={handleFormEmployeeChange}
                         label="Health Insurance No."

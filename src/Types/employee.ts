@@ -12,16 +12,16 @@ export interface Employee {
     type: string;
     mother_name: string;
     dob: string;
-    pob: string | null;
+    pob: string | number;
     ktp_no: string;
     nc_id: string;
     home_address_1: string;
-    home_address_2: string | null;
-    mobile_no: string | null;
+    home_address_2: string | any;
+    mobile_no: string | any;
     tel_no: string;
     bank_account_no: string;
     bank_name: string;
-    card_number: string | null;
+    card_number: string | any;
     family_card_number: string;
     health_insurance_no: string;
     safety_insurance_no: string;
@@ -83,9 +83,9 @@ export interface Contract {
     deleted_at: string | null;
 }
 
-// form employee Information
+// form employee Information staff_id
 export interface FormEmployeeInformation {
-    nik: string;
+    staff_id: string;
     name: string;
     gender: string;
     mother_name: string;
@@ -179,4 +179,9 @@ export interface IsContractInfo {
     contract_dates: string;
     modified_contracts: string;
     documents: string;
+    [key: string]: any;
+}
+
+export interface IsListContractInfo {
+    data: IsContractInfo[];
 }

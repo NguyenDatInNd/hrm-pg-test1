@@ -6,6 +6,7 @@ import { employeeType } from '../../context/dataLink';
 import { FormContractEmployee } from '../../Types/employee';
 import InputDatePicker from '../FormItem/InputDatePicker';
 import ContractUpload from '../Upload/ContractUpload';
+import { useAppDispatch, useAppSelector } from '../../store';
 
 type PropsTabEmployee = {
     formContractEmployee: FormContractEmployee;
@@ -14,6 +15,7 @@ type PropsTabEmployee = {
 
 const ContactInfomation = (props: PropsTabEmployee) => {
     const { formContractEmployee, handleFormContractChange } = props;
+    const { contractListInfo } = useAppSelector((state) => state.employee);
 
     return (
         <div>
@@ -40,7 +42,7 @@ const ContactInfomation = (props: PropsTabEmployee) => {
             </div>
 
             <div className="mt-5">
-                <ContractUpload />
+                <ContractUpload contractList={contractListInfo} />
             </div>
         </div>
     );

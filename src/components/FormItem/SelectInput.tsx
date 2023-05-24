@@ -63,6 +63,7 @@ const SelectInput = (props: PropsSelect) => {
             setIsValue(true);
         }
     };
+    console.log(`'is value ${value}'`, isValue);
 
     console.log('select input', value);
 
@@ -99,7 +100,7 @@ const SelectInput = (props: PropsSelect) => {
                     }}
                     onBlur={handleSelectBlur}
                 >
-                    {isNa && <MenuItem value={'gender'}>N/A</MenuItem>}
+                    {isNa && <MenuItem value={''}>N/A</MenuItem>}
                     {data.map((item: any) => (
                         <MenuItem value={item.id} key={item.id}>
                             {item.name}

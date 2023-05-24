@@ -16,9 +16,15 @@ import {
     FormContractEmployee,
     FormSalaryEmployee,
     FormDetailsEmployee,
+    Employee,
 } from '../../Types/employee';
 import { Button, SelectChangeEvent } from '@mui/material';
-import { addEmployee, changeValueFormEmployeeInfo, removeValueFormEmployeeInfo } from '../Redux/employee.slice';
+import {
+    addEmployee,
+    changeValueEmployeeUpdate,
+    changeValueFormEmployeeInfo,
+    removeValueFormEmployeeInfo,
+} from '../Redux/employee.slice';
 import ContactInfomation from '../../components/EmployeeSplit/ContactInfomation';
 import EmployeeDetails from '../../components/EmployeeSplit/EmployeeDetails';
 import EmployeeSalary from '../../components/EmployeeSplit/EmployeeSalary';
@@ -69,15 +75,13 @@ const CreateEmployee = () => {
     };
     const dispatch = useAppDispatch();
     dispatch(loginSuccess(true));
-    // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
-    // console.log(cookieValue);
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
-    const { employee } = useAppSelector((state) => state.employee);
+    const { employee, employeeList } = useAppSelector((state) => state.employee);
     const { idEmployee } = useParams();
 
     // state employee Information form
     const [formEmployeeInfomation, setFormEmployeeInfomation] = useState<FormEmployeeInformation>({
-        nik: '',
+        staff_id: '',
         name: '',
         gender: '',
         mother_name: '',
@@ -171,12 +175,11 @@ const CreateEmployee = () => {
         setTimeout(() => {
             navigate(ROUTES.employee);
         }, 250);
-        dispatch(removeValueFormEmployeeInfo());
     };
 
-    console.log(employee);
+    // check data when adding employee
     const handleActiveAddEmployee = () => {
-        if (employee[0].name && employee[0].gender && employee[0].dob && employee[0].ktp_no && employee[0].nc_id) {
+        if (employee.name && employee.gender && employee.dob && employee.ktp_no && employee.nc_id) {
             setIsActiveAdd(true);
         } else {
             setIsActiveAdd(false);
@@ -184,7 +187,7 @@ const CreateEmployee = () => {
         }
     };
     const handleActiveAddEmployeeContact = () => {
-        if (employee[0].contract_start_date && employee[0].type) {
+        if (employee.contract_start_date && employee.type) {
             setIsActiveAddContract(true);
         } else {
             setIsActiveAddContract(false);
@@ -195,9 +198,18 @@ const CreateEmployee = () => {
         setTimeout(() => {
             handleActiveAddEmployee();
             handleActiveAddEmployeeContact();
-        }, 1000);
+        }, 500);
     });
 
+    // handle get data when update employee
+
+    useEffect(() => {
+        if (idEmployee) {
+            dispatch(changeValueEmployeeUpdate(Number(idEmployee)));
+        } else {
+            dispatch(removeValueFormEmployeeInfo());
+        }
+    }, [idEmployee, dispatch]);
     return (
         <div className="mt-36 px-16">
             <div className="relative">
@@ -214,6 +226,7 @@ const CreateEmployee = () => {
                             </Button>
                         ) : (
                             <Button
+                                disabled={!isActiveAdd && !isActiveAddContract}
                                 onClick={handleAddEmployee}
                                 type="submit"
                                 className={`h-20 w-32 ${

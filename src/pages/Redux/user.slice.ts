@@ -48,7 +48,7 @@ export const getUserList = createAsyncThunk('users/getUser', async () => {
 
 // get user details  `${API_PATHS.API_FIXER}/user/detail`
 export const getUserDetails = createAsyncThunk('users/getUserDetails', async () => {
-    const res = await axios.get(API_PATHS.useDetail, {
+    const res = await axios.get(`${API_PATHS.API_FIXER}/user/detail`, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     const data = res.data.data;

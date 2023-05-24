@@ -6,8 +6,10 @@ import InputDatePicker from '../FormItem/InputDatePicker';
 import InputComponent from '../FormItem/InputComponent';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { IsContractInfo } from '../../Types/employee';
-import { useAppSelector } from '../../store';
-
+import { useAppDispatch, useAppSelector } from '../../store';
+import { ChangeValueContractUpload, addContractInfo, deleteContractInfo } from '../../pages/Redux/employee.slice';
+import { IsListContractInfo } from '../../Types/employee';
+import { MdDeleteOutline } from 'react-icons/md';
 interface Column {
     id: 'No' | 'Contract Name' | 'Sign Date' | 'Action';
     label: string;
@@ -23,7 +25,12 @@ const columns: readonly Column[] = [
     { id: 'Action', label: 'Action', minWidth: 250 },
 ];
 
-const ContractUpload = () => {
+interface typeContractListInfo {
+    contractList: IsListContractInfo;
+}
+
+const ContractUpload = ({ contractList }: typeContractListInfo) => {
+    const dispatch = useAppDispatch();
     const [selectedFile, setSelectedFile] = useState<string>('');
     const { contractInfo } = useAppSelector((state) => state.employee);
     const [formContractInfo, setFormContractInfo] = useState<IsContractInfo>({
@@ -41,13 +48,29 @@ const ContractUpload = () => {
         setSelectedFile('');
     };
 
-    const handleAddContractInfo = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        const { name } = e.target;
-        const value = e.target.value;
-        setFormContractInfo((prevValues) => ({ ...prevValues, [name]: value }));
-    }, []);
-    console.log('value indedited:', formContractInfo);
-    console.log('value Changed:', contractInfo);
+    const handleAddContractInfo = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = e.target;
+            setFormContractInfo((prevValues) => ({ ...prevValues, [name]: value }));
+            dispatch(ChangeValueContractUpload({ name, value }));
+        },
+        [dispatch],
+    );
+
+    const handleAddContractUpload = () => {
+        dispatch(addContractInfo(contractInfo));
+        setFormContractInfo({
+            names: '',
+            contract_dates: '',
+            modified_contracts: '',
+            documents: '',
+        });
+    };
+
+    const handleDeleteContractInfo = (nameId: string) => {
+        dispatch(deleteContractInfo(nameId));
+    };
+
     return (
         <div className="flex flex-col border border-[#dfe3e6] rounded-md">
             <span className="font-semibold text-lg bg-[#f1f3f5] text-[#687076] px-[18px] py-2">CONTRACT:</span>
@@ -105,7 +128,9 @@ const ContractUpload = () => {
                         </div>
                     </div>
                     <div>
-                        <Button className="button-upload-file">Add</Button>
+                        <Button onClick={handleAddContractUpload} className="button-upload-file">
+                            Add
+                        </Button>
                     </div>
                     {selectedFile && (
                         <div className="-mt-4">
@@ -120,7 +145,7 @@ const ContractUpload = () => {
                 </div>
                 <hr className="hr-hegiht" />
                 <div>
-                    <TableContainer className="">
+                    <TableContainer className="h-[36vh]">
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
                                 <TableRow className="table-upload">
@@ -136,7 +161,26 @@ const ContractUpload = () => {
                                 </TableRow>
                             </TableHead>
 
-                            <TableBody>{/* Content off here */}</TableBody>
+                            <TableBody>
+                                {contractList.data.map((row, index) => {
+                                    return (
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>{row.names}</TableCell>
+                                            <TableCell>{row.contract_dates}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    onClick={() => handleDeleteContractInfo(row.names)}
+                                                    className="button-contract-upload "
+                                                >
+                                                    <MdDeleteOutline size={14} className="-mt-1" />
+                                                    <span className="ml-2">Delete</span>
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
                         </Table>
                     </TableContainer>
                 </div>

@@ -4,6 +4,7 @@ import Input from '../FormItem/InputDatePicker';
 import { FormSalaryEmployee } from '../../Types/employee';
 import { SelectChangeEvent } from '@mui/material';
 import InputComponent from '../FormItem/InputComponent';
+import { useAppSelector } from '../../store';
 type PropsTabEmployee = {
     formSalaryEmployee: FormSalaryEmployee;
     handleFormSalaryChange?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
@@ -11,16 +12,14 @@ type PropsTabEmployee = {
 
 const EmployeeSalary = (props: PropsTabEmployee) => {
     const { formSalaryEmployee, handleFormSalaryChange } = props;
-
-    console.log(formSalaryEmployee);
-
+    const { employee } = useAppSelector((state) => state.employee);
     return (
         <div>
             <SubTitleTable category="Salary & Wages" title="Required" />
             <div className="flex flex-col gap-9">
                 <InputComponent
                     type="number"
-                    value={formSalaryEmployee.basic_salary}
+                    value={employee.basic_salary}
                     name="basic_salary"
                     isRequired={true}
                     onChange={handleFormSalaryChange}
@@ -29,7 +28,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                 />
                 <InputComponent
                     type="number"
-                    value={formSalaryEmployee.audit_salary}
+                    value={employee.audit_salary}
                     name="audit_salary"
                     isRequired={true}
                     onChange={handleFormSalaryChange}
@@ -38,7 +37,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                 />
                 <InputComponent
                     type="number"
-                    value={formSalaryEmployee.safety_insurance}
+                    value={employee.safety_insurance}
                     name="safety_insurance"
                     isRequired={true}
                     onChange={handleFormSalaryChange}
@@ -47,7 +46,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                 />
                 <InputComponent
                     type="number"
-                    value={formSalaryEmployee.health_insurance}
+                    value={employee.health_insurance}
                     name="health_insurance"
                     isRequired={true}
                     onChange={handleFormSalaryChange}
@@ -56,7 +55,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                 />
                 <InputComponent
                     type="number"
-                    value={formSalaryEmployee.meal_allowance}
+                    value={employee.meal_allowance}
                     name="meal_allowance"
                     isRequired={true}
                     onChange={handleFormSalaryChange}

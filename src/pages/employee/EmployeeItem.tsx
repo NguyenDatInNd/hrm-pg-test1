@@ -10,13 +10,11 @@ import { BsCheckLg } from 'react-icons/bs';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { EmployeeList } from '../../Types/employee';
 import './Employee.scss';
-
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { getIdEmployeeDelete } from '../Redux/employee.slice';
 import IconNoData from '../../assets/nodata.svg';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import { Typography } from '@mui/material';
 interface EmployeddItemType {
     employeeList: EmployeeList;
@@ -139,7 +137,7 @@ const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItem
         <div className="w-min-table w-max-table overflow-auto mt-3">
             <Paper>
                 <div className="relative">
-                    <TableContainer className=" h-[73vh]">
+                    <TableContainer className="h-[73vh]">
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
                                 <TableRow>
@@ -200,7 +198,6 @@ const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItem
 
                             <TableBody>
                                 {employeeList.data.map((row) => {
-                                    console.log('Day la row', row.employee_id);
                                     return (
                                         <TableRow
                                             hover

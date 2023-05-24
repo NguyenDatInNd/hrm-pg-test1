@@ -17,11 +17,12 @@ type PropsInput = {
     type: string;
     isRp?: boolean;
     upload?: boolean;
+    disable?: boolean;
 };
 
 const InputComponent = (props: PropsInput) => {
     const dispatch = useAppDispatch();
-    const { label, onChange, upload, value, name, isRp, isRequired, type } = props;
+    const { label, onChange, upload, value, name, isRp, isRequired, type, disable } = props;
     const [isValueCheck, setIsValueCheck] = useState([name]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -54,7 +55,6 @@ const InputComponent = (props: PropsInput) => {
         setIsValueCheck((prevValues) => ({ ...prevValues, [name]: value }));
         trigger(name);
     };
-
     return (
         <div>
             <Box component="form" className="form" noValidate autoComplete="off">
@@ -134,11 +134,14 @@ const InputComponent = (props: PropsInput) => {
                         ) : (
                             <div className="flex flex-col">
                                 <input
+                                    disabled={disable && true}
                                     type={type}
                                     onChange={onChange}
                                     value={value}
                                     name={name}
-                                    className={`input-type h-12 min-w-290 max-w-300  ${upload && 'max-w-[230px]'}`}
+                                    className={`input-type h-12 min-w-290 max-w-300  ${upload && 'max-w-[230px]'} ${
+                                        disable && '!bg-[#0000001f]'
+                                    }`}
                                 />
                             </div>
                         )}

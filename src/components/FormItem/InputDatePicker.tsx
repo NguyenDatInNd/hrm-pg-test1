@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Input.scss';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import {
     ChangeValueDateFormEmployeeInfo,
     changeValueFormContractDate,
@@ -29,6 +29,7 @@ const InputDatePicker = (props: PropsInput) => {
     const { label, upload, onChange, value, name, isRp, isRequired, type } = props;
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [isValue, setIsValue] = useState(true);
+    const { employee } = useAppSelector((state) => state.employee);
 
     const handleDateChange = (date: Date | null, event: React.SyntheticEvent<any> | undefined) => {
         const dateString = moment(date).format('YYYY/MM/DD');
@@ -39,6 +40,8 @@ const InputDatePicker = (props: PropsInput) => {
             dispatch(changeValueFormContractDate(formattedDate));
         } else if (name === 'contract_dates') {
             dispatch(changeValueFormContractDateInfo(dateString));
+        } else if (!value) {
+            setSelectedDate(null);
         }
         setSelectedDate(date);
     };
@@ -51,6 +54,15 @@ const InputDatePicker = (props: PropsInput) => {
         }
     };
 
+    const handleFillValueDate = () => {
+        return name === 'dob'
+            ? moment(employee.dob).format('YYYY/MM/DD')
+            : name === 'contract_start_date'
+            ? moment(employee.contract_start_date).format('YYYY/MM/DD')
+            : value === 'Invalid date' || selectedDate === null
+            ? ''
+            : '';
+    };
     return (
         <Box component="form" className="form" noValidate autoComplete="off">
             <div className="flex  items-center h-12">
@@ -71,6 +83,7 @@ const InputDatePicker = (props: PropsInput) => {
                             onChange={handleDateChange}
                             onBlur={handleDateBlur}
                             dateFormat="yyyy/MM/dd"
+                            value={employee.dob && employee.contract_start_date && handleFillValueDate()}
                             isClearable
                             className={`input-type-date  h-12 min-w-290 max-w-300  ${
                                 !isValue && !selectedDate && 'input-danger'

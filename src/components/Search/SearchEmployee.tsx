@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import './Search.scss';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { changeValueSearchEmployee } from '../../pages/Redux/employee.slice';
-
 export interface ISearchEmployeeProps {
     onSearchEmployee: (value: string) => void;
     search: string | null;
@@ -14,9 +12,6 @@ const SearchEmployee = ({ onSearchEmployee, search }: ISearchEmployeeProps) => {
     const [value, setValue] = useState<string>(search || '');
     const { searchValue } = useAppSelector((state) => state.employee);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // const { value } = e.target;
-        // setValue(value);
-        // dispatch(changeValueSearchEmployee(value));
         const { value } = e.target;
         setValue(value);
         onSearchEmployee(value);

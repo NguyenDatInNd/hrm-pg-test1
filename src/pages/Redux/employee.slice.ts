@@ -6,6 +6,7 @@ import {
     IsBenefit,
     IsContractInfo,
     IsGrade,
+    IsListContractInfo,
     MarriageStatus,
     Position,
 } from '../../Types/employee';
@@ -27,17 +28,16 @@ type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 
 interface EmployeeState {
     employeeList: EmployeeList;
-    employee: Employee[];
+    employee: Employee;
     employeeIddelete: number[];
     marriageList: MarriageStatus[];
     department: Department[];
     position: Position[];
-    searchValue: string;
     loadingEmployee: boolean;
-    employeeOriginal: EmployeeList;
     gradeList: IsGrade[];
     benefitList: IsBenefit[];
-    contractInfo: IsContractInfo[];
+    contractListInfo: IsListContractInfo;
+    contractInfo: IsContractInfo;
 }
 
 interface EmployeeListParams {
@@ -70,96 +70,76 @@ const initialState: EmployeeState = {
         to: 0,
         total: 0,
     },
-    employee: [
-        {
-            id: 0,
-            old_staff_id: 0,
-            staff_id: '',
-            department_id: 1,
-            company_id: 1,
-            manager_id: 1,
-            marriage_id: 1,
-            position_id: 1,
-            mother_name: '',
-            pob: '',
-            home_address_1: '',
-            home_address_2: '',
-            mobile_no: '',
-            tel_no: '',
-            bank_account_no: '',
-            bank_name: '',
-            card_number: '',
-            family_card_number: '',
-            health_insurance_no: '',
-            safety_insurance_no: '',
-            entitle_ot: 1,
-            meal_allowance_paid: 1,
-            operational_allowance_paid: 1,
-            attendance_allowance_paid: 1,
-            minimum_salary_used: '',
-            shift: '',
-            grade_id: 1,
-            remark: '',
-            created_at: '',
-            updated_at: '',
-            deleted_at: '',
-            department_name: '',
-            marriage_code: '',
-            position_name: '',
-            grade_prefix: '',
-            grade_name: '',
-            manager_name: '',
-            contracts: [],
+    employee: {
+        id: 0,
+        old_staff_id: 0,
+        staff_id: '',
+        department_id: 1,
+        company_id: 1,
+        manager_id: 1,
+        marriage_id: 1,
+        position_id: 1,
+        mother_name: '',
+        pob: '',
+        home_address_1: '',
+        home_address_2: '',
+        mobile_no: '',
+        tel_no: '',
+        bank_account_no: '',
+        bank_name: '',
+        card_number: '',
+        family_card_number: '',
+        health_insurance_no: '',
+        safety_insurance_no: '',
+        entitle_ot: 1,
+        meal_allowance_paid: 1,
+        operational_allowance_paid: 1,
+        attendance_allowance_paid: 1,
+        minimum_salary_used: '',
+        shift: '',
+        grade_id: 1,
+        remark: '',
+        created_at: '',
+        updated_at: '',
+        deleted_at: '',
+        department_name: '',
+        marriage_code: '',
+        position_name: '',
+        grade_prefix: '',
+        grade_name: '',
+        manager_name: '',
+        contracts: [],
 
-            name: '',
-            gender: 1,
-            dob: '',
-            ktp_no: '',
-            nc_id: '',
-            type: '',
-            basic_salary: 0,
-            audit_salary: 0,
-            safety_insurance: 0,
-            health_insurance: 0,
-            meal_allowance: 0,
-            contract_start_date: '2023-01-03',
-        },
-    ],
+        name: '',
+        gender: 1,
+        dob: '',
+        ktp_no: '',
+        nc_id: '',
+        type: '',
+        basic_salary: 0,
+        audit_salary: 0,
+        safety_insurance: 0,
+        health_insurance: 0,
+        meal_allowance: 0,
+        contract_start_date: '2023-01-03',
+    },
+
     employeeIddelete: [],
-    searchValue: '',
     marriageList: [],
     department: [],
     position: [],
     loadingEmployee: false,
-    employeeOriginal: {
-        current_page: 0,
-        data: [],
-        first_page_url: '',
-        from: 0,
-        last_page: 0,
-        last_page_url: '',
-        links: {
-            url: '',
-            label: '',
-            active: false,
-        },
-        next_page_url: '',
-        path: '',
-        per_page: 0,
-        prev_page_url: '',
-        to: 0,
-        total: 0,
-    },
     gradeList: [],
     benefitList: [],
-    contractInfo: [
-        {
-            names: '',
-            contract_dates: '',
-            modified_contracts: '',
-            documents: '',
-        },
-    ],
+    contractListInfo: {
+        data: [],
+    },
+    contractInfo: {
+        names: '',
+        contract_dates: '',
+        modified_contracts: '',
+        documents: '',
+    },
 };
 
 //get API employeeList
@@ -196,7 +176,7 @@ export const getEmployeeListSearch = createAsyncThunk(
 export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, { getState }) => {
     const { employee } = getState() as RootState;
     console.log('employee', employee.employee);
-    const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, employee.employee[0], {
+    const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, employee.employee, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     toast.success('Record added');
@@ -275,98 +255,103 @@ const employeeSlice = createSlice({
     reducers: {
         changeValueFormEmployeeInfo: (state, action: PayloadAction<Value>) => {
             const { name, value } = action.payload;
-            state.employee[0][name] = value;
+            state.employee[name] = value;
         },
         ChangeValueDateFormEmployeeInfo: (state, action: PayloadAction<any>) => {
-            state.employee[0].dob = action.payload;
+            state.employee.dob = action.payload;
         },
         changeValueFormContractDate: (state, action: PayloadAction<any>) => {
-            state.employee[0].contract_start_date = action.payload;
+            state.employee.contract_start_date = action.payload;
         },
-        changeValueFormContractDateInfo: (state, action: PayloadAction<string>) => {
-            state.contractInfo[0].contract_dates = action.payload;
+        ChangeValueContractUpload: (state, action: PayloadAction<Value>) => {
+            const { name, value } = action.payload;
+            state.contractInfo[name] = value;
+        },
+        changeValueFormContractDateInfo: (state, action: PayloadAction<any>) => {
+            state.contractInfo.contract_dates = action.payload;
         },
         getIdEmployeeDelete: (state, action: PayloadAction<number[]>) => {
             state.employeeIddelete = action.payload;
         },
-        removeValueFormEmployeeInfo: (state) => {
-            state.employee = [
-                {
-                    id: 0,
-                    old_staff_id: 0,
-                    staff_id: '',
-                    department_id: 1,
-                    company_id: 1,
-                    manager_id: 1,
-                    marriage_id: 1,
-                    position_id: 1,
-                    mother_name: '',
-                    pob: '',
-                    home_address_1: '',
-                    home_address_2: '',
-                    mobile_no: '',
-                    tel_no: '',
-                    bank_account_no: '',
-                    bank_name: '',
-                    card_number: '',
-                    family_card_number: '',
-                    health_insurance_no: '',
-                    safety_insurance_no: '',
-                    entitle_ot: 1,
-                    meal_allowance_paid: 1,
-                    operational_allowance_paid: 1,
-                    attendance_allowance_paid: 1,
-                    minimum_salary_used: '',
-                    shift: '',
-                    grade_id: 1,
-                    remark: '',
-                    created_at: '',
-                    updated_at: '',
-                    deleted_at: '',
-                    department_name: '',
-                    marriage_code: '',
-                    position_name: '',
-                    grade_prefix: '',
-                    grade_name: '',
-                    manager_name: '',
-                    contracts: [],
-
-                    name: '',
-                    gender: 1,
-                    dob: '2024-09-09',
-                    ktp_no: '99999',
-                    nc_id: '9999',
-                    type: '0',
-                    basic_salary: 23,
-                    audit_salary: 123,
-                    safety_insurance: 123,
-                    health_insurance: 123,
-                    meal_allowance: 123,
-                    contract_start_date: '2023-01-03',
-                },
-            ];
+        addContractInfo: (state, action) => {
+            state.contractListInfo.data.push(action.payload);
+            state.contractInfo.contract_dates = '';
         },
-        addContractInfo: (state, action: PayloadAction<number[]>) => {
-            state.employeeIddelete = action.payload;
-        },
-
-        // search filter
-        changeValueSearchEmployee: (state, action: PayloadAction<string>) => {
-            state.searchValue = action.payload;
-            if (state.searchValue === '') {
-                state.employeeList.data = state.employeeOriginal.data;
-            } else {
-                state.employeeList.data = state.employeeList.data.filter((employee) =>
-                    employee.name.includes(state.searchValue),
-                );
+        deleteContractInfo: (state, action: PayloadAction<string>) => {
+            // Xoas tam thoi bang ten
+            const nameId = action.payload;
+            const deletePostIndex = state.contractListInfo.data.findIndex((post) => post.names === nameId);
+            if (deletePostIndex !== -1) {
+                state.contractListInfo.data.splice(deletePostIndex, 1);
             }
+        },
+        changeValueEmployeeUpdate: (state, action: PayloadAction<number>) => {
+            const idEmployee = action.payload;
+            state.employeeList.data.find((employee) => {
+                if (employee.id === idEmployee) {
+                    state.employee = employee;
+                }
+            });
+        },
+        removeValueFormEmployeeInfo: (state) => {
+            state.employee = {
+                id: 0,
+                old_staff_id: 0,
+                staff_id: '',
+                department_id: 1,
+                company_id: 1,
+                manager_id: 1,
+                marriage_id: 1,
+                position_id: 1,
+                mother_name: '',
+                pob: '',
+                home_address_1: '',
+                home_address_2: '',
+                mobile_no: '',
+                tel_no: '',
+                bank_account_no: '',
+                bank_name: '',
+                card_number: '',
+                family_card_number: '',
+                health_insurance_no: '',
+                safety_insurance_no: '',
+                entitle_ot: 1,
+                meal_allowance_paid: 1,
+                operational_allowance_paid: 1,
+                attendance_allowance_paid: 1,
+                minimum_salary_used: '',
+                shift: '',
+                grade_id: 1,
+                remark: '',
+                created_at: '',
+                updated_at: '',
+                deleted_at: '',
+                department_name: '',
+                marriage_code: '',
+                position_name: '',
+                grade_prefix: '',
+                grade_name: '',
+                manager_name: '',
+                contracts: [],
+                name: '',
+                gender: '',
+                dob: '',
+                ktp_no: '',
+                nc_id: '',
+                type: '0',
+                basic_salary: 0,
+                audit_salary: 0,
+                safety_insurance: 0,
+                health_insurance: 0,
+                meal_allowance: 0,
+                contract_start_date: '',
+            };
         },
     },
     extraReducers(builder) {
         builder
             .addCase(getEmployeeList.fulfilled, (state, action) => {
                 state.employeeList = action.payload;
-                state.employeeOriginal = action.payload;
             })
             .addCase(getEmployeeListSearch.fulfilled, (state, action) => {
                 state.employeeList = action.payload;
@@ -426,9 +411,12 @@ export const {
     ChangeValueDateFormEmployeeInfo,
     getIdEmployeeDelete,
     changeValueFormContractDate,
-    removeValueFormEmployeeInfo,
-    changeValueSearchEmployee,
     changeValueFormContractDateInfo,
+    ChangeValueContractUpload,
+    addContractInfo,
+    deleteContractInfo,
+    changeValueEmployeeUpdate,
+    removeValueFormEmployeeInfo,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;
