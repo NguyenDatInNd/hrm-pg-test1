@@ -1,0 +1,11 @@
+import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
+import { Company } from '../../Types/company';
+import axios from 'axios';
+import { API_PATHS } from '../../configs/api';
+import Cookies from 'js-cookie';
+import { ACCESS_TOKEN_KEY } from '../../utils/contants';
+import { fetchApi } from '../../configs/fetchApi';
+type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
+type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
+type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
+type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;

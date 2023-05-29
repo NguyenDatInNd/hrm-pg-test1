@@ -6,16 +6,15 @@ import { Routes, Route } from 'react-router-dom';
 import { ROUTES } from './configs/router';
 import { ACCESS_TOKEN_KEY } from './utils/contants';
 import { useAppSelector } from './store';
-
+import { ToastContainer } from 'react-toastify';
 const LoginPage = lazy(() => import('./modules/page/loginPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const EmployeePage = lazy(() => import('./pages/employee/EmployeeListPage'));
 const CreateOrUpdateEmployee = lazy(() => import('./pages/employee/CreateEmployee'));
 const Settings = lazy(() => import('./pages/Settings/Setting'));
 const ForgotPassWord = lazy(() => import('./modules/page/ForgotPasswordPage'));
-
+import 'react-toastify/dist/ReactToastify.css';
 import { Header, SideBar } from './components/index';
-import { Toaster } from 'react-hot-toast';
 
 export const RoutesConfig = () => {
     const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
@@ -33,7 +32,7 @@ export const RoutesConfig = () => {
 
                             <div
                                 style={{ zIndex: '99' }}
-                                className="w-[325px] mt-24  fixed sidebar dark:bg-secondary-dark-bg bg-white"
+                                className="w-[325px] mt-24  fixed sidebar dark:bg-secondary-dark-bg bg-white border-r border-[#c1c8cd3d] "
                             >
                                 <SideBar />
                             </div>
@@ -60,7 +59,19 @@ export const RoutesConfig = () => {
                         </Suspense>
                     </div>
                 </div>
-                <Toaster position="top-right" reverseOrder={false} />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={1000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
+                <ToastContainer />
             </div>
         </>
     );

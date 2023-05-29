@@ -72,6 +72,7 @@ export const gender = [
     },
 ];
 
+// not use
 export const marriage = [
     {
         id: 0,
@@ -90,7 +91,7 @@ export const marriage = [
         value: 2,
     },
 ];
-
+// not use
 export const employeeType = [
     {
         id: '0',

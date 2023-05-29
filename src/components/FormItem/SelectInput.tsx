@@ -33,6 +33,7 @@ const SelectInput = (props: PropsSelect) => {
             padding: '0 10px',
             '& .MuiMenuItem-root': {
                 marginBottom: '2px',
+                fontSize: '14px',
             },
             '& .Mui-focusVisible': {
                 ...(isNa && {
@@ -47,6 +48,7 @@ const SelectInput = (props: PropsSelect) => {
             '& .MuiMenuItem-root:hover': {
                 color: 'rgb(48, 164, 108)',
                 borderRadius: '6px',
+                fontSize: '14px',
             },
             '& .MuiMenuItem-root.Mui-selected': {
                 backgroundColor: 'rgb(233, 249, 238)',
@@ -57,16 +59,12 @@ const SelectInput = (props: PropsSelect) => {
     };
 
     const handleSelectBlur = () => {
-        if (!value) {
-            setIsValue(false);
-        } else {
+        if (value || value === 0) {
             setIsValue(true);
+        } else {
+            setIsValue(false);
         }
     };
-    console.log(`'is value ${value}'`, isValue);
-
-    console.log('select input', value);
-
     return (
         // <Box component="form" className="form" noValidate autoComplete="off">
         <div className="flex flex-col ">

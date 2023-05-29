@@ -1,15 +1,22 @@
-import React, { ChangeEvent, useState, useCallback } from 'react';
+import { ChangeEvent, useState, useCallback } from 'react';
 import './Upload.scss';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import Button from '@mui/material/Button';
-import InputDatePicker from '../FormItem/InputDatePicker';
+import ClearIcon from '@mui/icons-material/Clear';
 import InputComponent from '../FormItem/InputComponent';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { IsContractInfo } from '../../Types/employee';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { ChangeValueContractUpload, addContractInfo, deleteContractInfo } from '../../pages/Redux/employee.slice';
-import { IsListContractInfo } from '../../Types/employee';
 import { MdDeleteOutline } from 'react-icons/md';
+import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
+import { useParams } from 'react-router-dom';
+import {
+    addDataTableContract,
+    addDataToForm,
+    removeDataContractById,
+    removeDataFormConTtract,
+} from '../../pages/Redux/contractUpload.slice';
+import moment from 'moment-timezone';
 interface Column {
     id: 'No' | 'Contract Name' | 'Sign Date' | 'Action';
     label: string;
@@ -25,50 +32,93 @@ const columns: readonly Column[] = [
     { id: 'Action', label: 'Action', minWidth: 250 },
 ];
 
-interface typeContractListInfo {
-    contractList: IsListContractInfo;
-}
+// interface typeContractListInfo {
+//     contractList: IsListContractInfo;
+// }
 
-const ContractUpload = ({ contractList }: typeContractListInfo) => {
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+// { contractList }: typeContractListInfo
+const ContractUpload = () => {
     const dispatch = useAppDispatch();
-    const [selectedFile, setSelectedFile] = useState<string>('');
-    const { contractInfo } = useAppSelector((state) => state.employee);
-    const [formContractInfo, setFormContractInfo] = useState<IsContractInfo>({
-        names: '',
-        contract_dates: '',
-        modified_contracts: '',
-        documents: '',
-    });
+    const { idEmployee } = useParams();
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [openFirstModal, setOpenFirstModal] = useState(false);
+    const [formContract, setFormContract] = useState({ date: '', name: '' });
 
+    const { contractList, contractInfo } = useAppSelector((state) => state.contractUpload);
+
+    console.log('contractList', contractList);
+    console.log('contractInfo', contractInfo);
+
+    // Change when selected file
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        setSelectedFile(file ? file.name : '');
+        const selectedFile = event.target.files && event.target.files[0];
+        setSelectedFile(selectedFile || null);
     };
     const handleDeleteFile = () => {
-        setSelectedFile('');
+        setSelectedFile(null);
     };
 
-    const handleAddContractInfo = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => {
-            const { name, value } = e.target;
-            setFormContractInfo((prevValues) => ({ ...prevValues, [name]: value }));
-            dispatch(ChangeValueContractUpload({ name, value }));
-        },
-        [dispatch],
-    );
-
-    const handleAddContractUpload = () => {
-        dispatch(addContractInfo(contractInfo));
-        setFormContractInfo({
-            names: '',
-            contract_dates: '',
-            modified_contracts: '',
-            documents: '',
-        });
+    const changeContractName = (e: ChangeEvent<HTMLInputElement>) => {
+        setFormContract((prevValues) => ({ ...prevValues, name: e.target.value }));
+    };
+    const handleChangeDate = (date: Date, event: ChangeEvent<HTMLInputElement>) => {
+        setFormContract((prevValues) => ({ ...prevValues, date: String(date) }));
     };
 
-    const handleDeleteContractInfo = (nameId: string) => {
-        dispatch(deleteContractInfo(nameId));
+    const handleDataContract = () => {
+        if (selectedFile != null) {
+            dispatch(
+                addDataToForm({
+                    employee_id: idEmployee ?? '0',
+                    documents: [selectedFile],
+                    names: [formContract.name],
+                    contract_dates: [
+                        moment(formContract.date).format('YYYY-MM-DD'),
+                        // file.date
+                    ],
+                    modified_contracts: [],
+                }),
+            );
+            dispatch(
+                addDataTableContract({
+                    id: selectedFile.lastModified,
+                    employee_id: -1,
+                    contract_date: formContract.date,
+                    name: formContract.name,
+                    document: '',
+                    created_at: '',
+                    updated_at: '',
+                    deleted_at: '',
+                }),
+            );
+        }
+        setFormContract({ date: '', name: '' });
+    };
+
+    // handle open/close modal
+    const handleOpenFirstModal = () => {
+        setOpenFirstModal(true);
+    };
+    const handleCloseFirstModal = () => {
+        setOpenFirstModal(false);
+    };
+
+    // delete contract upload
+    const handleDeleteContractInfo = (index: number, rowId: number) => {
+        dispatch(removeDataFormConTtract(index));
+        dispatch(removeDataContractById(rowId));
+        setOpenFirstModal(false);
     };
 
     return (
@@ -79,19 +129,20 @@ const ContractUpload = ({ contractList }: typeContractListInfo) => {
 
             <div className="flex flex-wrap gap-5 py-5 px-[18px]">
                 <div className="container-upload flex flex-col gap-11">
-                    <InputDatePicker
-                        type="date"
-                        value={formContractInfo.contract_dates}
-                        name="contract_dates"
-                        onChange={handleAddContractInfo}
+                    <InputComponentDatePicker
+                        // value={formContractInfo.contract_dates}
+                        onChange={handleChangeDate}
+                        value={formContract.date}
+                        name="contract_date"
                         label="Contract Date"
-                        upload
+                        size="small"
                     />
                     <InputComponent
                         type="text"
-                        value={formContractInfo.names}
-                        name="names"
-                        onChange={handleAddContractInfo}
+                        onChange={changeContractName}
+                        value={formContract.name}
+                        name="name"
+                        // onChange={handleAddContractInfo}
                         label="Contract Name"
                         upload
                     />
@@ -128,14 +179,15 @@ const ContractUpload = ({ contractList }: typeContractListInfo) => {
                         </div>
                     </div>
                     <div>
-                        <Button onClick={handleAddContractUpload} className="button-upload-file">
+                        {/* onClick={handleAddContractUpload} */}
+                        <Button onClick={handleDataContract} className="button-upload-file">
                             Add
                         </Button>
                     </div>
                     {selectedFile && (
                         <div className="-mt-4">
                             <span className="px-3 py-3 text-xl max-w-full bg-[#f1f3f5]">
-                                {selectedFile}
+                                {selectedFile.name}
                                 <button className="ml-4 mr-3" onClick={handleDeleteFile}>
                                     X
                                 </button>
@@ -162,24 +214,75 @@ const ContractUpload = ({ contractList }: typeContractListInfo) => {
                             </TableHead>
 
                             <TableBody>
-                                {contractList.data.map((row, index) => {
-                                    return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                                            <TableCell>{index + 1}</TableCell>
-                                            <TableCell>{row.names}</TableCell>
-                                            <TableCell>{row.contract_dates}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    onClick={() => handleDeleteContractInfo(row.names)}
-                                                    className="button-contract-upload "
-                                                >
-                                                    <MdDeleteOutline size={14} className="-mt-1" />
-                                                    <span className="ml-2">Delete</span>
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
+                                {contractList &&
+                                    contractList[0]?.id !== -1 &&
+                                    contractList.map((row: any, index: number) => {
+                                        return (
+                                            <>
+                                                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                                    <TableCell>{index + 1}</TableCell>
+                                                    <TableCell>{row.name}</TableCell>
+                                                    <TableCell>
+                                                        {moment(row.contract_date).format('YYYY/MM/DD')}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Button
+                                                            onClick={handleOpenFirstModal}
+                                                            className="button-contract-upload "
+                                                        >
+                                                            <MdDeleteOutline size={14} className="-mt-1" />
+                                                            <span className="ml-2">Delete</span>
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <div>
+                                                    <Modal
+                                                        open={openFirstModal}
+                                                        className={`${openFirstModal ? 'modalStyle' : ''}`}
+                                                        onClose={handleCloseFirstModal}
+                                                        aria-labelledby="modal-modal-title"
+                                                        aria-describedby="modal-modal-description"
+                                                    >
+                                                        <Box sx={style} className="modalITemStyleSecond !w-[446px]">
+                                                            <div className="flex items-center justify-between gap-3">
+                                                                <span className=" text-center  font-semibold text-3xl">
+                                                                    Delete
+                                                                </span>
+                                                                <span
+                                                                    onClick={handleCloseFirstModal}
+                                                                    className="cursor-pointer"
+                                                                >
+                                                                    <ClearIcon className="!h-8 !w-8 rounded-full font-semibold" />
+                                                                </span>
+                                                            </div>
+                                                            <div className="w-full mt-4 font-semibold text-[#687076]">
+                                                                <span>
+                                                                    This will delete the {row.names} record. Are you
+                                                                    sure to continue?
+                                                                </span>
+                                                            </div>
+                                                            <div className="mt-5 mb-2 flex gap-3">
+                                                                <Button
+                                                                    onClick={handleCloseFirstModal}
+                                                                    className="button-signout-close  !text-[#11181c] w-[48%] !bg-[#f1f3f5]"
+                                                                >
+                                                                    No
+                                                                </Button>
+                                                                <Button
+                                                                    onClick={() =>
+                                                                        handleDeleteContractInfo(index, row.id)
+                                                                    }
+                                                                    className="button-signout w-[48%]"
+                                                                >
+                                                                    Yes
+                                                                </Button>
+                                                            </div>
+                                                        </Box>
+                                                    </Modal>
+                                                </div>
+                                            </>
+                                        );
+                                    })}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -190,3 +293,29 @@ const ContractUpload = ({ contractList }: typeContractListInfo) => {
 };
 
 export default ContractUpload;
+
+// const [formContractInfo, setFormContractInfo] = useState<IsContractInfo>({
+//     names: '',
+//     contract_dates: '',
+//     modified_contracts: '',
+//     documents: '',
+// });
+
+// const handleAddContractInfo = useCallback(
+//     (e: ChangeEvent<HTMLInputElement>) => {
+//         const { name, value } = e.target;
+//         setFormContractInfo((prevValues) => ({ ...prevValues, [name]: value }));
+//         dispatch(ChangeValueContractUpload({ name, value }));
+//     },
+//     [dispatch],
+// );
+
+// const handleAddContractUpload = () => {
+//     dispatch(addContractInfo(contractInfo));
+//     setFormContractInfo({
+//         names: '',
+//         contract_dates: '',
+//         modified_contracts: '',
+//         documents: '',
+//     });
+// };

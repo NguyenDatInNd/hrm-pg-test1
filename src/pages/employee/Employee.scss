@@ -83,7 +83,8 @@
     color: rgb(0, 145, 255) !important;
     box-shadow: none !important;
     border-radius: 6px !important;
-    background-color: rgb(237, 246, 255) !important;
+    background-color: rgb(255, 239, 239) !important;
+    color: rgb(229, 72, 77) !important;
     min-width: 180px !important;
     min-height: 43px !important ;
 }
@@ -100,9 +101,15 @@
     color: white !important;
     background-color: rgb(229, 72, 77) !important;
 }
+
 .tab-button-error:hover {
-    background-color: rgba(0, 145, 255, 0.08) !important;
+    background-color: rgba(229, 72, 77, 0.08) !important;
 }
+
+.tab-button-error.Mui-selected:hover {
+    background-color: rgb(220, 61, 67) !important;
+}
+
 .MuiTabs-indicator .css-1aquho2-MuiTabs-indicator {
     display: none !important;
 }

@@ -6,6 +6,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { IForgotPasswordParams } from '../../../Types/auth';
 import Copyright from '../../../components/Copyright';
+import { ROUTES } from '../../../configs/router';
 
 type IForgotPasswordType = {
     handleForgotPassword(values: IForgotPasswordParams): void;
@@ -16,7 +17,6 @@ const ForgotPassword = ({ handleForgotPassword }: IForgotPasswordType) => {
         register,
         formState: { errors },
         handleSubmit,
-        watch,
     } = useForm({
         defaultValues: {
             email: '',
@@ -61,7 +61,7 @@ const ForgotPassword = ({ handleForgotPassword }: IForgotPasswordType) => {
                                                 type="text"
                                                 className=""
                                                 {...register('email', {
-                                                    required: 'The email not empty',
+                                                    required: 'Please enter your email',
                                                     pattern: {
                                                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                                                         message: 'invalid email address',
@@ -97,7 +97,7 @@ const ForgotPassword = ({ handleForgotPassword }: IForgotPasswordType) => {
                                     </div>
 
                                     <div className="d-flex flex-column mt-3 mb-4">
-                                        <Link to="/login" className="text-center  text-primary">
+                                        <Link to={ROUTES.login} className="text-center  text-primary hover:underline">
                                             Back to Sign In
                                         </Link>
                                     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-const */
 import React, { useState, useCallback, ChangeEvent, useEffect } from 'react';
@@ -24,6 +25,7 @@ import {
     changeValueEmployeeUpdate,
     changeValueFormEmployeeInfo,
     removeValueFormEmployeeInfo,
+    updateEmployee,
 } from '../Redux/employee.slice';
 import ContactInfomation from '../../components/EmployeeSplit/ContactInfomation';
 import EmployeeDetails from '../../components/EmployeeSplit/EmployeeDetails';
@@ -67,16 +69,16 @@ function a11yProps(index: number) {
 
 const CreateEmployee = () => {
     const navigate = useNavigate();
-    const [value, setValue] = React.useState(0);
+    const [valueTab, setValueTab] = React.useState(0);
     const [isActiveAdd, setIsActiveAdd] = useState(false);
+    const [isActiveAddInfo, setIsActiveAddInfo] = useState(false);
     const [isActiveAddContract, setIsActiveAddContract] = useState(false);
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
+    const [isActiveAddSalary, setIsActiveAddSalary] = useState(false);
+
     const dispatch = useAppDispatch();
     dispatch(loginSuccess(true));
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
-    const { employee, employeeList } = useAppSelector((state) => state.employee);
+    const { employee } = useAppSelector((state) => state.employee);
     const { idEmployee } = useParams();
 
     // state employee Information form
@@ -169,39 +171,89 @@ const CreateEmployee = () => {
         [dispatch],
     );
 
-    // handle add employee
-    const handleAddEmployee = () => {
-        dispatch(addEmployee());
+    // handle create or update employee
+    const handleCreateOrUpdateEmployee = () => {
+        if (idEmployee) {
+            dispatch(updateEmployee(Number(idEmployee)));
+        } else {
+            dispatch(addEmployee());
+        }
         setTimeout(() => {
             navigate(ROUTES.employee);
         }, 250);
     };
 
-    // check data when adding employee
-    const handleActiveAddEmployee = () => {
-        if (employee.name && employee.gender && employee.dob && employee.ktp_no && employee.nc_id) {
+    // handle change TabPanel
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValueTab(newValue);
+
+        if (
+            !employee.name &&
+            !employee.gender &&
+            !employee.dob &&
+            !employee.ktp_no &&
+            !employee.nc_id &&
+            newValue !== 0
+        ) {
+            setIsActiveAddInfo(true);
+        }
+        if (!employee.contract_start_date && !employee.type && newValue !== 1) {
+            setIsActiveAddContract(true);
+        }
+        if (
+            !String(employee.basic_salary) ||
+            !String(employee.audit_salary) ||
+            !String(employee.safety_insurance) ||
+            !String(employee.health_insurance) ||
+            (!String(employee.meal_allowance) && newValue !== 3)
+        ) {
+            setIsActiveAddSalary(true);
+        }
+    };
+
+    // handle get data when update employee
+    const handleCheckActiceTabPanel = () => {
+        if (
+            employee.name &&
+            (employee.gender || employee.gender == 0) &&
+            employee.dob &&
+            employee.ktp_no &&
+            employee.nc_id
+        ) {
+            setIsActiveAddInfo(false);
+        } else {
+            setTimeout(() => {
+                setIsActiveAddInfo(true);
+            }, 2000);
+        }
+        if (employee.contract_start_date && employee.type) {
+            setIsActiveAddContract(false);
+        }
+        if (
+            String(employee.basic_salary) &&
+            String(employee.audit_salary) &&
+            String(employee.safety_insurance) &&
+            String(employee.health_insurance) &&
+            String(employee.meal_allowance)
+        ) {
+            setIsActiveAddSalary(false);
+        }
+    };
+
+    const handleActiveButtonAdd = () => {
+        if (!isActiveAddInfo && !isActiveAddContract && !isActiveAddSalary) {
             setIsActiveAdd(true);
         } else {
             setIsActiveAdd(false);
-            setIsActiveAddContract(false);
-        }
-    };
-    const handleActiveAddEmployeeContact = () => {
-        if (employee.contract_start_date && employee.type) {
-            setIsActiveAddContract(true);
-        } else {
-            setIsActiveAddContract(false);
         }
     };
 
     useEffect(() => {
-        setTimeout(() => {
-            handleActiveAddEmployee();
-            handleActiveAddEmployeeContact();
-        }, 500);
-    });
+        handleCheckActiceTabPanel();
+        handleActiveButtonAdd();
+    }, [handleCheckActiceTabPanel]);
 
-    // handle get data when update employee
+    console.log('activeTab Button', isActiveAdd);
 
     useEffect(() => {
         if (idEmployee) {
@@ -210,6 +262,7 @@ const CreateEmployee = () => {
             dispatch(removeValueFormEmployeeInfo());
         }
     }, [idEmployee, dispatch]);
+
     return (
         <div className="mt-36 px-16">
             <div className="relative">
@@ -221,18 +274,20 @@ const CreateEmployee = () => {
                 <div className="search-employee absolute top-14 right-0">
                     <div className="">
                         {idEmployee ? (
-                            <Button type="submit" className="h-20 w-64 button-save-change">
+                            <Button
+                                onClick={handleCreateOrUpdateEmployee}
+                                type="submit"
+                                className="h-20 w-64 button-save-change"
+                            >
                                 Save Change
                             </Button>
                         ) : (
                             <Button
-                                disabled={!isActiveAdd && !isActiveAddContract}
-                                onClick={handleAddEmployee}
+                                disabled={!isActiveAdd}
+                                onClick={handleCreateOrUpdateEmployee}
                                 type="submit"
                                 className={`h-20 w-32 ${
-                                    isActiveAdd && isActiveAddContract
-                                        ? 'button-save-change'
-                                        : ' button-not-save-change'
+                                    isActiveAdd ? 'button-save-change' : ' button-not-save-change'
                                 } `}
                             >
                                 Add
@@ -245,28 +300,53 @@ const CreateEmployee = () => {
                 <Box>
                     <Tabs
                         className="tab-container"
-                        value={value}
+                        value={valueTab}
                         onChange={handleChange}
                         aria-label="basic tabs example"
                     >
                         <Tab
-                            icon={!isActiveAdd ? <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} /> : ''}
+                            icon={
+                                isActiveAddInfo ? (
+                                    <ErrorOutlineRoundedIcon style={{ fontSize: 22, color: '#FFB7B9' }} />
+                                ) : (
+                                    ''
+                                )
+                            }
                             iconPosition={'end'}
-                            className={` ${isActiveAdd ? 'tab-button' : 'tab-button-error'} `}
+                            className={` ${isActiveAddInfo ? 'tab-button-error' : 'tab-button'} `}
                             component="button"
                             label="Employee Information"
                             {...a11yProps(0)}
                         />
                         <Tab
-                            icon={!isActiveAddContract ? <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} /> : ''}
+                            icon={
+                                isActiveAddContract ? (
+                                    <ErrorOutlineRoundedIcon style={{ fontSize: 22, color: '#FFB7B9' }} />
+                                ) : (
+                                    ''
+                                )
+                            }
                             iconPosition={'end'}
-                            className={` ${isActiveAddContract ? 'tab-button' : 'tab-button-error'} `}
+                            className={` ${isActiveAddContract ? 'tab-button-error' : 'tab-button'} `}
                             component="button"
                             label="Contract Information"
                             {...a11yProps(1)}
                         />
                         <Tab className="tab-button" component="button" label="Employment Details" {...a11yProps(2)} />
-                        <Tab className="tab-button" component="button" label="Salary & Wages" {...a11yProps(3)} />
+                        <Tab
+                            icon={
+                                isActiveAddSalary ? (
+                                    <ErrorOutlineRoundedIcon style={{ fontSize: 22, color: '#FFB7B9' }} />
+                                ) : (
+                                    ''
+                                )
+                            }
+                            iconPosition={'end'}
+                            className={` ${isActiveAddSalary ? 'tab-button-error' : 'tab-button'} `}
+                            component="button"
+                            label="Salary & Wages"
+                            {...a11yProps(3)}
+                        />
                         <Tab className="tab-button" component="button" label="Others" {...a11yProps(4)} />
                     </Tabs>
                 </Box>
@@ -274,31 +354,31 @@ const CreateEmployee = () => {
                 <div className="employee-container mt-5 bg-white rounded-3xl">
                     <div className="px-0 w-full">
                         <div className="">
-                            <TabPanel value={value} index={0}>
+                            <TabPanel value={valueTab} index={0}>
                                 <EmployeeInfomation
                                     FormEmployeeInformation={formEmployeeInfomation}
                                     handleFormEmployeeChange={handleFormEmployeeChange}
                                 />
                             </TabPanel>
-                            <TabPanel value={value} index={1}>
+                            <TabPanel value={valueTab} index={1}>
                                 <ContactInfomation
                                     formContractEmployee={formContractEmployee}
                                     handleFormContractChange={handleFormContractChange}
                                 />
                             </TabPanel>
-                            <TabPanel value={value} index={2}>
+                            <TabPanel value={valueTab} index={2}>
                                 <EmployeeDetails
                                     formDetailEmployee={formDetailEmployee}
                                     handleFormDetailChange={handleFormDetailChange}
                                 />
                             </TabPanel>
-                            <TabPanel value={value} index={3}>
+                            <TabPanel value={valueTab} index={3}>
                                 <EmployeeSalary
                                     formSalaryEmployee={formSalaryEmployee}
                                     handleFormSalaryChange={handleFormSalaryChange}
                                 />
                             </TabPanel>
-                            <TabPanel value={value} index={4}>
+                            <TabPanel value={valueTab} index={4}>
                                 <EmployeeOthers />
                             </TabPanel>
                         </div>
@@ -312,3 +392,63 @@ const CreateEmployee = () => {
 };
 
 export default CreateEmployee;
+
+// const handleFormDetailChange = useCallback(
+//     debounce((e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
+//       const { name } = e.target;
+//       let value: any;
+//       value = e.target.value;
+//       setFormDetailEmployee((prevValues) => ({ ...prevValues, [name]: value }));
+//       dispatch(changeValueFormEmployeeInfo({ name, value }));
+//     }, 300), // Thay đổi thời gian chờ debounce tùy theo yêu cầu của bạn
+//     [dispatch, setFormDetailEmployee]
+//   );
+
+//   useEffect(() => {
+//     return () => {
+//       handleFormDetailChange.cancel(); // Hủy bỏ debounce khi component bị unmount
+//     };
+//   }, [handleFormDetailChange]);
+
+// check data when adding employee
+// const handleActiveAddEmployee = () => {
+//     if (
+//         employee.name &&
+//         (employee.gender || employee.gender === 0) &&
+//         employee.dob &&
+//         employee.ktp_no &&
+//         employee.nc_id
+//     ) {
+//         setIsActiveAdd(true);
+//     } else {
+//         setIsActiveAdd(false);
+//     }
+// };
+// const handleActiveAddEmployeeContact = () => {
+//     if (employee.contract_start_date && employee.type) {
+//         setIsActiveAddContract(true);
+//     } else {
+//         setIsActiveAddContract(false);
+//     }
+// };
+// const handleActiveAddEmployeeSalary = () => {
+//     if (
+//         (employee.basic_salary || employee.basic_salary === 0) &&
+//         (employee.audit_salary || employee.basic_salary === 0) &&
+//         (employee.safety_insurance || employee.safety_insurance === 0) &&
+//         (employee.health_insurance || employee.health_insurance === 0) &&
+//         (employee.meal_allowance || employee.meal_allowance === 0)
+//     ) {
+//         setIsActiveAddSalary(true);
+//     } else {
+//         setIsActiveAddSalary(false);
+//     }
+// };
+
+// useEffect(() => {
+//     setTimeout(() => {
+//         handleActiveAddEmployee();
+//         handleActiveAddEmployeeContact();
+//         handleActiveAddEmployeeSalary();
+//     }, 500);
+// }, [handleActiveAddEmployee, handleActiveAddEmployeeContact, handleActiveAddEmployeeSalary]);

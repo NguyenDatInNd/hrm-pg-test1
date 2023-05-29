@@ -1,22 +1,12 @@
 import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
-import {
-    Department,
-    Employee,
-    EmployeeList,
-    IsBenefit,
-    IsContractInfo,
-    IsGrade,
-    IsListContractInfo,
-    MarriageStatus,
-    Position,
-} from '../../Types/employee';
+import { Department, Employee, EmployeeList, IsBenefit, IsGrade, MarriageStatus, Position } from '../../Types/employee';
 import { API_PATHS } from '../../configs/api';
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import Cookies from 'js-cookie';
 import { fetchApi } from '../../configs/fetchApi';
 import { RootState } from '../../store';
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 // AsyncThunk
 //một hành động không đồng bộ, thường gửi một hành động đang chờ xử lý,
@@ -36,8 +26,6 @@ interface EmployeeState {
     loadingEmployee: boolean;
     gradeList: IsGrade[];
     benefitList: IsBenefit[];
-    contractListInfo: IsListContractInfo;
-    contractInfo: IsContractInfo;
 }
 
 interface EmployeeListParams {
@@ -131,15 +119,6 @@ const initialState: EmployeeState = {
     loadingEmployee: false,
     gradeList: [],
     benefitList: [],
-    contractListInfo: {
-        data: [],
-    },
-    contractInfo: {
-        names: '',
-        contract_dates: '',
-        modified_contracts: '',
-        documents: '',
-    },
 };
 
 //get API employeeList
@@ -175,7 +154,6 @@ export const getEmployeeListSearch = createAsyncThunk(
 
 export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, { getState }) => {
     const { employee } = getState() as RootState;
-    console.log('employee', employee.employee);
     const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, employee.employee, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
@@ -200,6 +178,17 @@ export const deleteEmployeeEncode = createAsyncThunk('employees/deleteEmployee',
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     toast.success(response.data?.message);
+    const data = response.data.data;
+    return data;
+});
+
+//update employee
+export const updateEmployee = createAsyncThunk('employees/updateEmployee', async (idEmployee: number, { getState }) => {
+    const { employee } = getState() as RootState;
+    const response = await axios.put(`${API_PATHS.API_FIXER}/employee/${idEmployee}`, employee.employee, {
+        headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
+    toast.success('Change saved');
     const data = response.data.data;
     return data;
 });
@@ -257,33 +246,9 @@ const employeeSlice = createSlice({
             const { name, value } = action.payload;
             state.employee[name] = value;
         },
-        ChangeValueDateFormEmployeeInfo: (state, action: PayloadAction<any>) => {
-            state.employee.dob = action.payload;
-        },
-        changeValueFormContractDate: (state, action: PayloadAction<any>) => {
-            state.employee.contract_start_date = action.payload;
-        },
-        ChangeValueContractUpload: (state, action: PayloadAction<Value>) => {
-            const { name, value } = action.payload;
-            state.contractInfo[name] = value;
-        },
-        changeValueFormContractDateInfo: (state, action: PayloadAction<any>) => {
-            state.contractInfo.contract_dates = action.payload;
-        },
+
         getIdEmployeeDelete: (state, action: PayloadAction<number[]>) => {
             state.employeeIddelete = action.payload;
-        },
-        addContractInfo: (state, action) => {
-            state.contractListInfo.data.push(action.payload);
-            state.contractInfo.contract_dates = '';
-        },
-        deleteContractInfo: (state, action: PayloadAction<string>) => {
-            // Xoas tam thoi bang ten
-            const nameId = action.payload;
-            const deletePostIndex = state.contractListInfo.data.findIndex((post) => post.names === nameId);
-            if (deletePostIndex !== -1) {
-                state.contractListInfo.data.splice(deletePostIndex, 1);
-            }
         },
         changeValueEmployeeUpdate: (state, action: PayloadAction<number>) => {
             const idEmployee = action.payload;
@@ -338,7 +303,7 @@ const employeeSlice = createSlice({
                 dob: '',
                 ktp_no: '',
                 nc_id: '',
-                type: '0',
+                type: '',
                 basic_salary: 0,
                 audit_salary: 0,
                 safety_insurance: 0,
@@ -405,18 +370,30 @@ const employeeSlice = createSlice({
             );
     },
 });
-
 export const {
     changeValueFormEmployeeInfo,
-    ChangeValueDateFormEmployeeInfo,
     getIdEmployeeDelete,
-    changeValueFormContractDate,
-    changeValueFormContractDateInfo,
-    ChangeValueContractUpload,
-    addContractInfo,
-    deleteContractInfo,
     changeValueEmployeeUpdate,
     removeValueFormEmployeeInfo,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;
+
+// ChangeValueContractUpload: (state, action: PayloadAction<Value>) => {
+//     const { name, value } = action.payload;
+//     state.contractInfo[name] = value;
+// },
+
+// addContractInfo: (state, action) => {
+//     state.contractListInfo.data.push(action.payload);
+//     state.contractInfo.contract_dates = '';
+// },
+
+// deleteContractInfo: (state, action: PayloadAction<string>) => {
+//     // Xoas tam thoi bang ten
+//     const nameId = action.payload;
+//     const deletePostIndex = state.contractListInfo.data.findIndex((post) => post.names === nameId);
+//     if (deletePostIndex !== -1) {
+//         state.contractListInfo.data.splice(deletePostIndex, 1);
+//     }
+// },

@@ -37,7 +37,7 @@ export const getCompany = createAsyncThunk('companys/getCompany', async () => {
 // });
 
 export const getCompanyFixerLogin = createAsyncThunk('companysFixer/getCompanyFixer', async () => {
-    const res = await axios.get(`${companyfixerLogin}/company`);
+    const res = await axios.get(`${API_PATHS.API_FIXER}/company`);
     const data = res.data.data;
     return data;
 });

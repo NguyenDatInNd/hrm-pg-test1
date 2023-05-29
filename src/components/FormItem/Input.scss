@@ -24,7 +24,7 @@
 }
 .input-danger {
     background-color: #ffefef !important;
-    border: 1px solid rgb(243, 174, 175);
+    border: 1px solid rgb(243, 174, 175) !important;
 }
 
 .date-container {
@@ -80,16 +80,13 @@
     background-color: rgb(241, 243, 245);
     overflow: hidden;
 }
-
 .select-type-2 {
     width: 260px;
 }
-
 .css-idofj3-MuiInputBase-root {
     font-size: 1.4rem !important;
     font-family: 'SVN-Sofia Pro Regular', 'Public Sans', sans-serif !important;
 }
-
 // Css configuration datePicker
 .custom-datepicker {
     --datepicker-bg: #fff;

@@ -10,7 +10,8 @@ import { gender } from '../../context/dataLink';
 import { getMarriageList } from '../../pages/Redux/employee.slice';
 import SubTitleTable from '../Header/SubTitleTable';
 import InputComponent from '../FormItem/InputComponent';
-import InputDatePicker from '../FormItem/InputDatePicker';
+
+import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
 type PropsTabEmployee = {
     FormEmployeeInformation: FormEmployeeInformation;
     handleFormEmployeeChange?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
@@ -82,14 +83,7 @@ const EmployeeInfomation = (props: PropsTabEmployee) => {
                         onChange={handleFormEmployeeChange}
                         label="Mother Name"
                     />
-                    <InputDatePicker
-                        type="date"
-                        value={employee.dob}
-                        name="dob"
-                        onChange={handleFormEmployeeChange}
-                        label="Date of birth"
-                        isRequired
-                    />
+                    <InputComponentDatePicker value={employee.dob} name="dob" label="Date of birth" isRequired />
                     <InputComponent
                         type="text"
                         value={employee.pob}

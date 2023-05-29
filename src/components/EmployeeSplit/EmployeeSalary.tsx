@@ -1,6 +1,5 @@
 import React, { ChangeEvent } from 'react';
 import SubTitleTable from '../Header/SubTitleTable';
-import Input from '../FormItem/InputDatePicker';
 import { FormSalaryEmployee } from '../../Types/employee';
 import { SelectChangeEvent } from '@mui/material';
 import InputComponent from '../FormItem/InputComponent';
@@ -13,6 +12,7 @@ type PropsTabEmployee = {
 const EmployeeSalary = (props: PropsTabEmployee) => {
     const { formSalaryEmployee, handleFormSalaryChange } = props;
     const { employee } = useAppSelector((state) => state.employee);
+
     return (
         <div>
             <SubTitleTable category="Salary & Wages" title="Required" />

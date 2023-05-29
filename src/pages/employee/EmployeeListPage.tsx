@@ -50,6 +50,7 @@ const EmployeeListPage = () => {
         };
     }, [dispatch]);
 
+    // handle open/close modal
     const handleOpenFirstModal = () => {
         setOpenFirstModal(true);
     };
@@ -138,16 +139,12 @@ const EmployeeListPage = () => {
                                 <span className="ml-2">Add</span>
                             </Link>
                             <Button
+                                disabled={employeeIddelete.length ? false : true}
                                 onClick={handleOpenFirstModal}
                                 className={`flex items-center btn-employee ${
                                     employeeIddelete.length > 0 ? 'btn-e-delete' : ''
                                 }`}
                             >
-                                {/* <img
-                                    className="w-4 -mt-1"
-                                    src={employeeIddelete.length > 0 ? deleteIconActive : deleteIcon}
-                                    alt=""
-                                /> */}
                                 <MdDeleteOutline size={16} className=" -mt-1" />
                                 <span className="ml-2">Delete</span>
                             </Button>

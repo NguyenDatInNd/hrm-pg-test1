@@ -62,7 +62,7 @@
 
 .select-self {
     line-height: 1.4375em;
-    font-size: 16px;
+    font-size: 14px !important;
     letter-spacing: -0.01em;
     font-weight: 400;
     color: rgb(105, 105, 105);
@@ -77,7 +77,7 @@
     border-radius: 6px;
     background-color: rgb(241, 243, 245);
     overflow: hidden;
-    padding: 11px 10px;
+    padding: 10px 0px;
 }
 
 // dangerously

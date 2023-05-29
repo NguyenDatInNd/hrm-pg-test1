@@ -175,13 +175,9 @@ export interface IsGrade {
 }
 
 export interface IsContractInfo {
-    names: string;
-    contract_dates: string;
-    modified_contracts: string;
-    documents: string;
-    [key: string]: any;
-}
-
-export interface IsListContractInfo {
-    data: IsContractInfo[];
+    employee_id: string;
+    names: string[];
+    contract_dates: string[];
+    documents: File[];
+    modified_contracts: string[];
 }
