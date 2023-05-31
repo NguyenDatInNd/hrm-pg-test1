@@ -65,6 +65,17 @@ const SelectInput = (props: PropsSelect) => {
             setIsValue(false);
         }
     };
+
+    console.log(name, value);
+
+    const handleValueSelected = () => {
+        if (name === 'gender') {
+            return;
+        } else {
+            return value == '' ? undefined : value;
+        }
+    };
+
     return (
         // <Box component="form" className="form" noValidate autoComplete="off">
         <div className="flex flex-col ">
@@ -86,10 +97,10 @@ const SelectInput = (props: PropsSelect) => {
                     IconComponent={ExpandMoreIcon}
                     onChange={onChange}
                     name={name}
-                    value={value == '' ? undefined : value}
+                    value={value}
                     defaultValue={isNa ? '' : undefined}
                     renderValue={(selected: any) => {
-                        if (selected === '' || selected === undefined) {
+                        if (selected === '' || selected === undefined || selected === null) {
                             return placeholder;
                         }
                         const selectedItem = data.find((item: any) => item?.id === selected) as MarriageStatus;

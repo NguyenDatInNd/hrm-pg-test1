@@ -26,6 +26,8 @@ interface EmployeeState {
     loadingEmployee: boolean;
     gradeList: IsGrade[];
     benefitList: IsBenefit[];
+    statusAdd: boolean;
+    idEmployeeAdd: number | null;
 }
 
 interface EmployeeListParams {
@@ -35,7 +37,7 @@ interface EmployeeListParams {
 
 interface Value {
     name: string;
-    value: string | number;
+    value: string | number | number[] | IsGrade | IsBenefit[] | null;
 }
 
 const initialState: EmployeeState = {
@@ -62,11 +64,11 @@ const initialState: EmployeeState = {
         id: 0,
         old_staff_id: 0,
         staff_id: '',
-        department_id: 1,
+        department_id: null,
         company_id: 1,
-        manager_id: 1,
-        marriage_id: 1,
-        position_id: 1,
+        manager_id: null,
+        marriage_id: null,
+        position_id: null,
         mother_name: '',
         pob: '',
         home_address_1: '',
@@ -79,13 +81,13 @@ const initialState: EmployeeState = {
         family_card_number: '',
         health_insurance_no: '',
         safety_insurance_no: '',
-        entitle_ot: 1,
-        meal_allowance_paid: 1,
+        entitle_ot: 0,
+        meal_allowance_paid: 0,
         operational_allowance_paid: 1,
         attendance_allowance_paid: 1,
         minimum_salary_used: '',
         shift: '',
-        grade_id: 1,
+        grade_id: null,
         remark: '',
         created_at: '',
         updated_at: '',
@@ -97,9 +99,12 @@ const initialState: EmployeeState = {
         grade_name: '',
         manager_name: '',
         contracts: [],
+        documents: [],
+        grade: [],
+        benefits: [],
 
         name: '',
-        gender: 1,
+        gender: '',
         dob: '',
         ktp_no: '',
         nc_id: '',
@@ -109,7 +114,7 @@ const initialState: EmployeeState = {
         safety_insurance: 0,
         health_insurance: 0,
         meal_allowance: 0,
-        contract_start_date: '2023-01-03',
+        contract_start_date: '',
     },
 
     employeeIddelete: [],
@@ -119,6 +124,8 @@ const initialState: EmployeeState = {
     loadingEmployee: false,
     gradeList: [],
     benefitList: [],
+    statusAdd: false,
+    idEmployeeAdd: null,
 };
 
 //get API employeeList
@@ -154,7 +161,11 @@ export const getEmployeeListSearch = createAsyncThunk(
 
 export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, { getState }) => {
     const { employee } = getState() as RootState;
-    const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, employee.employee, {
+    const { benefits } = employee.employee;
+    const benefitsId = benefits.map((benefit) => benefit.id);
+    const newEmployee = { ...employee.employee, benefits: benefitsId };
+
+    const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, newEmployee, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     toast.success('Record added');
@@ -185,10 +196,23 @@ export const deleteEmployeeEncode = createAsyncThunk('employees/deleteEmployee',
 //update employee
 export const updateEmployee = createAsyncThunk('employees/updateEmployee', async (idEmployee: number, { getState }) => {
     const { employee } = getState() as RootState;
-    const response = await axios.put(`${API_PATHS.API_FIXER}/employee/${idEmployee}`, employee.employee, {
+    const { benefits } = employee.employee;
+    const benefitsId = benefits.map((benefit) => benefit.id);
+    const newEmployee = { ...employee.employee, benefits: benefitsId };
+    const response = await axios.put(`${API_PATHS.API_FIXER}/employee/${idEmployee}`, newEmployee, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     toast.success('Change saved');
+    const data = response.data.data;
+    return data;
+});
+
+// get employee by Id when update employee
+
+export const getIdEmployeeUpdate = createAsyncThunk('employees/getEmployeeId', async (id: number) => {
+    const response = await axios.get(`${API_PATHS.API_FIXER}/employee/${id}`, {
+        headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
     const data = response.data.data;
     return data;
 });
@@ -259,58 +283,7 @@ const employeeSlice = createSlice({
             });
         },
         removeValueFormEmployeeInfo: (state) => {
-            state.employee = {
-                id: 0,
-                old_staff_id: 0,
-                staff_id: '',
-                department_id: 1,
-                company_id: 1,
-                manager_id: 1,
-                marriage_id: 1,
-                position_id: 1,
-                mother_name: '',
-                pob: '',
-                home_address_1: '',
-                home_address_2: '',
-                mobile_no: '',
-                tel_no: '',
-                bank_account_no: '',
-                bank_name: '',
-                card_number: '',
-                family_card_number: '',
-                health_insurance_no: '',
-                safety_insurance_no: '',
-                entitle_ot: 1,
-                meal_allowance_paid: 1,
-                operational_allowance_paid: 1,
-                attendance_allowance_paid: 1,
-                minimum_salary_used: '',
-                shift: '',
-                grade_id: 1,
-                remark: '',
-                created_at: '',
-                updated_at: '',
-                deleted_at: '',
-                department_name: '',
-                marriage_code: '',
-                position_name: '',
-                grade_prefix: '',
-                grade_name: '',
-                manager_name: '',
-                contracts: [],
-                name: '',
-                gender: '',
-                dob: '',
-                ktp_no: '',
-                nc_id: '',
-                type: '',
-                basic_salary: 0,
-                audit_salary: 0,
-                safety_insurance: 0,
-                health_insurance: 0,
-                meal_allowance: 0,
-                contract_start_date: '',
-            };
+            state.employee = initialState.employee;
         },
     },
     extraReducers(builder) {
@@ -321,8 +294,15 @@ const employeeSlice = createSlice({
             .addCase(getEmployeeListSearch.fulfilled, (state, action) => {
                 state.employeeList = action.payload;
             })
+            .addCase(getIdEmployeeUpdate.fulfilled, (state, action) => {
+                state.employee = action.payload;
+            })
             .addCase(addEmployee.fulfilled, (state, action) => {
                 state.employeeList.data.push(action.payload);
+                console.log('employee hiiiiiii', action.payload);
+                state.idEmployeeAdd = action.payload.id;
+                state.employee = action.payload;
+                state.statusAdd = true;
             })
             .addCase(deleteEmployeeEncode.fulfilled, (state, action) => {
                 const postIdArray = action.meta.arg;
@@ -350,10 +330,12 @@ const employeeSlice = createSlice({
             .addCase(getBenefit.fulfilled, (state, action) => {
                 state.benefitList = action.payload;
             })
+
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),
                 (state, action) => {
                     state.loadingEmployee = true;
+                    state.statusAdd = false;
                 },
             )
             .addMatcher<RejectedAction>(

@@ -32,10 +32,6 @@ const columns: readonly Column[] = [
     { id: 'Action', label: 'Action', minWidth: 250 },
 ];
 
-// interface typeContractListInfo {
-//     contractList: IsListContractInfo;
-// }
-
 const style = {
     position: 'absolute',
     top: '50%',
@@ -56,19 +52,20 @@ const ContractUpload = () => {
     const [formContract, setFormContract] = useState({ date: '', name: '' });
 
     const { contractList, contractInfo } = useAppSelector((state) => state.contractUpload);
-
-    console.log('contractList', contractList);
-    console.log('contractInfo', contractInfo);
+    // console.log('contractList', contractList);
+    // console.log('contractInfo', contractInfo);
 
     // Change when selected file
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files && event.target.files[0];
+        console.log('file', selectedFile);
         setSelectedFile(selectedFile || null);
     };
     const handleDeleteFile = () => {
         setSelectedFile(null);
     };
 
+    // Change value form
     const changeContractName = (e: ChangeEvent<HTMLInputElement>) => {
         setFormContract((prevValues) => ({ ...prevValues, name: e.target.value }));
     };
@@ -92,7 +89,7 @@ const ContractUpload = () => {
             );
             dispatch(
                 addDataTableContract({
-                    id: selectedFile.lastModified,
+                    id: selectedFile.size,
                     employee_id: -1,
                     contract_date: formContract.date,
                     name: formContract.name,
@@ -104,7 +101,11 @@ const ContractUpload = () => {
             );
         }
         setFormContract({ date: '', name: '' });
+        setSelectedFile(null);
     };
+
+    console.log('Contract info', contractInfo);
+    console.log('contract list', contractList);
 
     // handle open/close modal
     const handleOpenFirstModal = () => {
@@ -115,9 +116,11 @@ const ContractUpload = () => {
     };
 
     // delete contract upload
-    const handleDeleteContractInfo = (index: number, rowId: number) => {
-        dispatch(removeDataFormConTtract(index));
-        dispatch(removeDataContractById(rowId));
+    const handleDeleteContractInfo = (document: string, index: number, rowId: number) => {
+        if (document === '') {
+            dispatch(removeDataFormConTtract(index));
+            dispatch(removeDataContractById(rowId));
+        }
         setOpenFirstModal(false);
     };
 
@@ -218,23 +221,19 @@ const ContractUpload = () => {
                                     contractList[0]?.id !== -1 &&
                                     contractList.map((row: any, index: number) => {
                                         return (
-                                            <>
-                                                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell>{row.name}</TableCell>
-                                                    <TableCell>
-                                                        {moment(row.contract_date).format('YYYY/MM/DD')}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Button
-                                                            onClick={handleOpenFirstModal}
-                                                            className="button-contract-upload "
-                                                        >
-                                                            <MdDeleteOutline size={14} className="-mt-1" />
-                                                            <span className="ml-2">Delete</span>
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{row.name}</TableCell>
+                                                <TableCell>{moment(row.contract_date).format('YYYY/MM/DD')}</TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        onClick={handleOpenFirstModal}
+                                                        className="button-contract-upload "
+                                                    >
+                                                        <MdDeleteOutline size={14} className="-mt-1" />
+                                                        <span className="ml-2">Delete</span>
+                                                    </Button>
+                                                </TableCell>
                                                 <div>
                                                     <Modal
                                                         open={openFirstModal}
@@ -270,7 +269,11 @@ const ContractUpload = () => {
                                                                 </Button>
                                                                 <Button
                                                                     onClick={() =>
-                                                                        handleDeleteContractInfo(index, row.id)
+                                                                        handleDeleteContractInfo(
+                                                                            row.document,
+                                                                            index,
+                                                                            row.id,
+                                                                        )
                                                                     }
                                                                     className="button-signout w-[48%]"
                                                                 >
@@ -280,7 +283,7 @@ const ContractUpload = () => {
                                                         </Box>
                                                     </Modal>
                                                 </div>
-                                            </>
+                                            </TableRow>
                                         );
                                     })}
                             </TableBody>

@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
-import { Company } from '../../Types/company';
 import axios from 'axios';
 import { API_PATHS } from '../../configs/api';
 import Cookies from 'js-cookie';
@@ -32,7 +31,9 @@ export const addDataContract = createAsyncThunk(
     'contact/addContact',
     async ({ id, formData }: { id?: string; formData: IsContractInfo }) => {
         const formdata = new FormData();
-        console.log(formData.employee_id);
+
+        console.log('employid', id);
+
         formdata.append('employee_id', id || '');
         formData.names.forEach((name) => formdata.append('names[]', name));
         formData.contract_dates.forEach((date) => formdata.append('contract_dates[]', date));
@@ -55,12 +56,20 @@ const contractUploadSlice = createSlice({
             if (employee_id !== '0') {
                 state.contractInfo.employee_id = employee_id;
             }
-            if (names[0] != '') {
+            if (names[0] !== '') {
                 console.log(names);
 
-                state.contractInfo.names.push(...names);
-                state.contractInfo.contract_dates.push(...contract_dates);
-                state.contractInfo.documents.push(...documents);
+                const processedPayload: IsContractInfo = {
+                    employee_id,
+                    names,
+                    contract_dates,
+                    documents: [], // Loại bỏ giá trị không tuần tự hóa ở đây
+                    modified_contracts: [],
+                };
+
+                state.contractInfo.names.push(...processedPayload.names);
+                state.contractInfo.contract_dates.push(...processedPayload.contract_dates);
+                state.contractInfo.documents.push(...documents); // Sử dụng giá trị documents ban đầu từ action.payload
             }
         },
         removeDataFormConTtract: (state, action: PayloadAction<number>) => {

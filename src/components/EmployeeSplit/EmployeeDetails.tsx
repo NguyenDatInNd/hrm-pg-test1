@@ -5,52 +5,36 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import SelectInput from '../FormItem/SelectInput';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { getDepartment, getPosition } from '../../pages/Redux/employee.slice';
-import { FormDetailsEmployee } from '../../Types/employee';
+import { changeValueFormEmployeeInfo, getDepartment, getPosition } from '../../pages/Redux/employee.slice';
+import { Employee } from '../../Types/employee';
 import { SelectChangeEvent } from '@mui/material';
 import BpCheckbox from '../Upload/CustomerChecked';
 
-type PropsTabEmployee = {
-    formDetailEmployee: FormDetailsEmployee;
-    handleFormDetailChange?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
+type PropsFormDataEmployee = {
+    employee: Employee;
+    handleChangeValueFormDataEmployee?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
 };
 
 interface CheckboxValues {
-    entitledOT: boolean;
-    mealAllowancePaid: boolean;
-    operationalAllowancePaid: boolean;
-    attendanceAllowancePaid: boolean;
+    entitle_ot: boolean;
+    meal_allowance_paid: boolean;
+    operational_allowance_paid: boolean;
+    attendance_allowance_paid: boolean;
 }
 
-const EmployeeDetails = (props: PropsTabEmployee) => {
+const EmployeeDetails = (props: PropsFormDataEmployee) => {
     const dispatch = useAppDispatch();
-    const { formDetailEmployee, handleFormDetailChange } = props;
+    const { employee, handleChangeValueFormDataEmployee } = props;
     const { department, position } = useAppSelector((state) => state.employee);
-
-    const [checkboxValues, setCheckboxValues] = useState<CheckboxValues>({
-        entitledOT: false,
-        mealAllowancePaid: false,
-        operationalAllowancePaid: true,
-        attendanceAllowancePaid: true,
-    });
-
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target;
-        let updatedValues: CheckboxValues;
-        if (name === 'entitledOT') {
-            updatedValues = {
-                ...checkboxValues,
-                [name]: checked,
-                operationalAllowancePaid: checked ? false : true,
-                attendanceAllowancePaid: checked ? false : true,
-            };
+        if (name === 'entitle_ot') {
+            dispatch(changeValueFormEmployeeInfo({ name, value: Number(checked) }));
+            dispatch(changeValueFormEmployeeInfo({ name: 'operational_allowance_paid', value: Number(!checked) }));
+            dispatch(changeValueFormEmployeeInfo({ name: 'attendance_allowance_paid', value: Number(!checked) }));
         } else {
-            updatedValues = {
-                ...checkboxValues,
-                [name]: checked,
-            };
+            dispatch(changeValueFormEmployeeInfo({ name, value: Number(checked) }));
         }
-        setCheckboxValues(updatedValues);
     };
 
     // get API Departments,Position
@@ -71,8 +55,8 @@ const EmployeeDetails = (props: PropsTabEmployee) => {
                     data={department}
                     label="Department"
                     placeholder="Choose Department"
-                    value={formDetailEmployee.department_id}
-                    onChange={handleFormDetailChange}
+                    value={employee.department_id}
+                    onChange={handleChangeValueFormDataEmployee}
                     name="department_id"
                     isNa
                 />
@@ -80,8 +64,8 @@ const EmployeeDetails = (props: PropsTabEmployee) => {
                     data={position}
                     label="Position"
                     placeholder="Choose Position"
-                    value={formDetailEmployee.position_id}
-                    onChange={handleFormDetailChange}
+                    value={employee.position_id}
+                    onChange={handleChangeValueFormDataEmployee}
                     name="position_id"
                     isNa
                 />
@@ -92,8 +76,8 @@ const EmployeeDetails = (props: PropsTabEmployee) => {
                     <FormControlLabel
                         control={
                             <BpCheckbox
-                                name="entitledOT"
-                                checked={checkboxValues.entitledOT}
+                                name="entitle_ot"
+                                checked={!!employee.entitle_ot}
                                 onChange={handleCheckboxChange}
                             />
                         }
@@ -111,8 +95,8 @@ const EmployeeDetails = (props: PropsTabEmployee) => {
                     <FormControlLabel
                         control={
                             <BpCheckbox
-                                name="mealAllowancePaid"
-                                checked={checkboxValues.mealAllowancePaid}
+                                name="meal_allowance_paid"
+                                checked={!!employee.meal_allowance_paid}
                                 onChange={handleCheckboxChange}
                             />
                         }
@@ -132,8 +116,8 @@ const EmployeeDetails = (props: PropsTabEmployee) => {
                         checked
                         control={
                             <BpCheckbox
-                                name="operationalAllowancePaid"
-                                checked={checkboxValues.operationalAllowancePaid}
+                                name="operational_allowance_paid"
+                                checked={!!employee.operational_allowance_paid}
                                 onChange={handleCheckboxChange}
                             />
                         }
@@ -153,8 +137,8 @@ const EmployeeDetails = (props: PropsTabEmployee) => {
                         checked
                         control={
                             <BpCheckbox
-                                name="attendanceAllowancePaid"
-                                checked={checkboxValues.attendanceAllowancePaid}
+                                name="attendance_allowance_paid"
+                                checked={!!employee.attendance_allowance_paid}
                                 onChange={handleCheckboxChange}
                             />
                         }

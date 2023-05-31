@@ -1,18 +1,16 @@
 import React, { ChangeEvent } from 'react';
 import SubTitleTable from '../Header/SubTitleTable';
-import { FormSalaryEmployee } from '../../Types/employee';
+import { Employee } from '../../Types/employee';
 import { SelectChangeEvent } from '@mui/material';
 import InputComponent from '../FormItem/InputComponent';
-import { useAppSelector } from '../../store';
-type PropsTabEmployee = {
-    formSalaryEmployee: FormSalaryEmployee;
-    handleFormSalaryChange?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
+
+type PropsFormDataEmployee = {
+    employee: Employee;
+    handleChangeValueFormDataEmployee?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
 };
 
-const EmployeeSalary = (props: PropsTabEmployee) => {
-    const { formSalaryEmployee, handleFormSalaryChange } = props;
-    const { employee } = useAppSelector((state) => state.employee);
-
+const EmployeeSalary = (props: PropsFormDataEmployee) => {
+    const { employee, handleChangeValueFormDataEmployee } = props;
     return (
         <div>
             <SubTitleTable category="Salary & Wages" title="Required" />
@@ -22,7 +20,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                     value={employee.basic_salary}
                     name="basic_salary"
                     isRequired={true}
-                    onChange={handleFormSalaryChange}
+                    onChange={handleChangeValueFormDataEmployee}
                     label="Basic Salary"
                     isRp
                 />
@@ -31,7 +29,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                     value={employee.audit_salary}
                     name="audit_salary"
                     isRequired={true}
-                    onChange={handleFormSalaryChange}
+                    onChange={handleChangeValueFormDataEmployee}
                     label="Basic Salary (Audit)"
                     isRp
                 />
@@ -40,7 +38,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                     value={employee.safety_insurance}
                     name="safety_insurance"
                     isRequired={true}
-                    onChange={handleFormSalaryChange}
+                    onChange={handleChangeValueFormDataEmployee}
                     label="Safety Insurance Amount"
                     isRp
                 />
@@ -49,7 +47,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                     value={employee.health_insurance}
                     name="health_insurance"
                     isRequired={true}
-                    onChange={handleFormSalaryChange}
+                    onChange={handleChangeValueFormDataEmployee}
                     label="Healthy Insurance Amount"
                     isRp
                 />
@@ -58,7 +56,7 @@ const EmployeeSalary = (props: PropsTabEmployee) => {
                     value={employee.meal_allowance}
                     name="meal_allowance"
                     isRequired={true}
-                    onChange={handleFormSalaryChange}
+                    onChange={handleChangeValueFormDataEmployee}
                     label="Meal Allowance"
                     isRp
                 />

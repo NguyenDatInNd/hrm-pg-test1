@@ -8,7 +8,6 @@ import ClearIcon from '@mui/icons-material/Clear';
 import InputAdornment from '@mui/material/InputAdornment';
 import moment from 'moment';
 import { useAppDispatch } from '../../store';
-
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { changeValueFormEmployeeInfo } from '../../pages/Redux/employee.slice';
 import datePicker from '../../assets/datePicker.svg';
@@ -80,7 +79,7 @@ const InputComponentDatePicker = (props: PropsInputDatePicker) => {
                 </InputAdornment>
             }
             className={`w-full ${size === 'medium' && '!w-[260px]'}  ${size === 'small' && '!w-[230px]'}   ${
-                !isValue && !startDate && 'input-danger'
+                !isValue && !startDate && isRequired && 'input-danger'
             } `}
             endAdornment={
                 <>

@@ -39,13 +39,6 @@ const Header = () => {
 
     dispatch(loginSuccess(true));
     const logOut = async () => {
-        // const res = await fetch(API_PATHS.logout, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}`,
-        //     },
-        // });
         dispatch(logoutUserPost());
         dispatch(logoutUser());
         navigate('/login');
@@ -71,8 +64,6 @@ const Header = () => {
             promise.abort();
         };
     }, [dispatch]);
-
-    console.log(user);
 
     return (
         <div className="w-full h-24 bg-white header-container">

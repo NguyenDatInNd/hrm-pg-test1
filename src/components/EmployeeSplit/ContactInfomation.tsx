@@ -3,20 +3,15 @@ import SubTitleTable from '../Header/SubTitleTable';
 import { SelectChangeEvent } from '@mui/material/Select';
 import SelectInput from '../FormItem/SelectInput';
 import { employeeType } from '../../context/dataLink';
-import { FormContractEmployee } from '../../Types/employee';
+import { Employee } from '../../Types/employee';
 import ContractUpload from '../Upload/ContractUpload';
-import { useAppSelector } from '../../store';
 import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
-
-type PropsTabEmployee = {
-    formContractEmployee: FormContractEmployee;
-    handleFormContractChange?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
+type PropsFormDataEmployee = {
+    employee: Employee;
+    handleChangeValueFormDataEmployee?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
 };
-
-const ContactInfomation = (props: PropsTabEmployee) => {
-    const { formContractEmployee, handleFormContractChange } = props;
-    const { employee } = useAppSelector((state) => state.employee);
-    // , contractListInfo
+const ContactInfomation = (props: PropsFormDataEmployee) => {
+    const { employee, handleChangeValueFormDataEmployee } = props;
     return (
         <div>
             <SubTitleTable category="Contract Information" title="Required" />
@@ -33,8 +28,8 @@ const ContactInfomation = (props: PropsTabEmployee) => {
                     label="Employee Type"
                     placeholder="Choose Type"
                     isRequired={true}
-                    value={formContractEmployee.type}
-                    onChange={handleFormContractChange}
+                    value={employee.type}
+                    onChange={handleChangeValueFormDataEmployee}
                     name="type"
                     isType
                 />

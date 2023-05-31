@@ -27,20 +27,26 @@ const InputComponent = (props: PropsInput) => {
         gender: Yup.string().required('Please input Gender'),
         ktp_no: Yup.string().required('Please input KTP No'),
         nc_id: Yup.string().required('Please input National Card ID'),
+
         basic_salary: Yup.number().typeError('Please input Salary').required().min(1, 'Please input Salary'),
-        audit_salary: Yup.number().typeError('Please input Salary').required().min(1, 'Please input Salary (Audit)'),
+        audit_salary: Yup.number()
+            .typeError('Please input Salary (Audit)')
+            .required()
+            .min(1, 'Please input Salary (Audit)'),
         safety_insurance: Yup.number()
-            .typeError('Please input Salary')
+            .typeError('Please input Safety Insurance Amount')
             .required()
             .min(1, 'Please input Safety Insurance Amount'),
-        meal_allowance: Yup.number().typeError('Please input Salary').required().min(1, 'Please input Meal Allowance'),
+        meal_allowance: Yup.number()
+            .typeError('Please input Meal Allowance')
+            .required()
+            .min(1, 'Please input Meal Allowance'),
         health_insurance: Yup.number()
-            .typeError('Please input Salary')
+            .typeError('Please input Healthy Insurance Amount')
             .required()
             .min(1, 'Please input Healthy Insurance Amount'),
     });
 
-    const dispatch = useAppDispatch();
     const { label, onChange, upload, value, name, isRp, isRequired, type, disable } = props;
     const [isValueCheck, setIsValueCheck] = useState([name]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -60,12 +66,13 @@ const InputComponent = (props: PropsInput) => {
         // Kiểm tra lỗi khi ô input blur
         trigger(name);
     }, [name, trigger]);
-    const error = String(errors[name]?.message);
 
     const handleIsValueCheck = () => {
         setIsValueCheck((prevValues) => ({ ...prevValues, [name]: value }));
         trigger(name);
     };
+
+    console.log('isValueCheck', isValueCheck[name]);
 
     return (
         <div>
@@ -103,7 +110,7 @@ const InputComponent = (props: PropsInput) => {
                             <div
                                 className={`flex input-type  ${
                                     isValueCheck[name] === '' && !value && 'input-danger'
-                                }  `}
+                                }   ${Number(isValueCheck[name]) < 0 && 'input-danger'}`}
                             >
                                 <span
                                     style={{ zIndex: 20 }}
@@ -184,8 +191,23 @@ const InputComponent = (props: PropsInput) => {
                                 type === 'number' ? 'ml-[230px]' : 'ml-[172px]'
                             }`}
                         >
-                            {/* {errors[name]?.message?.toString()} */}
-                            {error}
+                            {errors[name]?.message?.toString()}
+
+                            {/* {error} */}
+                        </span>
+                    )}
+
+                    {isRp && isRequired && errors[name]?.message && (
+                        <span
+                            className={`text-danger mt-4 text-lg -mb-[10px] font-normal ${
+                                type === 'number' ? 'ml-[230px]' : 'ml-[172px]'
+                            }`}
+                        >
+                            {isValueCheck[name] === ''
+                                ? ''
+                                : Number(isValueCheck[name]) < 0
+                                ? 'Please input value min is 0'
+                                : null}
                         </span>
                     )}
                 </div>

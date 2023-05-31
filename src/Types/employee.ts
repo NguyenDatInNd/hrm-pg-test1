@@ -4,10 +4,10 @@ export interface Employee {
     staff_id: string;
     name: string;
     gender: number | string;
-    department_id: number;
+    department_id: number | null;
     company_id: number;
     manager_id: number | null;
-    marriage_id: number | string;
+    marriage_id: number | string | null;
     position_id: number | null;
     type: string;
     mother_name: string;
@@ -37,7 +37,7 @@ export interface Employee {
     minimum_salary_used: string;
     contract_start_date: string;
     shift: string;
-    grade_id: number;
+    grade_id: number | null;
     remark: string;
     created_at: string;
     updated_at: string;
@@ -46,9 +46,12 @@ export interface Employee {
     marriage_code: string;
     position_name: string | null;
     grade_prefix: string;
-    grade_name: string;
     manager_name: string | null;
     contracts: Contract[];
+    documents: IsDocument[];
+    grade: IsGrade[];
+    benefits: IsBenefit[];
+    grade_name: string;
     [key: string]: any;
 }
 
@@ -81,49 +84,6 @@ export interface Contract {
     created_at: string;
     updated_at: string;
     deleted_at: string | null;
-}
-
-// form employee Information staff_id
-export interface FormEmployeeInformation {
-    staff_id: string;
-    name: string;
-    gender: string;
-    mother_name: string;
-    dob: string;
-    pob: string;
-    ktp_no: string;
-    nc_id: string;
-    home_address_1: string;
-    home_address_2: string;
-    mobile_no: string;
-    tel_no: string;
-    marriage_id: string;
-    card_number: string;
-    bank_account_no: string;
-    bank_name: string;
-    family_card_number: string;
-    safety_insurance_no: string;
-    health_insurance_no: string;
-}
-
-// from contract information
-export interface FormContractEmployee {
-    contract_start_date: string;
-    type: string;
-    contract: Contract[];
-}
-// from employee Salary information
-export interface FormSalaryEmployee {
-    basic_salary: number;
-    audit_salary: number;
-    safety_insurance: number;
-    health_insurance: number;
-    meal_allowance: number;
-}
-// form employee details
-export interface FormDetailsEmployee {
-    department_id: string;
-    position_id: string;
 }
 
 export interface MarriageStatus {
@@ -180,4 +140,12 @@ export interface IsContractInfo {
     contract_dates: string[];
     documents: File[];
     modified_contracts: string[];
+}
+
+export interface IsDocument {
+    id: number;
+    employee_id: number;
+    created_at: string;
+    document: string;
+    updated_at: string | null;
 }

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState, useCallback } from 'react';
 import SubTitleTable from '../Header/SubTitleTable';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { getBenefit, getGrade } from '../../pages/Redux/employee.slice';
-import { IsBenefit } from '../../Types/employee';
+import { changeValueFormEmployeeInfo, getBenefit, getGrade } from '../../pages/Redux/employee.slice';
+import { Employee, IsBenefit } from '../../Types/employee';
 import { styled } from '@mui/material/styles';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Chip } from '@mui/material';
@@ -50,6 +50,7 @@ export const autocompleteStyles = {
 
 const TextAreaStyle = styled('textarea')(({ theme }) => ({
     width: '314px',
+    fontSize: '1.4rem',
     flexGrow: 1,
     boxSizing: 'border-box',
     height: '96px',
@@ -69,10 +70,14 @@ const TextAreaStyle = styled('textarea')(({ theme }) => ({
     },
 }));
 
-const EmployeeOthers = () => {
+type PropsFormDataEmployee = {
+    employee: Employee;
+};
+
+const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
     const dispatch = useAppDispatch();
     const { gradeList, benefitList } = useAppSelector((state) => state.employee);
-
+    const [selectedOption, setSelectedOption] = useState<IsBenefit[]>([]);
     // get API Grade, Benefit
     useEffect(() => {
         const benefit = dispatch(getBenefit());
@@ -82,18 +87,32 @@ const EmployeeOthers = () => {
             grade.abort();
         };
     }, [dispatch]);
-    const [selectedGradeIndex, setSelectedGradeIndex] = useState(-1);
 
-    const [selectedOption, setSelectedOption] = useState<IsBenefit[]>([]);
-
+    // handle change option benefit list
     const handleOptionChange = (event: any, newValue: IsBenefit[]) => {
-        setSelectedOption(newValue);
+        setSelectedOption(newValue ?? undefined);
+        if (newValue) {
+            const idBenefits = newValue.map((item) => item);
+            dispatch(changeValueFormEmployeeInfo({ name: 'benefits', value: idBenefits }));
+        }
     };
 
     const handleDeleteOption = (option: IsBenefit) => {
+        const filteredBenefits = employee.benefits.filter((item) => item !== option);
+        dispatch(changeValueFormEmployeeInfo({ name: 'benefits', value: filteredBenefits }));
         const updatedOptions = selectedOption.filter((item) => item !== option);
         setSelectedOption(updatedOptions);
     };
+
+    // handle Change Remark
+    const hanleChangeRemark = useCallback(
+        (e: ChangeEvent<HTMLTextAreaElement>) => {
+            const { value, name } = e.target;
+            dispatch(changeValueFormEmployeeInfo({ name: name, value }));
+        },
+        [dispatch],
+    );
+
     return (
         <div>
             <SubTitleTable category="Others" title="Required" />
@@ -107,12 +126,14 @@ const EmployeeOthers = () => {
                         sx={autocompleteStyles}
                         getOptionLabel={(option) => option.name}
                         renderInput={(params) => <TextField {...params} />}
+                        value={gradeList.find((item) => item.id === employee.grade_id) || null}
                         onChange={(event, newValue) => {
-                            if (newValue) {
-                                const selectedIndex = gradeList.findIndex((item) => item.name === newValue.name);
-                                setSelectedGradeIndex(selectedIndex);
+                            if (newValue === null) {
+                                dispatch(changeValueFormEmployeeInfo({ name: 'grade', value: [] }));
+                                dispatch(changeValueFormEmployeeInfo({ name: 'grade_id', value: null }));
                             } else {
-                                setSelectedGradeIndex(-1);
+                                dispatch(changeValueFormEmployeeInfo({ name: 'grade', value: newValue }));
+                                dispatch(changeValueFormEmployeeInfo({ name: 'grade_id', value: newValue.id }));
                             }
                         }}
                         renderOption={(props, option, { selected }) => (
@@ -130,6 +151,28 @@ const EmployeeOthers = () => {
                         )}
                     />
                 </div>
+
+                {employee.grade_id && (
+                    <div className="flex items-center">
+                        <span className="font-normal text-2xl min-w-[162px]"></span>
+                        <div className="flex items-center flex-wrap  pb-2  max-w-[400px]">
+                            {employee.grade_id &&
+                                gradeList.map(
+                                    (grade) =>
+                                        grade.id === employee.grade_id &&
+                                        grade.benefits.map((benefit) => (
+                                            <div
+                                                key={benefit.id}
+                                                className="flex items-center font-medium text-[#687076] text-lg bg-[#e6e8eb] px-3 py-[4px] rounded-xl ml-3 mt-1"
+                                            >
+                                                {benefit.name}
+                                            </div>
+                                        )),
+                                )}
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex items-center">
                     <span className="font-normal text-2xl min-w-[162px]">Benefit</span>
                     <Autocomplete
@@ -137,15 +180,15 @@ const EmployeeOthers = () => {
                         id="tags-standard"
                         options={benefitList}
                         getOptionLabel={(option) => option.name}
-                        value={selectedOption ?? undefined}
+                        value={employee.benefits}
                         sx={autocompleteStyles}
                         onChange={handleOptionChange}
                         disableCloseOnSelect
                         clearIcon={<ClearIcon />}
-                        // popupIcon={<ClearIcon />}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
+                                autoFocus
                                 sx={{
                                     maxHeight: '150px',
                                     overflowY: 'auto',
@@ -170,7 +213,7 @@ const EmployeeOthers = () => {
                         renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
                                 <Chip
-                                    label={option.name}
+                                    label={option?.name}
                                     {...getTagProps({ index })}
                                     onDelete={() => handleDeleteOption(option)}
                                     deleteIcon={
@@ -186,7 +229,7 @@ const EmployeeOthers = () => {
                 </div>
                 <div className="flex items-center">
                     <span className="font-normal text-2xl min-w-[162px]">Remark</span>
-                    <TextAreaStyle />
+                    <TextAreaStyle name="remark" onChange={hanleChangeRemark} value={employee.remark} />
                 </div>
 
                 <div className="flex items-center">
@@ -199,12 +242,7 @@ const EmployeeOthers = () => {
                         getOptionLabel={(option) => option.name}
                         renderInput={(params) => <TextField {...params} />}
                         onChange={(event, newValue) => {
-                            if (newValue) {
-                                const selectedIndex = gradeList.findIndex((item) => item.name === newValue.name);
-                                setSelectedGradeIndex(selectedIndex);
-                            } else {
-                                setSelectedGradeIndex(-1);
-                            }
+                            return;
                         }}
                     />
                 </div>
@@ -218,3 +256,109 @@ const EmployeeOthers = () => {
 };
 
 export default EmployeeOthers;
+
+// benefitList = [
+//     {
+//         id: 130,
+//         name: 'Cameron Brown',
+//         code: 'B-980874',
+//         type: 2,
+//         value: '842',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 129,
+//         name: 'Mr. Arthur Aufderhar',
+//         code: 'B-796990',
+//         type: 2,
+//         value: '489',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 128,
+//         name: 'Mr. Brown Herzog IV',
+//         code: 'B-189512',
+//         type: 2,
+//         value: '180',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 127,
+//         name: 'Nicolas Wilderman',
+//         code: 'B-335681',
+//         type: 0,
+//         value: '104',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 126,
+//         name: 'Aylin Langosh',
+//         code: 'B-799767',
+//         type: 2,
+//         value: '600',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 124,
+//         name: 'Pinkie Ortiz PhD',
+//         code: 'B-164389',
+//         type: 2,
+//         value: '380',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 123,
+//         name: 'Ms. Evangeline Halvorson',
+//         code: 'B-63323',
+//         type: 1,
+//         value: '961',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+// ];
+
+// employee.benefits = [
+//     {
+//         id: 128,
+//         name: 'Mr. Brown Herzog IV',
+//         code: 'B-189512',
+//         type: 2,
+//         value: '180',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 127,
+//         name: 'Nicolas Wilderman',
+//         code: 'B-335681',
+//         type: 0,
+//         value: '104',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+//     {
+//         id: 126,
+//         name: 'Aylin Langosh',
+//         code: 'B-799767',
+//         type: 2,
+//         value: '600',
+//         company_id: 1,
+//         created_at: '2023-04-27T09:41:29.000000Z',
+//         updated_at: '2023-04-27T09:41:29.000000Z',
+//     },
+// ];

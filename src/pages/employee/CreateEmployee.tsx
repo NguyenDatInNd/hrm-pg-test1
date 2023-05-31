@@ -12,18 +12,13 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import EmployeeInfomation from '../../components/EmployeeSplit/EmployeeInfomation';
-import {
-    FormEmployeeInformation,
-    FormContractEmployee,
-    FormSalaryEmployee,
-    FormDetailsEmployee,
-    Employee,
-} from '../../Types/employee';
+import { debounce } from 'lodash';
+
 import { Button, SelectChangeEvent } from '@mui/material';
 import {
     addEmployee,
-    changeValueEmployeeUpdate,
     changeValueFormEmployeeInfo,
+    getIdEmployeeUpdate,
     removeValueFormEmployeeInfo,
     updateEmployee,
 } from '../Redux/employee.slice';
@@ -34,6 +29,7 @@ import EmployeeOthers from '../../components/EmployeeSplit/EmployeeOthers';
 import Copyright from '../../components/Copyright';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 import { ROUTES } from '../../configs/router';
+
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -66,106 +62,26 @@ function a11yProps(index: number) {
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
-
 const CreateEmployee = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const { idEmployee } = useParams();
     const [valueTab, setValueTab] = React.useState(0);
     const [isActiveAdd, setIsActiveAdd] = useState(false);
     const [isActiveAddInfo, setIsActiveAddInfo] = useState(false);
-    const [isActiveAddContract, setIsActiveAddContract] = useState(false);
     const [isActiveAddSalary, setIsActiveAddSalary] = useState(false);
-
-    const dispatch = useAppDispatch();
+    const [isActiveAddContract, setIsActiveAddContract] = useState(false);
     dispatch(loginSuccess(true));
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
-    const { employee } = useAppSelector((state) => state.employee);
-    const { idEmployee } = useParams();
+    const { employee, statusAdd, idEmployeeAdd } = useAppSelector((state) => state.employee);
+    const { contractInfo } = useAppSelector((state) => state.contractUpload);
 
-    // state employee Information form
-    const [formEmployeeInfomation, setFormEmployeeInfomation] = useState<FormEmployeeInformation>({
-        staff_id: '',
-        name: '',
-        gender: '',
-        mother_name: '',
-        dob: '',
-        pob: '',
-        ktp_no: '',
-        nc_id: '',
-        home_address_1: '',
-        home_address_2: '',
-        mobile_no: '',
-        tel_no: '',
-        marriage_id: '',
-        card_number: '',
-        bank_account_no: '',
-        bank_name: '',
-        family_card_number: '',
-        safety_insurance_no: '',
-        health_insurance_no: '',
-    });
+    // console.log('employee add', idEmployeeAdd);
 
-    // state contract information form
-    const [formContractEmployee, setFormContractEmployee] = useState<FormContractEmployee>({
-        contract_start_date: '',
-        type: '',
-        contract: [],
-    });
-
-    // state employee Salary information
-    const [formSalaryEmployee, setFormSalaryEmployee] = useState<FormSalaryEmployee>({
-        basic_salary: 0,
-        audit_salary: 0,
-        safety_insurance: 0,
-        health_insurance: 0,
-        meal_allowance: 0,
-    });
-
-    // state employee detail information
-    const [formDetailEmployee, setFormDetailEmployee] = useState<FormDetailsEmployee>({
-        department_id: '',
-        position_id: '',
-    });
-
-    // handle Add employee information Submitted
-    const handleFormEmployeeChange = useCallback(
+    // handle Change Value FormData Employee in Redux
+    const handleChangeValueFormDataEmployee = useCallback(
         (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-            const { name } = e.target;
-            const value = e.target.value;
-            setFormEmployeeInfomation((prevValues) => ({ ...prevValues, [name]: value }));
-            dispatch(changeValueFormEmployeeInfo({ name, value }));
-        },
-        [dispatch],
-    );
-
-    // handle Add contract information Submitted
-    const handleFormContractChange = useCallback(
-        (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-            const { name } = e.target;
-            const value = e.target.value;
-            setFormContractEmployee((prevValues) => ({ ...prevValues, [name]: value }));
-            dispatch(changeValueFormEmployeeInfo({ name, value }));
-        },
-        [dispatch],
-    );
-    // handle Add Salary Employee Information Submitted
-    const handleFormSalaryChange = useCallback(
-        (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-            const { name } = e.target;
-            let value: any;
-            value = e.target.value;
-            setFormSalaryEmployee((prevValues) => ({ ...prevValues, [name]: value }));
-            dispatch(changeValueFormEmployeeInfo({ name, value }));
-        },
-        [dispatch],
-    );
-
-    // handle Add Detail Employee Information Submitted
-    const handleFormDetailChange = useCallback(
-        (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-            const { name } = e.target;
-            let value: any;
-            value = e.target.value;
-            setFormDetailEmployee((prevValues) => ({ ...prevValues, [name]: value }));
+            const { name, value } = e.target;
             dispatch(changeValueFormEmployeeInfo({ name, value }));
         },
         [dispatch],
@@ -184,9 +100,8 @@ const CreateEmployee = () => {
     };
 
     // handle change TabPanel
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
         setValueTab(newValue);
-
         if (
             !employee.name &&
             !employee.gender &&
@@ -224,7 +139,7 @@ const CreateEmployee = () => {
         } else {
             setTimeout(() => {
                 setIsActiveAddInfo(true);
-            }, 2000);
+            }, 500);
         }
         if (employee.contract_start_date && employee.type) {
             setIsActiveAddContract(false);
@@ -248,16 +163,16 @@ const CreateEmployee = () => {
         }
     };
 
+    // effect check tabpanel
     useEffect(() => {
         handleCheckActiceTabPanel();
         handleActiveButtonAdd();
     }, [handleCheckActiceTabPanel]);
 
-    console.log('activeTab Button', isActiveAdd);
-
+    // effect find id employ when update
     useEffect(() => {
         if (idEmployee) {
-            dispatch(changeValueEmployeeUpdate(Number(idEmployee)));
+            dispatch(getIdEmployeeUpdate(Number(idEmployee)));
         } else {
             dispatch(removeValueFormEmployeeInfo());
         }
@@ -301,7 +216,7 @@ const CreateEmployee = () => {
                     <Tabs
                         className="tab-container"
                         value={valueTab}
-                        onChange={handleChange}
+                        onChange={handleChangeTab}
                         aria-label="basic tabs example"
                     >
                         <Tab
@@ -356,30 +271,30 @@ const CreateEmployee = () => {
                         <div className="">
                             <TabPanel value={valueTab} index={0}>
                                 <EmployeeInfomation
-                                    FormEmployeeInformation={formEmployeeInfomation}
-                                    handleFormEmployeeChange={handleFormEmployeeChange}
+                                    employee={employee}
+                                    handleChangeValueFormDataEmployee={handleChangeValueFormDataEmployee}
                                 />
                             </TabPanel>
                             <TabPanel value={valueTab} index={1}>
                                 <ContactInfomation
-                                    formContractEmployee={formContractEmployee}
-                                    handleFormContractChange={handleFormContractChange}
+                                    employee={employee}
+                                    handleChangeValueFormDataEmployee={handleChangeValueFormDataEmployee}
                                 />
                             </TabPanel>
                             <TabPanel value={valueTab} index={2}>
                                 <EmployeeDetails
-                                    formDetailEmployee={formDetailEmployee}
-                                    handleFormDetailChange={handleFormDetailChange}
+                                    employee={employee}
+                                    handleChangeValueFormDataEmployee={handleChangeValueFormDataEmployee}
                                 />
                             </TabPanel>
                             <TabPanel value={valueTab} index={3}>
                                 <EmployeeSalary
-                                    formSalaryEmployee={formSalaryEmployee}
-                                    handleFormSalaryChange={handleFormSalaryChange}
+                                    employee={employee}
+                                    handleChangeValueFormDataEmployee={handleChangeValueFormDataEmployee}
                                 />
                             </TabPanel>
                             <TabPanel value={valueTab} index={4}>
-                                <EmployeeOthers />
+                                <EmployeeOthers employee={employee} />
                             </TabPanel>
                         </div>
                     </div>
@@ -403,52 +318,3 @@ export default CreateEmployee;
 //     }, 300), // Thay đổi thời gian chờ debounce tùy theo yêu cầu của bạn
 //     [dispatch, setFormDetailEmployee]
 //   );
-
-//   useEffect(() => {
-//     return () => {
-//       handleFormDetailChange.cancel(); // Hủy bỏ debounce khi component bị unmount
-//     };
-//   }, [handleFormDetailChange]);
-
-// check data when adding employee
-// const handleActiveAddEmployee = () => {
-//     if (
-//         employee.name &&
-//         (employee.gender || employee.gender === 0) &&
-//         employee.dob &&
-//         employee.ktp_no &&
-//         employee.nc_id
-//     ) {
-//         setIsActiveAdd(true);
-//     } else {
-//         setIsActiveAdd(false);
-//     }
-// };
-// const handleActiveAddEmployeeContact = () => {
-//     if (employee.contract_start_date && employee.type) {
-//         setIsActiveAddContract(true);
-//     } else {
-//         setIsActiveAddContract(false);
-//     }
-// };
-// const handleActiveAddEmployeeSalary = () => {
-//     if (
-//         (employee.basic_salary || employee.basic_salary === 0) &&
-//         (employee.audit_salary || employee.basic_salary === 0) &&
-//         (employee.safety_insurance || employee.safety_insurance === 0) &&
-//         (employee.health_insurance || employee.health_insurance === 0) &&
-//         (employee.meal_allowance || employee.meal_allowance === 0)
-//     ) {
-//         setIsActiveAddSalary(true);
-//     } else {
-//         setIsActiveAddSalary(false);
-//     }
-// };
-
-// useEffect(() => {
-//     setTimeout(() => {
-//         handleActiveAddEmployee();
-//         handleActiveAddEmployeeContact();
-//         handleActiveAddEmployeeSalary();
-//     }, 500);
-// }, [handleActiveAddEmployee, handleActiveAddEmployeeContact, handleActiveAddEmployeeSalary]);
