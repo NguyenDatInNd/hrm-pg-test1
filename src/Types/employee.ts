@@ -142,6 +142,12 @@ export interface IsContractInfo {
     modified_contracts: string[];
 }
 
+export interface IsDocumentFormData {
+    employee_id: string | null;
+    documents?: File[];
+    deleted_ids?: number[];
+}
+
 export interface IsDocument {
     id: number;
     employee_id: number;

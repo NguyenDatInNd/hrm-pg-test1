@@ -1,4 +1,4 @@
-import { ChangeEvent, forwardRef, useState } from 'react';
+import { ChangeEvent, forwardRef, useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import './Input.scss';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -63,6 +63,14 @@ const InputComponentDatePicker = (props: PropsInputDatePicker) => {
             setIsValue(true);
         }
     };
+
+    // ngoại lệ giá trị date of birth : 0000:00:00
+    // lỗi phía backend
+    useEffect(() => {
+        if (value === '0000-00-00') {
+            setStartDate(new Date(String(value)));
+        }
+    }, [value]);
 
     const CustomInput = forwardRef(({ value, onClick, onChange }: any, ref: any) => (
         <StyledFilledInput

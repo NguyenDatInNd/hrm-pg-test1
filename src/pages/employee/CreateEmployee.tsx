@@ -29,6 +29,8 @@ import EmployeeOthers from '../../components/EmployeeSplit/EmployeeOthers';
 import Copyright from '../../components/Copyright';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 import { ROUTES } from '../../configs/router';
+import { addDataContract, getIdEmployeeContract } from '../Redux/contractUpload.slice';
+import { addDataDocument } from '../Redux/documentUpload.slice';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -74,9 +76,8 @@ const CreateEmployee = () => {
     dispatch(loginSuccess(true));
     const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
     const { employee, statusAdd, idEmployeeAdd } = useAppSelector((state) => state.employee);
-    const { contractInfo } = useAppSelector((state) => state.contractUpload);
-
-    // console.log('employee add', idEmployeeAdd);
+    const { contractInfo, contractList } = useAppSelector((state) => state.contractUpload);
+    const { dataFormDocument } = useAppSelector((state) => state.documentUpload);
 
     // handle Change Value FormData Employee in Redux
     const handleChangeValueFormDataEmployee = useCallback(
@@ -88,16 +89,21 @@ const CreateEmployee = () => {
     );
 
     // handle create or update employee
-    const handleCreateOrUpdateEmployee = () => {
+    const handleCreateOrUpdateEmployee = async () => {
         if (idEmployee) {
-            dispatch(updateEmployee(Number(idEmployee)));
+            await dispatch(updateEmployee(Number(idEmployee)));
+            await dispatch(addDataContract({ id: idEmployee, formData: contractInfo }));
         } else {
-            dispatch(addEmployee());
+            await dispatch(addEmployee());
+            if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
+                dispatch(addDataDocument({ formData: dataFormDocument }));
+            }
         }
-        setTimeout(() => {
-            navigate(ROUTES.employee);
-        }, 250);
+
+        navigate(ROUTES.employee);
     };
+
+    console.log('formdata updated', dataFormDocument);
 
     // handle change TabPanel
     const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -116,13 +122,19 @@ const CreateEmployee = () => {
             setIsActiveAddContract(true);
         }
         if (
-            !String(employee.basic_salary) ||
-            !String(employee.audit_salary) ||
-            !String(employee.safety_insurance) ||
-            !String(employee.health_insurance) ||
-            (!String(employee.meal_allowance) && newValue !== 3)
+            !employee.basic_salary ||
+            employee.basic_salary < 0 ||
+            !employee.audit_salary ||
+            employee.audit_salary < 0 ||
+            !employee.safety_insurance ||
+            employee.safety_insurance < 0 ||
+            !employee.health_insurance ||
+            employee.health_insurance < 0 ||
+            !employee.meal_allowance_paid ||
+            employee.meal_allowance_paid < 0
         ) {
             setIsActiveAddSalary(true);
+            console.log('hihihi');
         }
     };
 
@@ -139,22 +151,28 @@ const CreateEmployee = () => {
         } else {
             setTimeout(() => {
                 setIsActiveAddInfo(true);
-            }, 500);
+            }, 700);
         }
         if (employee.contract_start_date && employee.type) {
             setIsActiveAddContract(false);
         }
         if (
             String(employee.basic_salary) &&
+            employee.basic_salary >= 0 &&
             String(employee.audit_salary) &&
+            employee.audit_salary >= 0 &&
             String(employee.safety_insurance) &&
+            employee.safety_insurance >= 0 &&
             String(employee.health_insurance) &&
-            String(employee.meal_allowance)
+            employee.health_insurance >= 0 &&
+            String(employee.meal_allowance) &&
+            employee.meal_allowance >= 0
         ) {
             setIsActiveAddSalary(false);
         }
     };
 
+    // Effect salary & Wages
     const handleActiveButtonAdd = () => {
         if (!isActiveAddInfo && !isActiveAddContract && !isActiveAddSalary) {
             setIsActiveAdd(true);
@@ -167,6 +185,22 @@ const CreateEmployee = () => {
     useEffect(() => {
         handleCheckActiceTabPanel();
         handleActiveButtonAdd();
+        // if (
+        //     !String(employee.basic_salary) ||
+        //     employee.basic_salary < 0 ||
+        //     !String(employee.audit_salary) ||
+        //     employee.audit_salary < 0 ||
+        //     !String(employee.safety_insurance) ||
+        //     employee.safety_insurance < 0 ||
+        //     !String(employee.health_insurance) ||
+        //     employee.health_insurance < 0 ||
+        //     !String(employee.meal_allowance_paid) ||
+        //     employee.meal_allowance_paid < 0
+        // ) {
+        //     setTimeout(() => {
+        //         setIsActiveAddSalary(true);
+        //     }, 300);
+        // }
     }, [handleCheckActiceTabPanel]);
 
     // effect find id employ when update
@@ -177,6 +211,20 @@ const CreateEmployee = () => {
             dispatch(removeValueFormEmployeeInfo());
         }
     }, [idEmployee, dispatch]);
+
+    // Effect Add contract upload
+    console.log('contractInfo', contractInfo);
+
+    // Effect get Data Contract upload, AddDataContract Upload
+    useEffect(() => {
+        if (idEmployee) {
+            dispatch(getIdEmployeeContract(Number(idEmployee)));
+        }
+
+        if (statusAdd && employee.id > 0 && contractInfo.documents.length > 0) {
+            dispatch(addDataContract({ id: String(employee.id), formData: contractInfo }));
+        }
+    }, [statusAdd, employee.id]);
 
     return (
         <div className="mt-36 px-16">
@@ -307,14 +355,3 @@ const CreateEmployee = () => {
 };
 
 export default CreateEmployee;
-
-// const handleFormDetailChange = useCallback(
-//     debounce((e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-//       const { name } = e.target;
-//       let value: any;
-//       value = e.target.value;
-//       setFormDetailEmployee((prevValues) => ({ ...prevValues, [name]: value }));
-//       dispatch(changeValueFormEmployeeInfo({ name, value }));
-//     }, 300), // Thay đổi thời gian chờ debounce tùy theo yêu cầu của bạn
-//     [dispatch, setFormDetailEmployee]
-//   );

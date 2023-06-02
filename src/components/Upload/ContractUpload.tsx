@@ -5,9 +5,10 @@ import Button from '@mui/material/Button';
 import ClearIcon from '@mui/icons-material/Clear';
 import InputComponent from '../FormItem/InputComponent';
 import { Box, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { IsContractInfo } from '../../Types/employee';
+import { Contract, IsContractInfo } from '../../Types/employee';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { MdDeleteOutline } from 'react-icons/md';
+import { styled } from '@mui/material/styles';
 import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
 import { useParams } from 'react-router-dom';
 import {
@@ -16,6 +17,7 @@ import {
     removeDataContractById,
     removeDataFormConTtract,
 } from '../../pages/Redux/contractUpload.slice';
+import dowloadIcon from '../../assets/download.svg';
 import moment from 'moment-timezone';
 interface Column {
     id: 'No' | 'Contract Name' | 'Sign Date' | 'Action';
@@ -43,8 +45,29 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+
 // { contractList }: typeContractListInfo
 const ContractUpload = () => {
+    // eslint-disable-next-line no-empty-pattern
+    const TableCellCustom = styled(TableCell)(({}) => ({
+        border: '1px solid white',
+        color: 'rgb(104, 112, 118)',
+        fontSize: '12px',
+        padding: '0 10px',
+    }));
+    const CustomTableRow = styled(TableRow)(({ theme, selected }) => ({
+        cursor: 'pointer',
+        height: '36px',
+        backgroundColor: selected ? 'rgb(237 246 255) !important' : 'rgb(248, 249, 250)',
+
+        '&:hover': {
+            backgroundColor: 'rgb(237, 246, 255) !important',
+        },
+        '&.MuiTableCell-root': {
+            color: 'transparent',
+        },
+    }));
+
     const dispatch = useAppDispatch();
     const { idEmployee } = useParams();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -69,6 +92,7 @@ const ContractUpload = () => {
     const changeContractName = (e: ChangeEvent<HTMLInputElement>) => {
         setFormContract((prevValues) => ({ ...prevValues, name: e.target.value }));
     };
+
     const handleChangeDate = (date: Date, event: ChangeEvent<HTMLInputElement>) => {
         setFormContract((prevValues) => ({ ...prevValues, date: String(date) }));
     };
@@ -103,9 +127,6 @@ const ContractUpload = () => {
         setFormContract({ date: '', name: '' });
         setSelectedFile(null);
     };
-
-    console.log('Contract info', contractInfo);
-    console.log('contract list', contractList);
 
     // handle open/close modal
     const handleOpenFirstModal = () => {
@@ -219,21 +240,66 @@ const ContractUpload = () => {
                             <TableBody>
                                 {contractList &&
                                     contractList[0]?.id !== -1 &&
-                                    contractList.map((row: any, index: number) => {
+                                    contractList.map((row: Contract, index: number) => {
                                         return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                                                <TableCell>{index + 1}</TableCell>
-                                                <TableCell>{row.name}</TableCell>
-                                                <TableCell>{moment(row.contract_date).format('YYYY/MM/DD')}</TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        onClick={handleOpenFirstModal}
-                                                        className="button-contract-upload "
-                                                    >
-                                                        <MdDeleteOutline size={14} className="-mt-1" />
-                                                        <span className="ml-2">Delete</span>
-                                                    </Button>
-                                                </TableCell>
+                                            // <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                            //     <TableCell>{index + 1}</TableCell>
+                                            //     <TableCell>{row.name}</TableCell>
+                                            //     <TableCell>{moment(row.contract_date).format('YYYY/MM/DD')}</TableCell>
+                                            //     <TableCell>
+                                            //         {row.document != '' && (
+                                            //             <button className="">
+                                            //                 <span className="">{row.document.split('/').pop()}</span>
+                                            //                 {/* <Dowload /> */}
+                                            //             </button>
+                                            //         )}
+
+                                            //         <Button
+                                            //             onClick={handleOpenFirstModal}
+                                            //             className="button-contract-upload "
+                                            //         >
+                                            //             <MdDeleteOutline size={14} className="-mt-1" />
+                                            //             <span className="ml-2">Delete</span>
+                                            //         </Button>
+                                            //     </TableCell>
+                                            // </TableRow>
+                                            <CustomTableRow
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={row.id}
+                                                sx={{
+                                                    cursor: 'pointer',
+                                                }}
+                                            >
+                                                <TableCellCustom>{index + 1}</TableCellCustom>
+                                                <TableCellCustom style={{ minWidth: `50px` }}>
+                                                    {row.name}
+                                                </TableCellCustom>
+                                                <TableCellCustom>
+                                                    {moment(row.contract_date).format('YYYY/MM/DD')}
+                                                </TableCellCustom>
+                                                <TableCellCustom>
+                                                    <div className="flex justify-center items-center gap-1">
+                                                        <span className="w-32">
+                                                            {row.document != '' && (
+                                                                <button className="flex gap-1 hover:bg-green-100 h-6  text-green bg-green-200 items-center rounded-lg py-[12px] px-4">
+                                                                    <span className="text-ellipsis overflow-hidden whitespace-nowrap w-20">
+                                                                        {row.document.split('/').pop()}
+                                                                    </span>
+                                                                    <img src={dowloadIcon} alt="" />
+                                                                </button>
+                                                            )}
+                                                        </span>
+                                                        <Button
+                                                            onClick={handleOpenFirstModal}
+                                                            className="button-contract-upload "
+                                                        >
+                                                            <MdDeleteOutline size={14} className="-mt-1" />
+                                                            <span className="ml-2">Delete</span>
+                                                        </Button>
+                                                    </div>
+                                                </TableCellCustom>
                                                 <div>
                                                     <Modal
                                                         open={openFirstModal}
@@ -256,8 +322,8 @@ const ContractUpload = () => {
                                                             </div>
                                                             <div className="w-full mt-4 font-semibold text-[#687076]">
                                                                 <span>
-                                                                    This will delete the {row.names} record. Are you
-                                                                    sure to continue?
+                                                                    This will delete the {row.name} record. Are you sure
+                                                                    to continue?
                                                                 </span>
                                                             </div>
                                                             <div className="mt-5 mb-2 flex gap-3">
@@ -283,7 +349,7 @@ const ContractUpload = () => {
                                                         </Box>
                                                     </Modal>
                                                 </div>
-                                            </TableRow>
+                                            </CustomTableRow>
                                         );
                                     })}
                             </TableBody>
@@ -296,29 +362,3 @@ const ContractUpload = () => {
 };
 
 export default ContractUpload;
-
-// const [formContractInfo, setFormContractInfo] = useState<IsContractInfo>({
-//     names: '',
-//     contract_dates: '',
-//     modified_contracts: '',
-//     documents: '',
-// });
-
-// const handleAddContractInfo = useCallback(
-//     (e: ChangeEvent<HTMLInputElement>) => {
-//         const { name, value } = e.target;
-//         setFormContractInfo((prevValues) => ({ ...prevValues, [name]: value }));
-//         dispatch(ChangeValueContractUpload({ name, value }));
-//     },
-//     [dispatch],
-// );
-
-// const handleAddContractUpload = () => {
-//     dispatch(addContractInfo(contractInfo));
-//     setFormContractInfo({
-//         names: '',
-//         contract_dates: '',
-//         modified_contracts: '',
-//         documents: '',
-//     });
-// };

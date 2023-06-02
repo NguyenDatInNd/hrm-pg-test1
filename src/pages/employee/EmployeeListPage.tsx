@@ -6,7 +6,7 @@ import { MdDeleteOutline } from 'react-icons/md';
 import './Employee.scss';
 import EmployeeItem from './EmployeeItem';
 import { deleteEmployeeEncode, getEmployeeList, getEmployeeListSearch } from '../Redux/employee.slice';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import addIcon from '../../assets/addIcon.svg';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -38,9 +38,11 @@ const EmployeeListPage = () => {
     const searchParams = new URLSearchParams(location.search);
     const search = searchParams.get('search');
     const page = searchParams.get('page');
-
     const { employeeList, employeeIddelete } = useAppSelector((state) => state.employee);
+    const { contractInfo } = useAppSelector((state) => state.contractUpload);
     const [openFirstModal, setOpenFirstModal] = React.useState(false);
+    // get data table in employeeList Search
+    const [dataTables, setDataTables] = useState<EmployeeList>(employeeList);
 
     // API get list employee
     useEffect(() => {
@@ -84,13 +86,7 @@ const EmployeeListPage = () => {
         }
     };
 
-    // get data table in employeeList Search
-    const [dataTables, setDataTables] = useState<EmployeeList>(employeeList);
-
-    useEffect(() => {
-        setDataTables(employeeList);
-    }, [employeeList]);
-
+    // Search employee
     const getDataEmployeeList = useCallback(
         async (keywordSearch: string | null, currentPage: string | null) => {
             const resultAction = await dispatch(getEmployeeListSearch({ keywordSearch, currentPage }));
@@ -98,6 +94,10 @@ const EmployeeListPage = () => {
         },
         [dispatch],
     );
+
+    useEffect(() => {
+        setDataTables(employeeList);
+    }, [employeeList]);
 
     useEffect(() => {
         (async () => {

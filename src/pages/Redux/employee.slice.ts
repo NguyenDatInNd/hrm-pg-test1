@@ -165,12 +165,16 @@ export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, {
     const benefitsId = benefits.map((benefit) => benefit.id);
     const newEmployee = { ...employee.employee, benefits: benefitsId };
 
-    const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, newEmployee, {
-        headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-    });
-    toast.success('Record added');
-    const data = response.data.data;
-    return data;
+    try {
+        const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, newEmployee, {
+            headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+        });
+        toast.success('Record added');
+        const data = response.data.data;
+        return data;
+    } catch (error) {
+        toast.error('Add Failed, Try It Again(check required fields in Contract Infomation)!');
+    }
 });
 
 // export const addEmployee = createAsyncThunk('employees/addEmployee', async (body: Employee) => {
@@ -290,6 +294,7 @@ const employeeSlice = createSlice({
         builder
             .addCase(getEmployeeList.fulfilled, (state, action) => {
                 state.employeeList = action.payload;
+                state.statusAdd = false;
             })
             .addCase(getEmployeeListSearch.fulfilled, (state, action) => {
                 state.employeeList = action.payload;
@@ -335,7 +340,6 @@ const employeeSlice = createSlice({
                 (action) => action.type.endsWith('/pending'),
                 (state, action) => {
                     state.loadingEmployee = true;
-                    state.statusAdd = false;
                 },
             )
             .addMatcher<RejectedAction>(

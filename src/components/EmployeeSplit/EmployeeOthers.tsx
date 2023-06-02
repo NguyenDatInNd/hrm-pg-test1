@@ -197,19 +197,23 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
                                 }}
                             />
                         )}
-                        renderOption={(props, option, { selected }) => (
-                            <li
-                                {...props}
-                                style={{
-                                    backgroundColor: selected ? '#e9f9ee' : 'inherit',
-                                    color: selected ? '#30a46c' : 'inherit',
-                                    padding: '6px 16px',
-                                    fontSize: '14px',
-                                }}
-                            >
-                                {option.name}
-                            </li>
-                        )}
+                        renderOption={(props, option, { selected }) => {
+                            const isSelected =
+                                employee.benefits && employee.benefits.some((item) => item.id === option.id);
+                            return (
+                                <li
+                                    {...props}
+                                    style={{
+                                        backgroundColor: isSelected ? '#e9f9ee' : 'inherit',
+                                        color: isSelected ? '#30a46c' : 'inherit',
+                                        padding: '6px 16px',
+                                        fontSize: '14px',
+                                    }}
+                                >
+                                    {option.name}
+                                </li>
+                            );
+                        }}
                         renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
                                 <Chip

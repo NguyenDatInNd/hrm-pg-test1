@@ -6,6 +6,7 @@ import { PaperProps } from '@mui/material/Paper';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { MarriageStatus } from '../../Types/employee';
 import './Input.scss';
+import { useParams } from 'react-router-dom';
 type PropsSelect = {
     label: string;
     placeholder?: string;
@@ -17,12 +18,13 @@ type PropsSelect = {
     // eslint-disable-next-line @typescript-eslint/ban-types
     data: {}[];
     isType?: boolean;
+    disable?: boolean;
 };
 
 const SelectInput = (props: PropsSelect) => {
-    const { label, name, data, placeholder, isRequired, isNa, value, onChange, isType } = props;
+    const { label, name, data, placeholder, isRequired, isNa, value, onChange, isType, disable } = props;
     const [isValue, setIsValue] = useState(true);
-
+    const { idEmployee } = useParams();
     const customPaperProps: PaperProps = {
         sx: {
             marginTop: '2px',
@@ -66,16 +68,6 @@ const SelectInput = (props: PropsSelect) => {
         }
     };
 
-    console.log(name, value);
-
-    const handleValueSelected = () => {
-        if (name === 'gender') {
-            return;
-        } else {
-            return value == '' ? undefined : value;
-        }
-    };
-
     return (
         // <Box component="form" className="form" noValidate autoComplete="off">
         <div className="flex flex-col ">
@@ -85,10 +77,11 @@ const SelectInput = (props: PropsSelect) => {
                     {isRequired && <span className="text-required font-normal isRequired text-lg">* </span>}
                 </label>
                 <Select
+                    disabled={disable && true}
                     displayEmpty
                     className={`select-type h-12 min-w-290 max-w-300 mb-2.5 ${isType ? 'select-type-2' : ''} ${
                         isRequired && !isValue && 'input-danger'
-                    } `}
+                    }  ${disable && '!bg-[#0000001f]'}  `}
                     id={name}
                     input={<CustomInputSelect />}
                     MenuProps={{

@@ -72,8 +72,6 @@ const InputComponent = (props: PropsInput) => {
         trigger(name);
     };
 
-    console.log('isValueCheck', isValueCheck[name]);
-
     return (
         <div>
             <Box component="form" className="form" noValidate autoComplete="off">
@@ -132,7 +130,7 @@ const InputComponent = (props: PropsInput) => {
                                             value={value}
                                             onChange={onChange}
                                             onBlur={handleIsValueCheck}
-                                            onFocus={handleIsValueCheck} // Kiểm tra lỗi khi ô input blur
+                                            // onFocus={handleIsValueCheck}
                                         />
                                     )}
                                 />
@@ -165,7 +163,7 @@ const InputComponent = (props: PropsInput) => {
                                             value={value}
                                             onChange={onChange}
                                             onBlur={handleIsValueCheck}
-                                            onFocus={handleIsValueCheck} // Kiểm tra lỗi khi ô input blur
+                                            // onFocus={handleIsValueCheck}
                                         />
                                     )}
                                 />
@@ -192,11 +190,10 @@ const InputComponent = (props: PropsInput) => {
                             }`}
                         >
                             {errors[name]?.message?.toString()}
-
-                            {/* {error} */}
                         </span>
                     )}
 
+                    {/* Check value when value < 0 */}
                     {isRp && isRequired && errors[name]?.message && (
                         <span
                             className={`text-danger mt-4 text-lg -mb-[10px] font-normal ${

@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import { fetchApi } from '../../configs/fetchApi';
 import { Contract, IsContractInfo } from '../../Types/employee';
+import { RootState } from '../../store';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
@@ -26,13 +27,13 @@ const initialState: contractUploadState = {
         modified_contracts: [],
     },
 };
-
+// { id, formData }: { id?: string; formData: IsContractInfo }
 export const addDataContract = createAsyncThunk(
     'contact/addContact',
-    async ({ id, formData }: { id?: string; formData: IsContractInfo }) => {
+    async ({ id, formData }: { id?: string; formData: IsContractInfo }, { getState }) => {
         const formdata = new FormData();
 
-        console.log('employid', id);
+        console.log('data form Employee', formData.employee_id);
 
         formdata.append('employee_id', id || '');
         formData.names.forEach((name) => formdata.append('names[]', name));
@@ -40,13 +41,23 @@ export const addDataContract = createAsyncThunk(
         formData.documents.forEach((doc) => formdata.append('documents[]', doc, doc.name));
         formdata.append('modified_contracts[]', '');
 
-        const response = await axios.post(`${API_PATHS.API_FIXER}/contract/save-multiple`, formData, {
+        const response = await axios.post(`${API_PATHS.API_FIXER}/contract/save-multiple`, formdata, {
             headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
         });
         const data = response.data.data;
         return data;
     },
 );
+
+//get-employee-contracts
+export const getIdEmployeeContract = createAsyncThunk('contract/getEmployeeContract', async (id: number) => {
+    const response = await axios.get(`${API_PATHS.API_FIXER}/contract/get-employee-contracts?employee_id=${id}`, {
+        headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
+    const data = response.data.data;
+    return data;
+});
+
 const contractUploadSlice = createSlice({
     name: 'contractUpload',
     initialState,
@@ -56,20 +67,10 @@ const contractUploadSlice = createSlice({
             if (employee_id !== '0') {
                 state.contractInfo.employee_id = employee_id;
             }
-            if (names[0] !== '') {
-                console.log(names);
-
-                const processedPayload: IsContractInfo = {
-                    employee_id,
-                    names,
-                    contract_dates,
-                    documents: [], // Loại bỏ giá trị không tuần tự hóa ở đây
-                    modified_contracts: [],
-                };
-
-                state.contractInfo.names.push(...processedPayload.names);
-                state.contractInfo.contract_dates.push(...processedPayload.contract_dates);
-                state.contractInfo.documents.push(...documents); // Sử dụng giá trị documents ban đầu từ action.payload
+            if (names[0] != '') {
+                state.contractInfo.names.push(...names);
+                state.contractInfo.contract_dates.push(...contract_dates);
+                state.contractInfo.documents.push(...documents);
             }
         },
         removeDataFormConTtract: (state, action: PayloadAction<number>) => {
@@ -95,6 +96,17 @@ const contractUploadSlice = createSlice({
         addDataTableContract: (state, action: PayloadAction<Contract>) => {
             state.contractList.unshift(action.payload);
         },
+    },
+    extraReducers(builder) {
+        builder
+            .addCase(getIdEmployeeContract.fulfilled, (state, action) => {
+                state.contractList = action.payload;
+                // state.statusAdd = false;
+            })
+            .addCase(addDataContract.fulfilled, (state, action) => {
+                state.contractInfo = initialState.contractInfo;
+                state.contractList = initialState.contractList;
+            });
     },
 });
 

@@ -6,12 +6,15 @@ import { employeeType } from '../../context/dataLink';
 import { Employee } from '../../Types/employee';
 import ContractUpload from '../Upload/ContractUpload';
 import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
+import { useParams } from 'react-router-dom';
 type PropsFormDataEmployee = {
     employee: Employee;
     handleChangeValueFormDataEmployee?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
 };
 const ContactInfomation = (props: PropsFormDataEmployee) => {
     const { employee, handleChangeValueFormDataEmployee } = props;
+    const { idEmployee } = useParams();
+
     return (
         <div>
             <SubTitleTable category="Contract Information" title="Required" />
@@ -24,6 +27,7 @@ const ContactInfomation = (props: PropsFormDataEmployee) => {
                     size="medium"
                 />
                 <SelectInput
+                    disable={Boolean(idEmployee) && true}
                     data={employeeType}
                     label="Employee Type"
                     placeholder="Choose Type"
