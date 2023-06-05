@@ -22,6 +22,7 @@ const EmployeeInfomation = (props: PropsFormDataEmployee) => {
     const { handleChangeValueFormDataEmployee, employee } = props;
     const { idEmployee } = useParams();
     const { marriageList } = useAppSelector((state) => state.employee);
+
     // get API Company
     useEffect(() => {
         const promise = dispatch(getCompanyFixerLogin());
@@ -70,8 +71,8 @@ const EmployeeInfomation = (props: PropsFormDataEmployee) => {
                         label="Gender"
                         placeholder="Choose Gender"
                         isRequired={true}
-                        value={employee.gender}
-                        onChange={handleChangeValueFormDataEmployee}
+                        value={String(employee.gender)}
+                        // onChange={handleChangeValueFormDataEmployee}
                         name="gender"
                     />
                     <InputComponent
@@ -140,7 +141,7 @@ const EmployeeInfomation = (props: PropsFormDataEmployee) => {
                         label="Marriage Status"
                         placeholder="Choose Marriage Status"
                         value={employee.marriage_id}
-                        onChange={handleChangeValueFormDataEmployee}
+                        // onChange={handleChangeValueFormDataEmployee}
                         isNa
                         name="marriage_id"
                     />

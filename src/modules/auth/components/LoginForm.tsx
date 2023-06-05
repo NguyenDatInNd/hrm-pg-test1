@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import { getCompany } from '../../../pages/Redux/company.slice';
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
 import { ROUTES } from '../../../configs/router';
-import { InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CustomInputSelect, { customPaperProps } from '../../../components/FormItem/StyleSelectInput';
 
@@ -21,6 +21,7 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
     const dispatch = useAppDispatch();
     const { companyList } = useAppSelector((state) => state.company);
     const [isShowPassWord, setIsShowPassWord] = useState(false);
+    const [selectedCompanyId, setSelectedCompanyId] = useState('');
 
     // call API to get company
     useEffect(() => {
@@ -47,10 +48,6 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
 
     // Watch for changes if input changed
     const passwordValue = watch('password');
-    const company_idValue = watch('company_id');
-
-    console.log('company_id', company_idValue);
-
     useEffect(() => {
         if (!passwordValue) {
             setIsShowPassWord(false);
@@ -62,6 +59,9 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
         e.preventDefault();
         setIsShowPassWord((prev) => !prev);
     };
+
+    console.log('selectedCompanyId', selectedCompanyId);
+    console.log('value', watch('company_id'));
 
     return (
         <div className="login-form-content">
@@ -115,10 +115,6 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
                                     value: true,
                                     message: 'Please enter Password',
                                 },
-                                // pattern: {
-                                //     value: /^(?!\s).*$/,
-                                //     message: 'Passwords must not have asterisks',
-                                // },
                                 minLength: {
                                     value: 8,
                                     message: 'Password length must be 8 characters',
@@ -153,36 +149,44 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
                         }
                     />
                 </div>
+
                 <div className="d-flex flex-column mt-3">
                     <label htmlFor="inputFac" className="">
                         Factory
                     </label>
                     <div className="mt-3">
-                        <Select
-                            className={`${
-                                errors?.company_id?.message && !company_idValue && 'input-danger'
-                            } select-self`}
-                            displayEmpty
-                            {...register('company_id', {
-                                required: 'Please enter factory',
-                            })}
-                            input={<CustomInputSelect />}
-                            MenuProps={{
-                                PaperProps: customPaperProps,
-                            }}
-                            IconComponent={ExpandMoreIcon}
-                        >
-                            <InputLabel shrink={false} className="!hidden">
+                        <FormControl fullWidth>
+                            <InputLabel
+                                shrink={false}
+                                className={`${!selectedCompanyId ? '' : '!hidden'}  !text-[#687076] !font-medium `}
+                            >
                                 Select Factory
                             </InputLabel>
-                            {companyList.map((company) => (
-                                <MenuItem key={company.id} value={company.id}>
-                                    {company.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
+                            <Select
+                                className={`${
+                                    errors?.company_id?.message && !selectedCompanyId && 'input-danger'
+                                } select-self`}
+                                displayEmpty
+                                {...register('company_id', {
+                                    required: 'Please enter factory',
+                                })}
+                                value={selectedCompanyId}
+                                onChange={(e) => setSelectedCompanyId(e.target.value)}
+                                input={<CustomInputSelect />}
+                                MenuProps={{
+                                    PaperProps: customPaperProps,
+                                }}
+                                IconComponent={ExpandMoreIcon}
+                            >
+                                {companyList.map((company) => (
+                                    <MenuItem key={company.id} value={company.id}>
+                                        {company.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </div>
-                    {errors.company_id && !company_idValue && (
+                    {errors.company_id && !selectedCompanyId && (
                         <span className="text-danger ml-4 mt-2 text-lg font-medium">{errors.company_id.message}</span>
                     )}
                 </div>

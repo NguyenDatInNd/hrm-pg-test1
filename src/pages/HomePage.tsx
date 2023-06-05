@@ -7,11 +7,6 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import { useAppDispatch, useAppSelector } from '../store';
 import { loginSuccess } from './Redux/company.slice';
 const HomePage = () => {
-    const dispatch = useAppDispatch();
-    dispatch(loginSuccess(true));
-    // const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
-    // console.log(cookieValue);
-    const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
     return (
         <div className="mt-32">
             <div>This is homePage</div>

@@ -123,8 +123,8 @@ const InputComponentDatePicker = (props: PropsInputDatePicker) => {
         <div className="flex items-center h-12 ">
             <label
                 htmlFor={label}
-                className={`font-normal !text-2xl  
-                   min-w-[162px] flex`}
+                className={`font-medium !text-2xl  
+                   min-w-[170px] flex`}
             >
                 {label}
                 {isRequired ? <span className={`isRequired text-required font-normal `}>*</span> : ''}

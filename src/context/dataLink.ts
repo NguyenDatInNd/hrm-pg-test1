@@ -61,37 +61,17 @@ export const links = [
 
 export const gender = [
     {
-        id: 0,
+        id: '0',
         name: 'Male',
         value: 0,
     },
     {
-        id: 1,
+        id: '1',
         name: 'Female',
         value: 1,
     },
 ];
 
-// not use
-export const marriage = [
-    {
-        id: 0,
-        name: 'Married with one kid',
-        value: 0,
-    },
-    {
-        id: 1,
-        name: 'Signle',
-        value: 1,
-    },
-
-    {
-        id: 2,
-        name: 'Married',
-        value: 2,
-    },
-];
-// not use
 export const employeeType = [
     {
         id: '0',

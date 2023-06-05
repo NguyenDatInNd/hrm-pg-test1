@@ -35,7 +35,7 @@ const initialState: contractUploadState = {
 };
 
 export const addDataDocument = createAsyncThunk(
-    'contact/addContact',
+    'document/addDocument',
     async ({ formData }: { formData: IsDocumentFormData }, { getState }) => {
         const { employee } = getState() as RootState;
         const formdata = new FormData();

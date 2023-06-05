@@ -34,14 +34,12 @@ const Header = () => {
     const navigate = useNavigate();
     const [openFirstModal, setOpenFirstModal] = useState(false);
     const [openSecondModal, setOpenSecondModal] = useState(false);
-
     const { user } = useAppSelector((state) => state.user);
-
-    dispatch(loginSuccess(true));
     const logOut = async () => {
-        dispatch(logoutUserPost());
-        dispatch(logoutUser());
-        navigate('/login');
+        await dispatch(logoutUserPost());
+        await dispatch(logoutUser());
+        navigate(ROUTES.login);
+        setOpenSecondModal(false);
     };
 
     const handleOpenFirstModal = () => {
@@ -50,7 +48,6 @@ const Header = () => {
     const handleCloseFirstModal = () => {
         setOpenFirstModal(false);
     };
-
     const handleOpenSecondModal = () => {
         setOpenSecondModal(true);
     };

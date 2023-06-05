@@ -6,13 +6,15 @@ import { PaperProps } from '@mui/material/Paper';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { MarriageStatus } from '../../Types/employee';
 import './Input.scss';
-import { useParams } from 'react-router-dom';
+import { useAppDispatch } from '../../store';
+import { changeValueFormEmployeeInfo } from '../../pages/Redux/employee.slice';
+
 type PropsSelect = {
     label: string;
     placeholder?: string;
     isRequired?: boolean;
     value?: string | any;
-    onChange?: (event: SelectChangeEvent) => void;
+    onChange?: (event: SelectChangeEvent<string | number>) => void;
     name: string;
     isNa?: boolean;
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -22,9 +24,9 @@ type PropsSelect = {
 };
 
 const SelectInput = (props: PropsSelect) => {
+    const dispatch = useAppDispatch();
     const { label, name, data, placeholder, isRequired, isNa, value, onChange, isType, disable } = props;
     const [isValue, setIsValue] = useState(true);
-    const { idEmployee } = useParams();
     const customPaperProps: PaperProps = {
         sx: {
             marginTop: '2px',
@@ -60,6 +62,14 @@ const SelectInput = (props: PropsSelect) => {
         },
     };
 
+    const handleChangeValueFormDataEmployee = (e: SelectChangeEvent<string | number>) => {
+        const { name, value } = e.target;
+        if (name) {
+            dispatch(changeValueFormEmployeeInfo({ name, value }));
+        }
+    };
+
+    // Handle check Blur
     const handleSelectBlur = () => {
         if (value || value === 0) {
             setIsValue(true);
@@ -69,10 +79,9 @@ const SelectInput = (props: PropsSelect) => {
     };
 
     return (
-        // <Box component="form" className="form" noValidate autoComplete="off">
         <div className="flex flex-col ">
             <div className="flex items-center h-12">
-                <label htmlFor={label} className="font-normal !text-2xl min-w-[162px] flex">
+                <label htmlFor={label} className="font-medium !text-2xl min-w-[170px] flex">
                     {label}
                     {isRequired && <span className="text-required font-normal isRequired text-lg">* </span>}
                 </label>
@@ -88,21 +97,16 @@ const SelectInput = (props: PropsSelect) => {
                         PaperProps: customPaperProps,
                     }}
                     IconComponent={ExpandMoreIcon}
-                    onChange={onChange}
+                    onChange={handleChangeValueFormDataEmployee}
                     name={name}
-                    value={value}
-                    defaultValue={isNa ? '' : undefined}
-                    renderValue={(selected: any) => {
-                        if (selected === '' || selected === undefined || selected === null) {
-                            return placeholder;
-                        }
-                        const selectedItem = data.find((item: any) => item?.id === selected) as MarriageStatus;
-
-                        return selectedItem?.name;
-                    }}
+                    value={value ? value : ''}
+                    defaultValue={isNa ? '' : value}
                     onBlur={handleSelectBlur}
                 >
                     {isNa && <MenuItem value={''}>N/A</MenuItem>}
+                    <MenuItem value={''} className="!hidden">
+                        {placeholder}
+                    </MenuItem>
                     {data.map((item: any) => (
                         <MenuItem value={item.id} key={item.id}>
                             {item.name}
@@ -122,4 +126,4 @@ const SelectInput = (props: PropsSelect) => {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export default memo(SelectInput);
+export default SelectInput;

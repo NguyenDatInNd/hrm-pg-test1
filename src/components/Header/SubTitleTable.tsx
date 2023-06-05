@@ -1,5 +1,3 @@
-import React from 'react';
-
 type subTitleTable = {
     category: string | null;
     title: string | null;

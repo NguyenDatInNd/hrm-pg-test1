@@ -30,12 +30,10 @@ const initialState: contractUploadState = {
 // { id, formData }: { id?: string; formData: IsContractInfo }
 export const addDataContract = createAsyncThunk(
     'contact/addContact',
-    async ({ id, formData }: { id?: string; formData: IsContractInfo }, { getState }) => {
+    async ({ formData }: { formData: IsContractInfo }, { getState }) => {
+        const { employee } = getState() as RootState;
         const formdata = new FormData();
-
-        console.log('data form Employee', formData.employee_id);
-
-        formdata.append('employee_id', id || '');
+        formdata.append('employee_id', String(employee.employee.id));
         formData.names.forEach((name) => formdata.append('names[]', name));
         formData.contract_dates.forEach((date) => formdata.append('contract_dates[]', date));
         formData.documents.forEach((doc) => formdata.append('documents[]', doc, doc.name));
@@ -73,16 +71,26 @@ const contractUploadSlice = createSlice({
                 state.contractInfo.documents.push(...documents);
             }
         },
-        removeDataFormConTtract: (state, action: PayloadAction<number>) => {
+        addDataTableContract: (state, action: PayloadAction<Contract>) => {
+            state.contractList.unshift(action.payload);
+            // state.contractList.push(action.payload);
+        },
+        getDataTableContract: (state, action: PayloadAction<number>) => {
+            // state.contractList.push(action.payload);
+        },
+        removeDataFormConTract: (state, action: PayloadAction<number>) => {
             const id = action.payload;
-
             state.contractInfo.names.splice(id, 1);
             state.contractInfo.contract_dates.splice(id, 1);
             state.contractInfo.documents.splice(id, 1);
         },
         removeDataContractById: (state, action: PayloadAction<number>) => {
-            const idToRemove = action.payload;
-            state.contractList = state.contractList.filter((contract) => contract.id !== idToRemove);
+            const idContractUpload = action.payload;
+            const deletePostIndex = state.contractList.findIndex((post) => post.id === idContractUpload);
+
+            if (deletePostIndex !== -1) {
+                state.contractList.splice(deletePostIndex, 1);
+            }
         },
         removeAllDataFormConTract: (state) => {
             state.contractInfo = initialState.contractInfo;
@@ -93,20 +101,43 @@ const contractUploadSlice = createSlice({
         mountDataContract: (state, action: PayloadAction<Contract[]>) => {
             state.contractList = action.payload;
         },
-        addDataTableContract: (state, action: PayloadAction<Contract>) => {
-            state.contractList.unshift(action.payload);
-        },
     },
     extraReducers(builder) {
         builder
             .addCase(getIdEmployeeContract.fulfilled, (state, action) => {
                 state.contractList = action.payload;
-                // state.statusAdd = false;
+                // console.log('action', action.payload);
+                // state.contractInfo = {
+                //     employee_id: action.payload.employee_id,
+                //     names: [],
+                //     contract_dates: [],
+                //     documents: [],
+                //     modified_contracts: [],
+                // };
+
+                // action.payload.forEach((contract: any) => {
+                //     state.contractInfo.employee_id = contract.employee_id;
+                //     state.contractInfo.names.push(contract.name);
+                //     state.contractInfo.contract_dates.push(contract.contract_date);
+                //     state.contractInfo.documents.push(contract.document);
+                // });
             })
             .addCase(addDataContract.fulfilled, (state, action) => {
                 state.contractInfo = initialState.contractInfo;
                 state.contractList = initialState.contractList;
+            })
+            .addCase(addDataContract.pending, (state, action) => {
+                state.contractInfo = initialState.contractInfo;
+                state.contractList = initialState.contractList;
             });
+
+        // .addMatcher<PendingAction>(
+        //     (action) => action.type.endsWith('/pending'),
+        //     (state, action) => {
+        //         state.contractInfo = initialState.contractInfo;
+        //         state.contractList = initialState.contractList;
+        //     },
+        // );
     },
 });
 
@@ -116,7 +147,7 @@ export const {
     removeAllDataContract,
     removeAllDataFormConTract,
     removeDataContractById,
-    removeDataFormConTtract,
+    removeDataFormConTract,
     addDataToForm,
 } = contractUploadSlice.actions;
 

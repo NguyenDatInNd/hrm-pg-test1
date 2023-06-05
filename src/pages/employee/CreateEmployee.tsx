@@ -29,7 +29,12 @@ import EmployeeOthers from '../../components/EmployeeSplit/EmployeeOthers';
 import Copyright from '../../components/Copyright';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 import { ROUTES } from '../../configs/router';
-import { addDataContract, getIdEmployeeContract } from '../Redux/contractUpload.slice';
+import {
+    addDataContract,
+    getIdEmployeeContract,
+    removeAllDataContract,
+    removeAllDataFormConTract,
+} from '../Redux/contractUpload.slice';
 import { addDataDocument } from '../Redux/documentUpload.slice';
 
 interface TabPanelProps {
@@ -51,7 +56,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <div>{children}</div>
                 </Box>
             )}
         </div>
@@ -73,9 +78,7 @@ const CreateEmployee = () => {
     const [isActiveAddInfo, setIsActiveAddInfo] = useState(false);
     const [isActiveAddSalary, setIsActiveAddSalary] = useState(false);
     const [isActiveAddContract, setIsActiveAddContract] = useState(false);
-    dispatch(loginSuccess(true));
-    const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
-    const { employee, statusAdd, idEmployeeAdd } = useAppSelector((state) => state.employee);
+    const { employee, statusAdd } = useAppSelector((state) => state.employee);
     const { contractInfo, contractList } = useAppSelector((state) => state.contractUpload);
     const { dataFormDocument } = useAppSelector((state) => state.documentUpload);
 
@@ -92,18 +95,20 @@ const CreateEmployee = () => {
     const handleCreateOrUpdateEmployee = async () => {
         if (idEmployee) {
             await dispatch(updateEmployee(Number(idEmployee)));
-            await dispatch(addDataContract({ id: idEmployee, formData: contractInfo }));
+            if (contractInfo.documents.length > 0) {
+                dispatch(addDataContract({ formData: contractInfo }));
+            }
         } else {
             await dispatch(addEmployee());
+            if (contractInfo.documents.length > 0) {
+                dispatch(addDataContract({ formData: contractInfo }));
+            }
             if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
                 dispatch(addDataDocument({ formData: dataFormDocument }));
             }
         }
-
         navigate(ROUTES.employee);
     };
-
-    console.log('formdata updated', dataFormDocument);
 
     // handle change TabPanel
     const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -207,24 +212,12 @@ const CreateEmployee = () => {
     useEffect(() => {
         if (idEmployee) {
             dispatch(getIdEmployeeUpdate(Number(idEmployee)));
+            dispatch(getIdEmployeeContract(Number(idEmployee)));
         } else {
             dispatch(removeValueFormEmployeeInfo());
+            dispatch(removeAllDataContract());
         }
     }, [idEmployee, dispatch]);
-
-    // Effect Add contract upload
-    console.log('contractInfo', contractInfo);
-
-    // Effect get Data Contract upload, AddDataContract Upload
-    useEffect(() => {
-        if (idEmployee) {
-            dispatch(getIdEmployeeContract(Number(idEmployee)));
-        }
-
-        if (statusAdd && employee.id > 0 && contractInfo.documents.length > 0) {
-            dispatch(addDataContract({ id: String(employee.id), formData: contractInfo }));
-        }
-    }, [statusAdd, employee.id]);
 
     return (
         <div className="mt-36 px-16">
@@ -316,7 +309,7 @@ const CreateEmployee = () => {
 
                 <div className="employee-container mt-5 bg-white rounded-3xl">
                     <div className="px-0 w-full">
-                        <div className="">
+                        <div className="huhuhu">
                             <TabPanel value={valueTab} index={0}>
                                 <EmployeeInfomation
                                     employee={employee}

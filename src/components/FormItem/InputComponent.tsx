@@ -27,7 +27,6 @@ const InputComponent = (props: PropsInput) => {
         gender: Yup.string().required('Please input Gender'),
         ktp_no: Yup.string().required('Please input KTP No'),
         nc_id: Yup.string().required('Please input National Card ID'),
-
         basic_salary: Yup.number().typeError('Please input Salary').required().min(1, 'Please input Salary'),
         audit_salary: Yup.number()
             .typeError('Please input Salary (Audit)')
@@ -79,8 +78,8 @@ const InputComponent = (props: PropsInput) => {
                     <div className="flex  items-center h-12">
                         <label
                             htmlFor={label}
-                            className={`font-normal !text-2xl ${
-                                type === 'number' ? 'min-w-[220px]' : 'min-w-[162px]'
+                            className={`font-medium !text-2xl ${
+                                type === 'number' ? 'min-w-[220px]' : 'min-w-[170px]'
                             }  ${upload && 'min-w-[120px]'} flex`}
                         >
                             {label}

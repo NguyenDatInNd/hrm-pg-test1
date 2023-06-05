@@ -9,17 +9,20 @@ import axios from 'axios';
 import { API_PATHS } from '../../configs/api';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import { toast } from 'react-toastify';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { loginSuccess } from '../../pages/Redux/company.slice';
 import Copyright from '../../components/Copyright';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../configs/router';
+import { loginAuthentication } from '../../pages/Redux/user.slice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const loginPage = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [loading, setLoading] = useState(false);
-    dispatch(loginSuccess(false));
+    const valueCookie = Cookies.get(ACCESS_TOKEN_KEY);
+
     const onLogin = async (value: IsLoginParam) => {
         try {
             setLoading(true);
@@ -33,7 +36,6 @@ const loginPage = () => {
             toast.success('Login Successfully');
             setTimeout(() => {
                 navigate(ROUTES.employee);
-                // window.location.href = '/employee';
             }, 500);
         } catch (error) {
             setLoading(false);
@@ -61,3 +63,14 @@ const loginPage = () => {
 };
 
 export default loginPage;
+// try {
+//     setLoading(true);
+//     const resultAction = await dispatch(loginAuthentication(value));
+//     unwrapResult(resultAction);
+//     console.log('no la gi', unwrapResult(resultAction));
+//     setLoading(false);
+//     navigate(ROUTES.employee);
+// } catch (error) {
+//     setLoading(false);
+//     toast.error('Incorrect Username, Password or Factory. Please try again!');
+// }

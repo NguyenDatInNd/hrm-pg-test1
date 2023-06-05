@@ -29,6 +29,7 @@ export const API_PATHS = {
     forgotPassword: 'api/forgot-password',
     grade: 'api/grade',
     benefit: 'api/benefit',
+    changepassword: 'api/change-password',
 
     API_FIXER: 'https://api-training.hrm.div4.pgtest.co/api/v1',
 

@@ -91,7 +91,8 @@ const OtherUpload = () => {
         }
     };
 
-    console.log('data document', idEmployee);
+    console.log('dataDocument', dataDocument);
+    console.log('dataFormDocument', dataFormDocument);
 
     return (
         <div className="flex flex-col border border-[#dfe3e6] rounded-md">

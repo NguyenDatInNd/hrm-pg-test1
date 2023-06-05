@@ -33,7 +33,6 @@ const ContactInfomation = (props: PropsFormDataEmployee) => {
                     placeholder="Choose Type"
                     isRequired={true}
                     value={employee.type}
-                    onChange={handleChangeValueFormDataEmployee}
                     name="type"
                     isType
                 />
@@ -41,7 +40,6 @@ const ContactInfomation = (props: PropsFormDataEmployee) => {
 
             <div className="mt-5">
                 <ContractUpload />
-                {/* contractList={contractListInfo} */}
             </div>
         </div>
     );

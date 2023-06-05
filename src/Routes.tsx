@@ -17,14 +17,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Header, SideBar } from './components/index';
 
 export const RoutesConfig = () => {
-    const cookieValue = Cookies.get(ACCESS_TOKEN_KEY);
-    const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
+    const { accessToken } = useAppSelector((state) => state.user);
+    const valueCookie = Cookies.get(ACCESS_TOKEN_KEY);
 
     return (
         <>
             <div>
                 <div className="flex relative flex-wrap dark:bg-main-dark-bg">
-                    {loadingLogin ? (
+                    {valueCookie ? (
                         <div className="">
                             <div style={{ zIndex: '101' }} className="w-full sidebar fixed">
                                 <Header />
@@ -42,7 +42,7 @@ export const RoutesConfig = () => {
                     )}
                     <div
                         className={`dark:bg-main-bg bg-main-bg min-h-screen w-full ${
-                            loadingLogin ? 'md:ml-[325px]' : ''
+                            valueCookie ? 'md:ml-[325px]' : ''
                         }`}
                     >
                         <Suspense fallback={<div>Loading.....</div>}>
@@ -71,7 +71,6 @@ export const RoutesConfig = () => {
                     pauseOnHover
                     theme="light"
                 />
-                <ToastContainer />
             </div>
         </>
     );

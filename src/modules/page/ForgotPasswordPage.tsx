@@ -10,7 +10,6 @@ import { IForgotPasswordParams } from '../../Types/auth';
 const ForgotPasswordPage = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    dispatch(loginSuccess(false));
 
     const handleForgotPassword = React.useCallback(
         async (values: IForgotPasswordParams) => {

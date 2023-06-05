@@ -31,17 +31,13 @@ const style = {
 
 const EmployeeListPage = () => {
     const dispatch = useAppDispatch();
-    dispatch(loginSuccess(true));
     const navigate = useNavigate();
-    const loadingLogin = useAppSelector((state) => state.company.loadingLogin);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const search = searchParams.get('search');
     const page = searchParams.get('page');
     const { employeeList, employeeIddelete } = useAppSelector((state) => state.employee);
-    const { contractInfo } = useAppSelector((state) => state.contractUpload);
     const [openFirstModal, setOpenFirstModal] = React.useState(false);
-    // get data table in employeeList Search
     const [dataTables, setDataTables] = useState<EmployeeList>(employeeList);
 
     // API get list employee

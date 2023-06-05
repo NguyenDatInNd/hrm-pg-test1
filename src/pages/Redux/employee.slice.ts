@@ -304,7 +304,6 @@ const employeeSlice = createSlice({
             })
             .addCase(addEmployee.fulfilled, (state, action) => {
                 state.employeeList.data.push(action.payload);
-                console.log('employee hiiiiiii', action.payload);
                 state.idEmployeeAdd = action.payload.id;
                 state.employee = action.payload;
                 state.statusAdd = true;
