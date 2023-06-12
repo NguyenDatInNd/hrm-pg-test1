@@ -1,5 +1,15 @@
 import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
-import { Department, Employee, EmployeeList, IsBenefit, IsGrade, MarriageStatus, Position } from '../../Types/employee';
+import {
+    Department,
+    Employee,
+    EmployeeList,
+    IsBenefit,
+    IsDocument,
+    IsDocumentFormData,
+    IsGrade,
+    MarriageStatus,
+    Position,
+} from '../../Types/employee';
 import { API_PATHS } from '../../configs/api';
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
@@ -27,7 +37,11 @@ interface EmployeeState {
     gradeList: IsGrade[];
     benefitList: IsBenefit[];
     statusAdd: boolean;
-    idEmployeeAdd: number | null;
+
+    // upload document
+    documentList: IsDocument[];
+    documentInfo: IsDocumentFormData;
+    errorsEmployee: any;
 }
 
 interface EmployeeListParams {
@@ -125,7 +139,14 @@ const initialState: EmployeeState = {
     gradeList: [],
     benefitList: [],
     statusAdd: false,
-    idEmployeeAdd: null,
+
+    documentList: [],
+    documentInfo: {
+        employee_id: '',
+        documents: [],
+        deleted_ids: [],
+    },
+    errorsEmployee: {},
 };
 
 //get API employeeList
@@ -152,13 +173,6 @@ export const getEmployeeListSearch = createAsyncThunk(
     },
 );
 
-// fetchApi configuration
-// export const getEmployeeList = createAsyncThunk('employees/getEmployees', async () => {
-//     const response = await fetchApi(API_PATHS.employee, 'get');
-//     const data = response.data;
-//     return data;
-// });
-
 export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, { getState }) => {
     const { employee } = getState() as RootState;
     const { benefits } = employee.employee;
@@ -176,14 +190,6 @@ export const addEmployee = createAsyncThunk('employees/addEmployee', async (_, {
         toast.error('Add Failed, Try It Again(check required fields in Contract Infomation)!');
     }
 });
-
-// export const addEmployee = createAsyncThunk('employees/addEmployee', async (body: Employee) => {
-//     const response = await axios.post(`${API_PATHS.API_FIXER}/employee`, body, {
-//         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-//     });
-//     const data = response.data.data;
-//     return data;
-// });
 
 // delete employee encode
 export const deleteEmployeeEncode = createAsyncThunk('employees/deleteEmployee', async (record_ids: number[]) => {
@@ -266,6 +272,24 @@ export const getBenefit = createAsyncThunk('benefits/getBenefit', async () => {
     return data;
 });
 
+// Add data document (Upload)
+export const addDataDocument = createAsyncThunk(
+    'document/addDocument',
+    async ({ formData }: { formData: IsDocumentFormData }, { getState }) => {
+        const { employee } = getState() as RootState;
+        const formdata = new FormData();
+        formdata.append('employee_id', String(employee.employee.id));
+        formData.documents && formData.documents.forEach((doc) => formdata.append('documents[]', doc, doc.name));
+        formData.deleted_ids && formData.deleted_ids.forEach((id) => formdata.append('deleted_ids[]', String(id)));
+
+        const response = await axios.post(`${API_PATHS.API_FIXER}/employee-document/upload`, formdata, {
+            headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+        });
+        const data = response.data.data;
+        return data;
+    },
+);
+
 const employeeSlice = createSlice({
     name: 'employee',
     initialState,
@@ -289,6 +313,39 @@ const employeeSlice = createSlice({
         removeValueFormEmployeeInfo: (state) => {
             state.employee = initialState.employee;
         },
+
+        setErrorsEmployee: (state, action) => {
+            const errorFields = Object.keys(action.payload);
+
+            errorFields.forEach((field) => {
+                state.errorsEmployee[field] = action.payload[field].message;
+            });
+        },
+        resetErorrsEmployee: (state) => {
+            state.errorsEmployee = initialState.errorsEmployee;
+        },
+        // Document Upload
+        addDataToDocument: (state, action: PayloadAction<IsDocumentFormData>) => {
+            const { employee_id, documents, deleted_ids } = action.payload;
+            state.documentInfo.employee_id = employee_id;
+            state.documentInfo.documents && documents && state.documentInfo.documents.push(...documents);
+            state.documentInfo.deleted_ids && deleted_ids && state.documentInfo.deleted_ids.push(...deleted_ids);
+        },
+        addDataTableDocument: (state, action: PayloadAction<IsDocument>) => {
+            state.documentList.unshift(action.payload);
+        },
+        removeDataTableDocument: (state, action: PayloadAction<{ id: number; index: number }>) => {
+            const idDocumentUpload = action.payload.id;
+            const deletePostIndex = state.documentList.findIndex((post) => post.id === idDocumentUpload);
+            if (deletePostIndex !== -1) {
+                state.documentList.splice(deletePostIndex, 1);
+            }
+
+            state.documentInfo.documents?.splice(action.payload.index, 1);
+        },
+        removeAllDataTableDocument: (state) => {
+            state.documentList = initialState.documentList;
+        },
     },
     extraReducers(builder) {
         builder
@@ -301,10 +358,22 @@ const employeeSlice = createSlice({
             })
             .addCase(getIdEmployeeUpdate.fulfilled, (state, action) => {
                 state.employee = action.payload;
+                state.documentList = action.payload.contracts;
+                // state.documentInfo = {
+                //     employee_id: '',
+                //     documents: [],
+                //     deleted_ids: [],
+                // };
+
+                //  action.payload.forEach((contract: any) => {
+                //     state.documentInfo.employee_id = contract.employee_id;
+                //     state.documentInfo.documents.push(contract.document);
+                //     state.documentInfo.deleted_ids.push(contract.contract_date);
+
+                // });
             })
             .addCase(addEmployee.fulfilled, (state, action) => {
                 state.employeeList.data.push(action.payload);
-                state.idEmployeeAdd = action.payload.id;
                 state.employee = action.payload;
                 state.statusAdd = true;
             })
@@ -360,25 +429,12 @@ export const {
     getIdEmployeeDelete,
     changeValueEmployeeUpdate,
     removeValueFormEmployeeInfo,
+    resetErorrsEmployee,
+    setErrorsEmployee,
+    addDataToDocument,
+    addDataTableDocument,
+    removeDataTableDocument,
+    removeAllDataTableDocument,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;
-
-// ChangeValueContractUpload: (state, action: PayloadAction<Value>) => {
-//     const { name, value } = action.payload;
-//     state.contractInfo[name] = value;
-// },
-
-// addContractInfo: (state, action) => {
-//     state.contractListInfo.data.push(action.payload);
-//     state.contractInfo.contract_dates = '';
-// },
-
-// deleteContractInfo: (state, action: PayloadAction<string>) => {
-//     // Xoas tam thoi bang ten
-//     const nameId = action.payload;
-//     const deletePostIndex = state.contractListInfo.data.findIndex((post) => post.names === nameId);
-//     if (deletePostIndex !== -1) {
-//         state.contractListInfo.data.splice(deletePostIndex, 1);
-//     }
-// },

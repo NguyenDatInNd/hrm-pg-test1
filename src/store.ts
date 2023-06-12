@@ -4,7 +4,6 @@ import employeeSlice from './pages/Redux/employee.slice';
 import companySlice from './pages/Redux/company.slice';
 import userSlice from './pages/Redux/user.slice';
 import contractUploadSlice from './pages/Redux/contractUpload.slice';
-import documentUploadSlice from './pages/Redux/documentUpload.slice';
 
 const store = configureStore({
     reducer: {
@@ -12,7 +11,6 @@ const store = configureStore({
         company: companySlice,
         user: userSlice,
         contractUpload: contractUploadSlice,
-        documentUpload: documentUploadSlice,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

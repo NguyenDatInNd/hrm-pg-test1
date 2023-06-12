@@ -2,18 +2,12 @@ import React, { ChangeEvent } from 'react';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import dowloadIcon from '../../assets/download.svg';
 
-import {
-    addDataTableDocument,
-    addDataToDocument,
-    removeAllDataFromDocument,
-    removeDataDocument,
-    removeDataFormDocument,
-} from '../../pages/Redux/documentUpload.slice';
 import moment from 'moment-timezone';
 import { MdDeleteOutline } from 'react-icons/md';
+import { addDataTableDocument, addDataToDocument, removeDataTableDocument } from '../../pages/Redux/employee.slice';
 
 interface Column {
     id: 'No' | 'Document Name' | 'Created At' | 'Action';
@@ -53,7 +47,7 @@ const OtherUpload = () => {
 
     const dispatch = useAppDispatch();
     const { idEmployee } = useParams();
-    const { dataDocument, dataFormDocument } = useAppSelector((state) => state.documentUpload);
+    const { documentList, documentInfo } = useAppSelector((state) => state.employee);
 
     const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files && e.target.files[0];
@@ -67,7 +61,7 @@ const OtherUpload = () => {
             );
             dispatch(
                 addDataTableDocument({
-                    id: Number(idEmployee),
+                    id: selectedFile.lastModified,
                     employee_id: -1,
                     created_at: moment(selectedFile.lastModified).format('YYYY-MM-DD'),
                     document: selectedFile.name,
@@ -77,23 +71,12 @@ const OtherUpload = () => {
         }
     };
 
-    const handleDeleteFileDocument = (updated_at: string, index: number, id: number) => {
-        dispatch(removeDataDocument(index));
-        dispatch(removeDataFormDocument(index));
-        dispatch(removeAllDataFromDocument());
-        if (updated_at !== '') {
-            dispatch(
-                addDataToDocument({
-                    employee_id: idEmployee || '0',
-                    deleted_ids: [id],
-                }),
-            );
-        }
+    console.log('document', documentList);
+    console.log('documentInfo', documentInfo);
+
+    const handleDeleteFileDocument = (id: number, index: number) => {
+        dispatch(removeDataTableDocument({ id, index }));
     };
-
-    console.log('dataDocument', dataDocument);
-    console.log('dataFormDocument', dataFormDocument);
-
     return (
         <div className="flex flex-col border border-[#dfe3e6] rounded-md">
             <div className="flex items-center gap-32 mt-4 px-4">
@@ -142,48 +125,51 @@ const OtherUpload = () => {
                         </TableHead>
 
                         <TableBody>
-                            {dataDocument &&
-                                dataDocument[0]?.id !== -1 &&
-                                dataDocument.map((row: any, index: number) => {
-                                    return (
-                                        <CustomTableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={row.id}
-                                            sx={{
-                                                cursor: 'pointer',
-                                            }}
-                                        >
-                                            <TableCellCustom>{index + 1}</TableCellCustom>
-                                            <TableCellCustom style={{ minWidth: `50px` }}>
-                                                {row.document.split('/').pop()}
-                                            </TableCellCustom>
-                                            <TableCellCustom>
-                                                {moment(row.create_at).format('YYYY-MM-DD')}
-                                            </TableCellCustom>
-                                            <TableCellCustom>
-                                                <div className="flex justify-center items-center gap-1">
-                                                    <span className="w-10">
-                                                        {idEmployee && (
-                                                            <button className="flex gap-1 ">
-                                                                <img src={dowloadIcon} className="" alt="" />
-                                                            </button>
-                                                        )}
-                                                    </span>
-                                                    <Button
-                                                        onClick={() =>
-                                                            handleDeleteFileDocument(row.updated_at, index, row.id)
-                                                        }
-                                                        className="button-contract-upload "
-                                                    >
-                                                        <MdDeleteOutline size={14} className="-mt-1" />
-                                                        <span className="ml-2">Delete</span>
-                                                    </Button>
-                                                </div>
-                                            </TableCellCustom>
-                                        </CustomTableRow>
-                                    );
+                            {documentList &&
+                                documentList.map((row: any, index: number) => {
+                                    if (row.id != -1) {
+                                        return (
+                                            <CustomTableRow
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={row.id}
+                                                sx={{
+                                                    cursor: 'pointer',
+                                                }}
+                                            >
+                                                <TableCellCustom>{index + 1}</TableCellCustom>
+                                                <TableCellCustom style={{ minWidth: `50px` }}>
+                                                    {row.document.split('/').pop()}
+                                                </TableCellCustom>
+                                                <TableCellCustom>
+                                                    {moment(row.create_at).format('YYYY-MM-DD')}
+                                                </TableCellCustom>
+                                                <TableCellCustom>
+                                                    <div className="flex justify-center items-center gap-1">
+                                                        <span className="w-10">
+                                                            {idEmployee && (
+                                                                <Link
+                                                                    to={row.document}
+                                                                    target="#blank"
+                                                                    className="flex gap-1 "
+                                                                >
+                                                                    <img src={dowloadIcon} className="" alt="" />
+                                                                </Link>
+                                                            )}
+                                                        </span>
+                                                        <Button
+                                                            onClick={() => handleDeleteFileDocument(row.id, index)}
+                                                            className="button-contract-upload "
+                                                        >
+                                                            <MdDeleteOutline size={14} className="-mt-1" />
+                                                            <span className="ml-2">Delete</span>
+                                                        </Button>
+                                                    </div>
+                                                </TableCellCustom>
+                                            </CustomTableRow>
+                                        );
+                                    }
                                 })}
                         </TableBody>
                     </Table>
@@ -192,5 +178,4 @@ const OtherUpload = () => {
         </div>
     );
 };
-
 export default OtherUpload;

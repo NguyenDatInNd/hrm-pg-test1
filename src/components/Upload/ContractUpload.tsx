@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { MdDeleteOutline } from 'react-icons/md';
 import { styled } from '@mui/material/styles';
 import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
     addDataTableContract,
     addDataToForm,
@@ -20,6 +20,7 @@ import {
 } from '../../pages/Redux/contractUpload.slice';
 import dowloadIcon from '../../assets/download.svg';
 import moment from 'moment-timezone';
+
 interface Column {
     id: 'No' | 'Contract Name' | 'Sign Date' | 'Action';
     label: string;
@@ -75,6 +76,7 @@ const ContractUpload = () => {
     const [openFirstModal, setOpenFirstModal] = useState(false);
     const [formContract, setFormContract] = useState({ date: '', name: '' });
     const [idContract, setIdContract] = useState<number | null>(null);
+    const { employee } = useAppSelector((state) => state.employee);
 
     const { contractList, contractInfo } = useAppSelector((state) => state.contractUpload);
 
@@ -139,7 +141,7 @@ const ContractUpload = () => {
     };
 
     // delete contract upload
-    const handleDeleteContractInfo = (document: string, index: number, rowId: number) => {
+    const handleDeleteContractInfo = (index: number, rowId: number) => {
         dispatch(removeDataFormConTract(index));
         dispatch(removeDataContractById(rowId));
         setIdContract(null);
@@ -161,7 +163,6 @@ const ContractUpload = () => {
             <div className="flex flex-wrap gap-5 py-5 px-[18px]">
                 <div className="container-upload flex flex-col gap-11">
                     <InputComponentDatePicker
-                        // value={formContractInfo.contract_dates}
                         onChange={handleChangeDate}
                         value={formContract.date}
                         name="contract_date"
@@ -173,7 +174,6 @@ const ContractUpload = () => {
                         onChange={changeContractName}
                         value={formContract.name}
                         name="name"
-                        // onChange={handleAddContractInfo}
                         label="Contract Name"
                         upload
                     />
@@ -216,13 +216,18 @@ const ContractUpload = () => {
                         </Button>
                     </div>
                     {selectedFile && (
-                        <div className="-mt-4">
-                            <span className="px-3 py-3 text-xl max-w-full bg-[#f1f3f5]">
-                                {selectedFile.name}
-                                <button className="ml-4 mr-3" onClick={handleDeleteFile}>
-                                    X
+                        <div className="-mt-4 ">
+                            <div className="flex ">
+                                <div className=" text-ellipsis overflow-hidden whitespace-nowrap bg-[#f1f3f5] px-3 py-3 text-xl  !max-w-[380px]">
+                                    {selectedFile.name}
+                                </div>
+                                <button
+                                    className=" mr-3 bg-[#f1f3f5] px-3 items-center pb-1"
+                                    onClick={handleDeleteFile}
+                                >
+                                    <ClearIcon />
                                 </button>
-                            </span>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -269,12 +274,15 @@ const ContractUpload = () => {
                                                     <div className="flex justify-center items-center gap-[6px]">
                                                         <span className="w-32">
                                                             {row.document != '' && (
-                                                                <button className="flex gap-1 hover:bg-green-100 h-6  text-green bg-green-200 items-center rounded-lg py-[12px] px-4">
+                                                                <Link
+                                                                    to={`https://api-training.hrm.div4.pgtest.co/storage/${row.document}`}
+                                                                    className="flex gap-1 hover:bg-green-100 h-6 text-green bg-green-200 items-center rounded-lg py-[12px] px-4"
+                                                                >
                                                                     <span className="text-ellipsis overflow-hidden whitespace-nowrap w-20">
                                                                         {row.document.split('/').pop()}
                                                                     </span>
                                                                     <img src={dowloadIcon} alt="" />
-                                                                </button>
+                                                                </Link>
                                                             )}
                                                         </span>
                                                         <Button
@@ -327,9 +335,7 @@ const ContractUpload = () => {
                                             No
                                         </Button>
                                         <Button
-                                            onClick={() =>
-                                                handleDeleteContractInfo(contract.document, index, contract.id)
-                                            }
+                                            onClick={() => handleDeleteContractInfo(index, contract.id)}
                                             className="button-signout w-[48%]"
                                         >
                                             Yes

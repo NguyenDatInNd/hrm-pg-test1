@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { loginSuccess } from '../Redux/company.slice';
 import SubHeader from '../../components/Header/SubHeader';
 import { MdDeleteOutline } from 'react-icons/md';
 import './Employee.scss';
 import EmployeeItem from './EmployeeItem';
 import { deleteEmployeeEncode, getEmployeeList, getEmployeeListSearch } from '../Redux/employee.slice';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import addIcon from '../../assets/addIcon.svg';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -100,6 +99,7 @@ const EmployeeListPage = () => {
             getDataEmployeeList(search, page);
         })();
     }, [search, page, getDataEmployeeList]);
+
     const handleSearchEmployee = debounce((keyword: string | '', page?: number) => {
         const queryParams: { search?: string; page: string } = keyword
             ? {

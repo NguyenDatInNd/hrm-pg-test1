@@ -39,6 +39,8 @@ export const addDataContract = createAsyncThunk(
         formData.documents.forEach((doc) => formdata.append('documents[]', doc, doc.name));
         formdata.append('modified_contracts[]', '');
 
+        console.log('formData', formData);
+
         const response = await axios.post(`${API_PATHS.API_FIXER}/contract/save-multiple`, formdata, {
             headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
         });
@@ -73,7 +75,6 @@ const contractUploadSlice = createSlice({
         },
         addDataTableContract: (state, action: PayloadAction<Contract>) => {
             state.contractList.unshift(action.payload);
-            // state.contractList.push(action.payload);
         },
         getDataTableContract: (state, action: PayloadAction<number>) => {
             // state.contractList.push(action.payload);

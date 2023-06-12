@@ -3,23 +3,23 @@
 /* eslint-disable prefer-const */
 import React, { useState, useCallback, ChangeEvent, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { loginSuccess } from '../Redux/company.slice';
 import { useNavigate, useParams } from 'react-router-dom';
 import SubHeader from '../../components/Header/SubHeader';
 import './Employee.scss';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import EmployeeInfomation from '../../components/EmployeeSplit/EmployeeInfomation';
-import { debounce } from 'lodash';
 
 import { Button, SelectChangeEvent } from '@mui/material';
 import {
+    addDataDocument,
     addEmployee,
     changeValueFormEmployeeInfo,
     getIdEmployeeUpdate,
+    removeAllDataTableDocument,
     removeValueFormEmployeeInfo,
+    resetErorrsEmployee,
     updateEmployee,
 } from '../Redux/employee.slice';
 import ContactInfomation from '../../components/EmployeeSplit/ContactInfomation';
@@ -29,13 +29,7 @@ import EmployeeOthers from '../../components/EmployeeSplit/EmployeeOthers';
 import Copyright from '../../components/Copyright';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 import { ROUTES } from '../../configs/router';
-import {
-    addDataContract,
-    getIdEmployeeContract,
-    removeAllDataContract,
-    removeAllDataFormConTract,
-} from '../Redux/contractUpload.slice';
-import { addDataDocument } from '../Redux/documentUpload.slice';
+import { addDataContract, getIdEmployeeContract, removeAllDataContract } from '../Redux/contractUpload.slice';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -78,9 +72,8 @@ const CreateEmployee = () => {
     const [isActiveAddInfo, setIsActiveAddInfo] = useState(false);
     const [isActiveAddSalary, setIsActiveAddSalary] = useState(false);
     const [isActiveAddContract, setIsActiveAddContract] = useState(false);
-    const { employee, statusAdd } = useAppSelector((state) => state.employee);
+    const { employee, documentInfo } = useAppSelector((state) => state.employee);
     const { contractInfo, contractList } = useAppSelector((state) => state.contractUpload);
-    const { dataFormDocument } = useAppSelector((state) => state.documentUpload);
 
     // handle Change Value FormData Employee in Redux
     const handleChangeValueFormDataEmployee = useCallback(
@@ -96,15 +89,18 @@ const CreateEmployee = () => {
         if (idEmployee) {
             await dispatch(updateEmployee(Number(idEmployee)));
             if (contractInfo.documents.length > 0) {
-                dispatch(addDataContract({ formData: contractInfo }));
+                await dispatch(addDataContract({ formData: contractInfo }));
+            }
+            if (documentInfo.documents && documentInfo.documents.length > 0) {
+                await dispatch(addDataDocument({ formData: documentInfo }));
             }
         } else {
             await dispatch(addEmployee());
             if (contractInfo.documents.length > 0) {
                 dispatch(addDataContract({ formData: contractInfo }));
             }
-            if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
-                dispatch(addDataDocument({ formData: dataFormDocument }));
+            if (documentInfo.documents && documentInfo.documents.length > 0) {
+                await dispatch(addDataDocument({ formData: documentInfo }));
             }
         }
         navigate(ROUTES.employee);
@@ -190,22 +186,6 @@ const CreateEmployee = () => {
     useEffect(() => {
         handleCheckActiceTabPanel();
         handleActiveButtonAdd();
-        // if (
-        //     !String(employee.basic_salary) ||
-        //     employee.basic_salary < 0 ||
-        //     !String(employee.audit_salary) ||
-        //     employee.audit_salary < 0 ||
-        //     !String(employee.safety_insurance) ||
-        //     employee.safety_insurance < 0 ||
-        //     !String(employee.health_insurance) ||
-        //     employee.health_insurance < 0 ||
-        //     !String(employee.meal_allowance_paid) ||
-        //     employee.meal_allowance_paid < 0
-        // ) {
-        //     setTimeout(() => {
-        //         setIsActiveAddSalary(true);
-        //     }, 300);
-        // }
     }, [handleCheckActiceTabPanel]);
 
     // effect find id employ when update
@@ -216,6 +196,8 @@ const CreateEmployee = () => {
         } else {
             dispatch(removeValueFormEmployeeInfo());
             dispatch(removeAllDataContract());
+            dispatch(resetErorrsEmployee());
+            dispatch(removeAllDataTableDocument());
         }
     }, [idEmployee, dispatch]);
 
@@ -231,9 +213,12 @@ const CreateEmployee = () => {
                     <div className="">
                         {idEmployee ? (
                             <Button
+                                disabled={!isActiveAdd}
                                 onClick={handleCreateOrUpdateEmployee}
                                 type="submit"
-                                className="h-20 w-64 button-save-change"
+                                className={`h-20 w-64 ${
+                                    isActiveAdd ? 'button-save-change' : ' button-not-save-change'
+                                } `}
                             >
                                 Save Change
                             </Button>

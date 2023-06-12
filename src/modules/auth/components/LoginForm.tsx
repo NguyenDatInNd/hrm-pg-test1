@@ -60,9 +60,6 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
         setIsShowPassWord((prev) => !prev);
     };
 
-    console.log('selectedCompanyId', selectedCompanyId);
-    console.log('value', watch('company_id'));
-
     return (
         <div className="login-form-content">
             <form className="form_container" action="" onSubmit={handleSubmit(onSubmit)}>

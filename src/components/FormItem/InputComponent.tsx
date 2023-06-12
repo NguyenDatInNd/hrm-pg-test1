@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import './Input.scss';
 import Box from '@mui/material/Box';
 import DatePicker from 'react-datepicker';
@@ -9,6 +9,7 @@ import moment from 'moment-timezone';
 import datePicker from '../../assets/datePicker.svg';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import * as Yup from 'yup';
+import { setErrorsEmployee } from '../../pages/Redux/employee.slice';
 type PropsInput = {
     label: string;
     isRequired?: boolean;
@@ -46,10 +47,11 @@ const InputComponent = (props: PropsInput) => {
             .min(1, 'Please input Healthy Insurance Amount'),
     });
 
+    const dispatch = useAppDispatch();
     const { label, onChange, upload, value, name, isRp, isRequired, type, disable } = props;
     const [isValueCheck, setIsValueCheck] = useState([name]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
+    const erorrsEmployee = useAppSelector((state) => state.employee.errorsEmployee);
     const handleDateChange = (date: Date | null, event: React.SyntheticEvent<any> | undefined) => {
         setSelectedDate(date);
     };
@@ -69,6 +71,7 @@ const InputComponent = (props: PropsInput) => {
     const handleIsValueCheck = () => {
         setIsValueCheck((prevValues) => ({ ...prevValues, [name]: value }));
         trigger(name);
+        dispatch(setErrorsEmployee(errors));
     };
 
     return (
@@ -106,12 +109,15 @@ const InputComponent = (props: PropsInput) => {
                         ) : isRp ? (
                             <div
                                 className={`flex input-type  ${
-                                    isValueCheck[name] === '' && !value && 'input-danger'
-                                }   ${Number(isValueCheck[name]) < 0 && 'input-danger'}`}
+                                    (!isValueCheck[name] || Number(isValueCheck[name]) < 0) &&
+                                    (value === '' || Number(value) < 0) &&
+                                    erorrsEmployee[name] &&
+                                    'input-danger'
+                                } `}
                             >
                                 <span
                                     style={{ zIndex: 20 }}
-                                    className="absolute text-2xl text-[#006adc] font-medium  left-"
+                                    className="absolute text-2xl text-[#006adc] font-medium left-"
                                 >
                                     Rp
                                 </span>
@@ -136,8 +142,8 @@ const InputComponent = (props: PropsInput) => {
                             </div>
                         ) : isRequired ? (
                             <div
-                                className={`flex input-type  ${
-                                    isValueCheck[name] === '' && !value && 'input-danger'
+                                className={`flex input-type ${
+                                    !isValueCheck[name] && erorrsEmployee[name] && !value && 'input-danger'
                                 }  `}
                             >
                                 <Controller
@@ -158,7 +164,7 @@ const InputComponent = (props: PropsInput) => {
                                                 },
                                                 // required: `Please ${name} is not empty`,
                                             })}
-                                            className=" input-width  h-12 min-w-290 max-w-300 "
+                                            className=" input-width h-12 min-w-290 max-w-300 "
                                             value={value}
                                             onChange={onChange}
                                             onBlur={handleIsValueCheck}
@@ -182,30 +188,30 @@ const InputComponent = (props: PropsInput) => {
                             </div>
                         )}
                     </div>
-                    {isRequired && isValueCheck[name] === '' && errors[name]?.message && !value && (
+                    {isRequired && erorrsEmployee[name] && errors[name]?.message && !value && (
                         <span
-                            className={`text-danger mt-4 text-lg -mb-[10px] font-normal ${
+                            className={`text-danger text-lg font-medium ${
                                 type === 'number' ? 'ml-[230px]' : 'ml-[172px]'
-                            }`}
+                            } ${(isValueCheck[name] === '' || !value) && 'pl-4 pt-3 -mb-3'}`}
                         >
-                            {errors[name]?.message?.toString()}
+                            {erorrsEmployee ? erorrsEmployee[name] : ''}
                         </span>
                     )}
 
                     {/* Check value when value < 0 */}
-                    {isRp && isRequired && errors[name]?.message && (
-                        <span
-                            className={`text-danger mt-4 text-lg -mb-[10px] font-normal ${
-                                type === 'number' ? 'ml-[230px]' : 'ml-[172px]'
-                            }`}
-                        >
-                            {isValueCheck[name] === ''
-                                ? ''
-                                : Number(isValueCheck[name]) < 0
-                                ? 'Please input value min is 0'
-                                : null}
-                        </span>
-                    )}
+                    {isRp &&
+                        erorrsEmployee &&
+                        isRequired &&
+                        errors[name]?.message &&
+                        (value === '' || Number(value) < 0) && (
+                            <span
+                                className={`text-danger mt-4 text-lg -mb-[10px] font-normal ${
+                                    type === 'number' ? 'ml-[230px]' : 'ml-[172px]'
+                                } `}
+                            >
+                                {!isValueCheck[name] ? '' : 'Please input value min is 0'}
+                            </span>
+                        )}
                 </div>
             </Box>
         </div>
