@@ -10,12 +10,9 @@ import { API_PATHS } from '../../configs/api';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { loginSuccess } from '../../pages/Redux/company.slice';
 import Copyright from '../../components/Copyright';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../configs/router';
-import { loginAuthentication } from '../../pages/Redux/user.slice';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 const loginPage = () => {
     const navigate = useNavigate();

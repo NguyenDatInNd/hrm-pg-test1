@@ -8,7 +8,6 @@ import { ACCESS_TOKEN_KEY } from './utils/contants';
 import { useAppSelector } from './store';
 import { ToastContainer } from 'react-toastify';
 const LoginPage = lazy(() => import('./modules/page/loginPage'));
-const HomePage = lazy(() => import('./pages/HomePage'));
 const EmployeePage = lazy(() => import('./pages/employee/EmployeeListPage'));
 const CreateOrUpdateEmployee = lazy(() => import('./pages/employee/CreateEmployee'));
 const Settings = lazy(() => import('./pages/Settings/Setting'));
