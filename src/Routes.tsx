@@ -25,7 +25,6 @@ export const RoutesConfig = () => {
         return false;
     }, [pathname]);
 
-    console.log('valueToken', valueToken);
     return (
         <>
             <div>
