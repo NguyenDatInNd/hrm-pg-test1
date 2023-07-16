@@ -76,9 +76,7 @@ const contractUploadSlice = createSlice({
         addDataTableContract: (state, action: PayloadAction<Contract>) => {
             state.contractList.unshift(action.payload);
         },
-        getDataTableContract: (state, action: PayloadAction<number>) => {
-            // state.contractList.push(action.payload);
-        },
+
         removeDataFormConTract: (state, action: PayloadAction<number>) => {
             const id = action.payload;
             state.contractInfo.names.splice(id, 1);
@@ -123,11 +121,11 @@ const contractUploadSlice = createSlice({
                 //     state.contractInfo.documents.push(contract.document);
                 // });
             })
-            .addCase(addDataContract.fulfilled, (state, action) => {
+            .addCase(addDataContract.fulfilled, (state) => {
                 state.contractInfo = initialState.contractInfo;
                 state.contractList = initialState.contractList;
             })
-            .addCase(addDataContract.pending, (state, action) => {
+            .addCase(addDataContract.pending, (state) => {
                 state.contractInfo = initialState.contractInfo;
                 state.contractList = initialState.contractList;
             });

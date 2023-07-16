@@ -406,19 +406,19 @@ const employeeSlice = createSlice({
 
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),
-                (state, action) => {
+                (state) => {
                     state.loadingEmployee = true;
                 },
             )
             .addMatcher<RejectedAction>(
                 (action) => action.type.endsWith('/rejected'),
-                (state, action) => {
+                (state) => {
                     state.loadingEmployee = false;
                 },
             )
             .addMatcher<FulfilledAction>(
                 (action) => action.type.endsWith('/fulfilled'),
-                (state, action) => {
+                (state) => {
                     state.loadingEmployee = false;
                 },
             );

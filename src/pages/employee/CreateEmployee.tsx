@@ -108,6 +108,9 @@ const CreateEmployee = () => {
 
     // handle change TabPanel
     const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+        if (event) {
+            true;
+        }
         setValueTab(newValue);
         if (
             !employee.name &&

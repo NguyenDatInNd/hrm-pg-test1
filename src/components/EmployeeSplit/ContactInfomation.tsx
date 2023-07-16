@@ -1,18 +1,18 @@
-import React, { ChangeEvent, useEffect } from 'react';
-import SubTitleTable from '../Header/SubTitleTable';
 import { SelectChangeEvent } from '@mui/material/Select';
-import SelectInput from '../FormItem/SelectInput';
-import { employeeType } from '../../context/dataLink';
-import { Employee } from '../../Types/employee';
-import ContractUpload from '../Upload/ContractUpload';
-import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
+import { ChangeEvent } from 'react';
 import { useParams } from 'react-router-dom';
+import { Employee } from '../../Types/employee';
+import { employeeType } from '../../context/dataLink';
+import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
+import SelectInput from '../FormItem/SelectInput';
+import SubTitleTable from '../Header/SubTitleTable';
+import ContractUpload from '../Upload/ContractUpload';
 type PropsFormDataEmployee = {
     employee: Employee;
     handleChangeValueFormDataEmployee?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
 };
 const ContactInfomation = (props: PropsFormDataEmployee) => {
-    const { employee, handleChangeValueFormDataEmployee } = props;
+    const { employee } = props;
     const { idEmployee } = useParams();
 
     return (

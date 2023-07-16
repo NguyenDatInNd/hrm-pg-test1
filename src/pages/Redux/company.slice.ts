@@ -52,7 +52,7 @@ const companySlice = createSlice({
         loginFailed: (state, action: PayloadAction<boolean>) => {
             state.loadingLogin = action.payload;
         },
-        logoutUser: (state) => {
+        logoutUser: () => {
             Cookies.remove(ACCESS_TOKEN_KEY);
         },
     },
@@ -66,19 +66,19 @@ const companySlice = createSlice({
             })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),
-                (state, action) => {
+                (state) => {
                     state.loadingCompany = true;
                 },
             )
             .addMatcher<RejectedAction>(
                 (action) => action.type.endsWith('/rejected'),
-                (state, action) => {
+                (state) => {
                     state.loadingCompany = false;
                 },
             )
             .addMatcher<FulfilledAction>(
                 (action) => action.type.endsWith('/fulfilled'),
-                (state, action) => {
+                (state) => {
                     state.loadingCompany = false;
                 },
             );

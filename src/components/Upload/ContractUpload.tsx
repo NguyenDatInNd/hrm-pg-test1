@@ -60,10 +60,10 @@ const ContractUpload = () => {
     const CustomTableRow = styled(TableRow)(({ theme, selected }) => ({
         cursor: 'pointer',
         height: '36px',
-        backgroundColor: selected ? 'rgb(237 246 255) !important' : 'rgb(248, 249, 250)',
+        backgroundColor: selected ? 'rgb(237 246 255) !important' : 'rgb(248, 249, 250) ',
 
         '&:hover': {
-            backgroundColor: 'rgb(237, 246, 255) !important',
+            backgroundColor: `rgb(237, 246, 255) !important ${theme && ''}`,
         },
         '&.MuiTableCell-root': {
             color: 'transparent',
@@ -95,7 +95,7 @@ const ContractUpload = () => {
         setFormContract((prevValues) => ({ ...prevValues, name: e.target.value }));
     };
 
-    const handleChangeDate = (date: Date, event: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeDate = (date: Date) => {
         setFormContract((prevValues) => ({ ...prevValues, date: String(date) }));
     };
 

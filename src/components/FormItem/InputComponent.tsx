@@ -1,15 +1,14 @@
-import React, { ChangeEvent, useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import { useAppDispatch, useAppSelector } from '../../store';
-import './Input.scss';
 import Box from '@mui/material/Box';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import moment from 'moment-timezone';
-import datePicker from '../../assets/datePicker.svg';
+import { Controller, useForm } from 'react-hook-form';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import * as Yup from 'yup';
+import datePicker from '../../assets/datePicker.svg';
 import { setErrorsEmployee } from '../../pages/Redux/employee.slice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import './Input.scss';
 type PropsInput = {
     label: string;
     isRequired?: boolean;
@@ -52,7 +51,7 @@ const InputComponent = (props: PropsInput) => {
     const [isValueCheck, setIsValueCheck] = useState([name]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const erorrsEmployee = useAppSelector((state) => state.employee.errorsEmployee);
-    const handleDateChange = (date: Date | null, event: React.SyntheticEvent<any> | undefined) => {
+    const handleDateChange = (date: Date | null) => {
         setSelectedDate(date);
     };
 

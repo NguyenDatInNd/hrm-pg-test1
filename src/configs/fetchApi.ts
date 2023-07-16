@@ -5,7 +5,6 @@ export function fetchApi(
     url: string,
     method: 'get' | 'post' | 'delete' | 'put' = 'get',
     body?: object | FormData,
-    auth = true,
     contentType?: string,
 ): Promise<any> {
     return fetch(url, {

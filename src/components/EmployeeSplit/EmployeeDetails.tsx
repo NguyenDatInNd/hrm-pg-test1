@@ -1,13 +1,12 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import SubTitleTable from '../Header/SubTitleTable';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import SelectInput from '../FormItem/SelectInput';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { changeValueFormEmployeeInfo, getDepartment, getPosition } from '../../pages/Redux/employee.slice';
-import { Employee } from '../../Types/employee';
 import { SelectChangeEvent } from '@mui/material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import { ChangeEvent, useEffect } from 'react';
+import { Employee } from '../../Types/employee';
+import { changeValueFormEmployeeInfo, getDepartment, getPosition } from '../../pages/Redux/employee.slice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import SelectInput from '../FormItem/SelectInput';
+import SubTitleTable from '../Header/SubTitleTable';
 import BpCheckbox from '../Upload/CustomerChecked';
 
 type PropsFormDataEmployee = {
@@ -15,16 +14,9 @@ type PropsFormDataEmployee = {
     handleChangeValueFormDataEmployee?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
 };
 
-interface CheckboxValues {
-    entitle_ot: boolean;
-    meal_allowance_paid: boolean;
-    operational_allowance_paid: boolean;
-    attendance_allowance_paid: boolean;
-}
-
 const EmployeeDetails = (props: PropsFormDataEmployee) => {
     const dispatch = useAppDispatch();
-    const { employee, handleChangeValueFormDataEmployee } = props;
+    const { employee } = props;
     const { department, position } = useAppSelector((state) => state.employee);
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target;
@@ -56,7 +48,6 @@ const EmployeeDetails = (props: PropsFormDataEmployee) => {
                     label="Department"
                     placeholder="Choose Department"
                     value={employee.department_id}
-                    onChange={handleChangeValueFormDataEmployee}
                     name="department_id"
                     isNa
                 />
@@ -65,7 +56,6 @@ const EmployeeDetails = (props: PropsFormDataEmployee) => {
                     label="Position"
                     placeholder="Choose Position"
                     value={employee.position_id}
-                    onChange={handleChangeValueFormDataEmployee}
                     name="position_id"
                     isNa
                 />

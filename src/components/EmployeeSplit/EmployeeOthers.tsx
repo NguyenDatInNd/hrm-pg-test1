@@ -1,13 +1,13 @@
-import React, { ChangeEvent, useEffect, useState, useCallback } from 'react';
-import SubTitleTable from '../Header/SubTitleTable';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { changeValueFormEmployeeInfo, getBenefit, getGrade } from '../../pages/Redux/employee.slice';
-import { Employee, IsBenefit } from '../../Types/employee';
-import { styled } from '@mui/material/styles';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Chip } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { Employee, IsBenefit } from '../../Types/employee';
+import { changeValueFormEmployeeInfo, getBenefit, getGrade } from '../../pages/Redux/employee.slice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import SubTitleTable from '../Header/SubTitleTable';
 import OtherUpload from '../Upload/OtherUpload';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -48,7 +48,7 @@ export const autocompleteStyles = {
     },
 };
 
-const TextAreaStyle = styled('textarea')(({ theme }) => ({
+const TextAreaStyle = styled('textarea')(() => ({
     width: '314px',
     fontSize: '1.4rem',
     flexGrow: 1,
@@ -91,6 +91,9 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
     // handle change option benefit list
     const handleOptionChange = (event: any, newValue: IsBenefit[]) => {
         setSelectedOption(newValue ?? undefined);
+        if (event) {
+            return true;
+        }
         if (newValue) {
             const idBenefits = newValue.map((item) => item);
             dispatch(changeValueFormEmployeeInfo({ name: 'benefits', value: idBenefits }));
@@ -128,6 +131,9 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
                         renderInput={(params) => <TextField {...params} />}
                         value={gradeList.find((item) => item.id === employee.grade_id) || null}
                         onChange={(event, newValue) => {
+                            if (event) {
+                                return true;
+                            }
                             if (newValue === null) {
                                 dispatch(changeValueFormEmployeeInfo({ name: 'grade', value: [] }));
                                 dispatch(changeValueFormEmployeeInfo({ name: 'grade_id', value: null }));
@@ -197,7 +203,7 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
                                 }}
                             />
                         )}
-                        renderOption={(props, option, { selected }) => {
+                        renderOption={(props, option) => {
                             const isSelected =
                                 employee.benefits && employee.benefits.some((item) => item.id === option.id);
                             return (
@@ -245,9 +251,6 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
                         sx={autocompleteStyles}
                         getOptionLabel={(option) => option.name}
                         renderInput={(params) => <TextField {...params} />}
-                        onChange={(event, newValue) => {
-                            return;
-                        }}
                     />
                 </div>
             </div>

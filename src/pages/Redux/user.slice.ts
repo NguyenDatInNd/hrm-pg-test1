@@ -109,26 +109,26 @@ const userSlice = createSlice({
                 state.accessToken = action.payload;
                 state.loadingLogin = true;
             })
-            .addCase(logoutUserPost.fulfilled, (state, action) => {
+            .addCase(logoutUserPost.fulfilled, (state) => {
                 Cookies.remove(ACCESS_TOKEN_KEY);
                 localStorage.setItem('accessToken', '');
                 state.accessToken = '';
             })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),
-                (state, action) => {
+                (state) => {
                     state.loadingUser = true;
                 },
             )
             .addMatcher<RejectedAction>(
                 (action) => action.type.endsWith('/rejected'),
-                (state, action) => {
+                (state) => {
                     state.loadingUser = false;
                 },
             )
             .addMatcher<FulfilledAction>(
                 (action) => action.type.endsWith('/fulfilled'),
-                (state, action) => {
+                (state) => {
                     state.loadingUser = false;
                 },
             );

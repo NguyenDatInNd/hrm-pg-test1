@@ -47,7 +47,7 @@ const InputComponentDatePicker = (props: PropsInputDatePicker) => {
     const [isValue, setIsValue] = useState(true);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const dispatch = useAppDispatch();
-    const handleChangeDate = (date: Date, event: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeDate = (date: Date) => {
         setStartDate(date);
         const formattedDate = moment(date).format('YYYY-MM-DD');
 
@@ -72,7 +72,7 @@ const InputComponentDatePicker = (props: PropsInputDatePicker) => {
         }
     }, [value]);
 
-    const CustomInput = forwardRef(({ value, onClick, onChange }: any, ref: any) => (
+    const CustomInput = forwardRef(({ value, onClick, onChange }: any) => (
         <StyledFilledInput
             onClick={onClick}
             onChange={onChange}

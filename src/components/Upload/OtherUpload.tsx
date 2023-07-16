@@ -31,7 +31,7 @@ const OtherUpload = () => {
         backgroundColor: selected ? 'rgb(237 246 255) !important' : 'rgb(248, 249, 250)',
 
         '&:hover': {
-            backgroundColor: 'rgb(237, 246, 255) !important',
+            backgroundColor: `rgb(237, 246, 255) !important ${theme && ''}`,
         },
         '&.MuiTableCell-root': {
             color: 'transparent',

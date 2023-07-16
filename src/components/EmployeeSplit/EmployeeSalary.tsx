@@ -1,8 +1,8 @@
-import React, { ChangeEvent } from 'react';
-import SubTitleTable from '../Header/SubTitleTable';
-import { Employee } from '../../Types/employee';
 import { SelectChangeEvent } from '@mui/material';
+import { ChangeEvent } from 'react';
+import { Employee } from '../../Types/employee';
 import InputComponent from '../FormItem/InputComponent';
+import SubTitleTable from '../Header/SubTitleTable';
 
 type PropsFormDataEmployee = {
     employee: Employee;

@@ -111,6 +111,9 @@ const EmployeeItem = ({ employeeList, onChangePage, currentPage }: EmployeddItem
     }, [dispatch, selectedRows]);
 
     const handleChangePagePanigation = (event: unknown, newPage: number) => {
+        if (event) {
+            true;
+        }
         onChangePage('', newPage);
         setLoadingSniper(true);
     };

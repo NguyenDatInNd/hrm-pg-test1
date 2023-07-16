@@ -23,7 +23,7 @@ export const customPaperProps: PaperProps = {
     },
 };
 
-const CustomInputSelect = styled(InputBase)(({ theme }) => ({
+const CustomInputSelect = styled(InputBase)(() => ({
     boxShadow: 'none',
     '.MuiOutlinedInput-notchedOutline': {
         border: 'none',
