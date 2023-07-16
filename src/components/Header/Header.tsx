@@ -1,22 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store';
-import './Header.scss';
-import { loginSuccess, logoutUser } from '../../pages/Redux/company.slice';
-import logo from '../../assets/HRM_Logo.svg';
-import english from '../../assets/English.svg';
-import { MdKeyboardArrowDown } from 'react-icons/md';
+import ClearIcon from '@mui/icons-material/Clear';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
+import { useEffect, useState } from 'react';
+import { MdKeyboardArrowDown } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import ClearIcon from '@mui/icons-material/Clear';
+import english from '../../assets/English.svg';
+import logo from '../../assets/HRM_Logo.svg';
 import { ROUTES } from '../../configs/router';
-import Cookies from 'js-cookie';
-import { ACCESS_TOKEN_KEY } from '../../utils/contants';
-import { redirect } from 'react-router-dom';
-import { getUserDetails, getUserList, logoutUserPost } from '../../pages/Redux/user.slice';
-import axios from 'axios';
-import { API_PATHS } from '../../configs/api';
+import { logoutUser } from '../../pages/Redux/company.slice';
+import { getUserDetails, logoutUserPost } from '../../pages/Redux/user.slice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import './Header.scss';
+
+interface Iprops {
+    isActive?: boolean;
+}
 const style = {
     position: 'absolute',
     top: '50%',
@@ -29,7 +28,7 @@ const style = {
     p: 4,
 };
 
-const Header = () => {
+const Header = ({ isActive }: Iprops) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [openFirstModal, setOpenFirstModal] = useState(false);
@@ -41,7 +40,6 @@ const Header = () => {
         navigate(ROUTES.login);
         setOpenSecondModal(false);
     };
-
     const handleOpenFirstModal = () => {
         setOpenFirstModal(true);
     };
@@ -63,7 +61,7 @@ const Header = () => {
     }, [dispatch]);
 
     return (
-        <div className="w-full h-24 bg-white header-container">
+        <div className={`w-full h-24 bg-white header-container  ${isActive && 'hidden'}`}>
             <div className="flex py-3 px-12 justify-between items-center">
                 <div className="">
                     <div className="flex justify-center items-center">

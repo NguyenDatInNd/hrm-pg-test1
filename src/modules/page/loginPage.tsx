@@ -16,10 +16,7 @@ import { ROUTES } from '../../configs/router';
 
 const loginPage = () => {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const [loading, setLoading] = useState(false);
-    const valueCookie = Cookies.get(ACCESS_TOKEN_KEY);
-
     const onLogin = async (value: IsLoginParam) => {
         try {
             setLoading(true);
@@ -29,6 +26,7 @@ const loginPage = () => {
                 company_id: Number(value.company_id),
             });
             Cookies.set(ACCESS_TOKEN_KEY, res.data.data.token);
+            localStorage.setItem('accessToken', res.data.data.token);
             setLoading(false);
             toast.success('Login Successfully');
             setTimeout(() => {

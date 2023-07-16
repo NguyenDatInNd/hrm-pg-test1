@@ -111,6 +111,7 @@ const userSlice = createSlice({
             })
             .addCase(logoutUserPost.fulfilled, (state, action) => {
                 Cookies.remove(ACCESS_TOKEN_KEY);
+                localStorage.setItem('accessToken', '');
                 state.accessToken = '';
             })
             .addMatcher<PendingAction>(
