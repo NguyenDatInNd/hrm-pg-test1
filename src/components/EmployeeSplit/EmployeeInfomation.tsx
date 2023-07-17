@@ -5,7 +5,7 @@ import SelectInput from '../FormItem/SelectInput';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { Employee } from '../../Types/employee';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { getCompanyFixerLogin } from '../../pages/Redux/company.slice';
+
 import { gender } from '../../context/dataLink';
 import { getMarriageList } from '../../pages/Redux/employee.slice';
 import SubTitleTable from '../Header/SubTitleTable';
