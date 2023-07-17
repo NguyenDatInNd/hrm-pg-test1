@@ -10,7 +10,6 @@ type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
 type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
 type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 
-const companyfixerLogin = 'https://api-training.hrm.div4.pgtest.co/api/v1';
 interface CompanyState {
     companyList: Company[];
     loadingCompany: boolean;
@@ -37,7 +36,7 @@ const initialState: CompanyState = {
 // });
 
 export const getCompany = createAsyncThunk('companysFixer/getCompanyFixer', async () => {
-    const res = await axios.get(`${API_PATHS.API_FIXER}/company`);
+    const res = await axios.get(`https://api-training.hrm.div4.pgtest.co/api/v1/company`);
     const data = res.data.data;
     return data;
 });
