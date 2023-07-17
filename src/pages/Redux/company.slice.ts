@@ -23,11 +23,11 @@ const initialState: CompanyState = {
     loadingLogin: false,
 };
 
-export const getCompany = createAsyncThunk('companys/getCompany', async () => {
-    const res = await axios.get(API_PATHS.company);
-    const data = res.data.data;
-    return data;
-});
+// export const getCompany = createAsyncThunk('companys/getCompany', async () => {
+//     const res = await axios.get(API_PATHS.company);
+//     const data = res.data.data;
+//     return data;
+// });
 
 // fetchApi configuration
 // export const getCompany = createAsyncThunk('companys/getCompany', async () => {
@@ -36,7 +36,7 @@ export const getCompany = createAsyncThunk('companys/getCompany', async () => {
 //     return data;
 // });
 
-export const getCompanyFixerLogin = createAsyncThunk('companysFixer/getCompanyFixer', async () => {
+export const getCompany = createAsyncThunk('companysFixer/getCompanyFixer', async () => {
     const res = await axios.get(`${API_PATHS.API_FIXER}/company`);
     const data = res.data.data;
     return data;
@@ -59,9 +59,6 @@ const companySlice = createSlice({
     extraReducers(builder) {
         builder
             .addCase(getCompany.fulfilled, (state, action) => {
-                state.companyList = action.payload;
-            })
-            .addCase(getCompanyFixerLogin.fulfilled, (state, action) => {
                 state.companyList = action.payload;
             })
             .addMatcher<PendingAction>(
