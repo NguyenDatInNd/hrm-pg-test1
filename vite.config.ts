@@ -8,7 +8,7 @@ export default defineConfig({
     plugins: [react()],
     server: {
         // // host: '127.0.0.1',
-        port: 3000,
+        // port: 3000,
         proxy: {
             '/api': {
                 target: 'https://api-training.hrm.div4.pgtest.co',

@@ -60,10 +60,10 @@ export const RoutesConfig = () => {
                                 </Route>
                                 <Route element={<ProtectedRoutes />}>
                                     <Route path={ROUTES.login} Component={LoginPage} />
+                                    <Route path="/" Component={LoginPage} />
                                     <Route path={ROUTES.forgotpassword} Component={ForgotPassWord} />
                                 </Route>
                                 <Route path={ROUTES.login} Component={LoginPage} />
-                                <Route path="/" Component={LoginPage} />
                             </Routes>
                         </Suspense>
                     </div>
