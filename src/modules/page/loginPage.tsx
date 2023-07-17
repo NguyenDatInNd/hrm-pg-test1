@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { IsLoginParam } from '../../Types/auth';
+import logo from '../../assets/HRM_Logo.svg';
+import Copyright from '../../components/Copyright';
+import { API_PATHS } from '../../configs/api';
+import { ROUTES } from '../../configs/router';
+import { ACCESS_TOKEN_KEY } from '../../utils/contants';
 import LoginForm from '../auth/components/LoginForm';
 import '../auth/components/LoginForm.scss';
-import logo from '../../assets/HRM_Logo.svg';
-import Cookies from 'js-cookie';
-import { IsLoginParam } from '../../Types/auth';
-import axios from 'axios';
-import { API_PATHS } from '../../configs/api';
-import { ACCESS_TOKEN_KEY } from '../../utils/contants';
-import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from '../../store';
-import Copyright from '../../components/Copyright';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../configs/router';
 
 const loginPage = () => {
     const navigate = useNavigate();
@@ -20,7 +19,7 @@ const loginPage = () => {
     const onLogin = async (value: IsLoginParam) => {
         try {
             setLoading(true);
-            const res = await axios.post(API_PATHS.signIn, {
+            const res = await axios.post(`${API_PATHS.API_FIXER}/login`, {
                 username: value.username,
                 password: value.password,
                 company_id: Number(value.company_id),

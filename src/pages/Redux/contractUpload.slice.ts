@@ -7,11 +7,6 @@ import { fetchApi } from '../../configs/fetchApi';
 import { Contract, IsContractInfo } from '../../Types/employee';
 import { RootState } from '../../store';
 
-type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
-type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
-type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
-type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
-
 interface contractUploadState {
     contractList: Contract[];
     contractInfo: IsContractInfo;
@@ -38,9 +33,6 @@ export const addDataContract = createAsyncThunk(
         formData.contract_dates.forEach((date) => formdata.append('contract_dates[]', date));
         formData.documents.forEach((doc) => formdata.append('documents[]', doc, doc.name));
         formdata.append('modified_contracts[]', '');
-
-        console.log('formData', formData);
-
         const response = await axios.post(`${API_PATHS.API_FIXER}/contract/save-multiple`, formdata, {
             headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
         });

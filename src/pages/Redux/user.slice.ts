@@ -46,7 +46,7 @@ const initialState: CompanyState = {
 // Login Authentication / get Token
 export const loginAuthentication = createAsyncThunk('login/loginAuthentication', async (body: IsLoginParam) => {
     try {
-        const res = await axios.post(API_PATHS.signIn, body);
+        const res = await axios.post(`${API_PATHS.API_FIXER}/login`, body);
         Cookies.set(ACCESS_TOKEN_KEY, res.data.data.token);
         toast.success('Login Successfully');
         const data = res.data.data.token;
@@ -58,7 +58,7 @@ export const loginAuthentication = createAsyncThunk('login/loginAuthentication',
 
 // get list User
 export const getUserList = createAsyncThunk('users/getUser', async () => {
-    const res = await axios.get(API_PATHS.user, {
+    const res = await axios.get(`${API_PATHS.API_FIXER}/user`, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     const data = res.data.data;
@@ -75,7 +75,7 @@ export const getUserDetails = createAsyncThunk('users/getUserDetails', async () 
 });
 
 export const logoutUserPost = createAsyncThunk('users/logOut', async (_, body) => {
-    const res = await axios.post(API_PATHS.logout, body, {
+    const res = await axios.post(`${API_PATHS.API_FIXER}/logout`, body, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     const data = res.data.data;
@@ -87,7 +87,7 @@ export const forgotPassword = createAsyncThunk('user/forgot-password', async (em
     const payload = {
         email: email,
     };
-    const res = await axios.post(API_PATHS.forgotPassword, payload, {
+    const res = await axios.post(`${API_PATHS.API_FIXER}/forgot-password`, payload, {
         headers: {
             'Content-Type': 'application/json',
         },

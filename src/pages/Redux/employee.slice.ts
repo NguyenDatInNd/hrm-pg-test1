@@ -151,7 +151,7 @@ const initialState: EmployeeState = {
 
 //get API employeeList
 export const getEmployeeList = createAsyncThunk('employees/getEmployees', async () => {
-    const response = await axios.get(API_PATHS.employee, {
+    const response = await axios.get(`${API_PATHS.API_FIXER}/employee`, {
         headers: { Authorization: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
     });
     const data = response.data.data;
@@ -161,7 +161,7 @@ export const getEmployeeList = createAsyncThunk('employees/getEmployees', async 
 export const getEmployeeListSearch = createAsyncThunk(
     'employees/getEmployeesSearch',
     async ({ keywordSearch = '', currentPage = '' }: EmployeeListParams) => {
-        const response = await axios.get(API_PATHS.employee, {
+        const response = await axios.get(`${API_PATHS.API_FIXER}/employee`, {
             params: {
                 search: keywordSearch,
                 page: currentPage,
@@ -359,18 +359,6 @@ const employeeSlice = createSlice({
             .addCase(getIdEmployeeUpdate.fulfilled, (state, action) => {
                 state.employee = action.payload;
                 state.documentList = action.payload.contracts;
-                // state.documentInfo = {
-                //     employee_id: '',
-                //     documents: [],
-                //     deleted_ids: [],
-                // };
-
-                //  action.payload.forEach((contract: any) => {
-                //     state.documentInfo.employee_id = contract.employee_id;
-                //     state.documentInfo.documents.push(contract.document);
-                //     state.documentInfo.deleted_ids.push(contract.contract_date);
-
-                // });
             })
             .addCase(addEmployee.fulfilled, (state, action) => {
                 state.employeeList.data.push(action.payload);
