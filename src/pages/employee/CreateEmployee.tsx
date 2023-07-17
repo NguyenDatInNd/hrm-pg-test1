@@ -138,7 +138,6 @@ const CreateEmployee = () => {
             employee.meal_allowance_paid < 0
         ) {
             setIsActiveAddSalary(true);
-            console.log('hihihi');
         }
     };
 

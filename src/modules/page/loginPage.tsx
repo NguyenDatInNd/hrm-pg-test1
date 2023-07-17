@@ -44,6 +44,8 @@ const loginPage = () => {
                         <img src={logo} className="" alt="" />
                         <h1 className="mt-2">HR Management System</h1>
                         <h4 className="mt-5">Sing In</h4>
+                        <p className="mt-2">You can test it</p>
+                        <p className="mt-2">{'{User: trieubuihai , password:123123123, fatory: SBM}'}</p>
                         <div className="w-100 mt-4">
                             <LoginForm onLogin={onLogin} loading={loading} />
                         </div>
