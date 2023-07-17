@@ -12,6 +12,7 @@ import SubTitleTable from '../Header/SubTitleTable';
 import InputComponent from '../FormItem/InputComponent';
 
 import InputComponentDatePicker from '../FormItem/InputComponentDatePicker';
+import { getCompany } from '../../pages/Redux/company.slice';
 type PropsFormDataEmployee = {
     employee: Employee;
     handleChangeValueFormDataEmployee?: (event: ChangeEvent<HTMLInputElement> | SelectChangeEvent) => void;
@@ -25,7 +26,7 @@ const EmployeeInfomation = (props: PropsFormDataEmployee) => {
 
     // get API Company
     useEffect(() => {
-        const promise = dispatch(getCompanyFixerLogin());
+        const promise = dispatch(getCompany());
         return () => {
             promise.abort();
         };
