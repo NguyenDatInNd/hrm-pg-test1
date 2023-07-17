@@ -4,7 +4,6 @@ import axios from 'axios';
 import { API_PATHS } from '../../configs/api';
 import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_KEY } from '../../utils/contants';
-import { fetchApi } from '../../configs/fetchApi';
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
 type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
@@ -22,21 +21,8 @@ const initialState: CompanyState = {
     loadingLogin: false,
 };
 
-// export const getCompany = createAsyncThunk('companys/getCompany', async () => {
-//     const res = await axios.get(API_PATHS.company);
-//     const data = res.data.data;
-//     return data;
-// });
-
-// fetchApi configuration
-// export const getCompany = createAsyncThunk('companys/getCompany', async () => {
-//     const res = await fetchApi(API_PATHS.company, 'get');
-//     const data = res.data;
-//     return data;
-// });
-
 export const getCompany = createAsyncThunk('companysFixer/getCompanyFixer', async () => {
-    const res = await axios.get(`https://api-training.hrm.div4.pgtest.co/api/v1/company`);
+    const res = await axios.get(`${API_PATHS.API_FIXER}/company`);
     const data = res.data.data;
     return data;
 });
