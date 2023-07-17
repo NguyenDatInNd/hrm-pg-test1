@@ -136,10 +136,6 @@ th {
     background-color: rgb(236, 238, 240) !important;
 }
 
-/* .css-1yhpg23-MuiTableCell-root {
-    padding: 6px 10px !important;
-    border: 1px solid white !important;
-} */
 .MuiTableBody-root > tr {
     padding: 6px 10px !important;
     border: 1px solid white !important;
@@ -148,6 +144,7 @@ th {
 .MuiTableCell-root {
     padding: 6px 10px !important;
     border: 1px solid white !important;
+    font-size: 16px !important;
 }
 
 .css-1ex1afd-MuiTableCell-root {
