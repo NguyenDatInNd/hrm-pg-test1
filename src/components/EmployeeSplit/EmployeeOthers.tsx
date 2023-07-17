@@ -78,6 +78,7 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
     const dispatch = useAppDispatch();
     const { gradeList, benefitList } = useAppSelector((state) => state.employee);
     const [selectedOption, setSelectedOption] = useState<IsBenefit[]>([]);
+
     // get API Grade, Benefit
     useEffect(() => {
         const benefit = dispatch(getBenefit());
@@ -91,12 +92,12 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
     // handle change option benefit list
     const handleOptionChange = (event: any, newValue: IsBenefit[]) => {
         setSelectedOption(newValue ?? undefined);
-        if (event) {
-            return true;
-        }
         if (newValue) {
             const idBenefits = newValue.map((item) => item);
             dispatch(changeValueFormEmployeeInfo({ name: 'benefits', value: idBenefits }));
+        }
+        if (event) {
+            return true;
         }
     };
 
@@ -115,7 +116,6 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
         },
         [dispatch],
     );
-
     return (
         <div>
             <SubTitleTable category="Others" title="Required" />
@@ -263,109 +263,3 @@ const EmployeeOthers = ({ employee }: PropsFormDataEmployee) => {
 };
 
 export default EmployeeOthers;
-
-// benefitList = [
-//     {
-//         id: 130,
-//         name: 'Cameron Brown',
-//         code: 'B-980874',
-//         type: 2,
-//         value: '842',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 129,
-//         name: 'Mr. Arthur Aufderhar',
-//         code: 'B-796990',
-//         type: 2,
-//         value: '489',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 128,
-//         name: 'Mr. Brown Herzog IV',
-//         code: 'B-189512',
-//         type: 2,
-//         value: '180',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 127,
-//         name: 'Nicolas Wilderman',
-//         code: 'B-335681',
-//         type: 0,
-//         value: '104',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 126,
-//         name: 'Aylin Langosh',
-//         code: 'B-799767',
-//         type: 2,
-//         value: '600',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 124,
-//         name: 'Pinkie Ortiz PhD',
-//         code: 'B-164389',
-//         type: 2,
-//         value: '380',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 123,
-//         name: 'Ms. Evangeline Halvorson',
-//         code: 'B-63323',
-//         type: 1,
-//         value: '961',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-// ];
-
-// employee.benefits = [
-//     {
-//         id: 128,
-//         name: 'Mr. Brown Herzog IV',
-//         code: 'B-189512',
-//         type: 2,
-//         value: '180',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 127,
-//         name: 'Nicolas Wilderman',
-//         code: 'B-335681',
-//         type: 0,
-//         value: '104',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-//     {
-//         id: 126,
-//         name: 'Aylin Langosh',
-//         code: 'B-799767',
-//         type: 2,
-//         value: '600',
-//         company_id: 1,
-//         created_at: '2023-04-27T09:41:29.000000Z',
-//         updated_at: '2023-04-27T09:41:29.000000Z',
-//     },
-// ];

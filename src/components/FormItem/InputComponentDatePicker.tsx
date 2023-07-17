@@ -55,7 +55,6 @@ const InputComponentDatePicker = (props: PropsInputDatePicker) => {
             dispatch(changeValueFormEmployeeInfo({ name: name, value: formattedDate }));
         }
     };
-
     const handleDateBlur = () => {
         if (!startDate) {
             setIsValue(false);
@@ -63,9 +62,6 @@ const InputComponentDatePicker = (props: PropsInputDatePicker) => {
             setIsValue(true);
         }
     };
-
-    // ngoại lệ giá trị date of birth : 0000:00:00
-    // lỗi phía backend
     useEffect(() => {
         if (value === '0000-00-00') {
             setStartDate(new Date(String(value)));

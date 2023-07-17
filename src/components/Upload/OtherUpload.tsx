@@ -70,10 +70,6 @@ const OtherUpload = () => {
             );
         }
     };
-
-    console.log('document', documentList);
-    console.log('documentInfo', documentInfo);
-
     const handleDeleteFileDocument = (id: number, index: number) => {
         dispatch(removeDataTableDocument({ id, index }));
     };
